@@ -26,7 +26,10 @@ class ImageAnalyzerTest(unittest.TestCase):
             "crank_length": 7,
         }
         bike_fit = self.analyzer.get_bike_fit(bike, body_dimensions)
-        print(bike_fit)
+        self.assertDictAlmostEqual(
+            {'knee': 0.220, 'back': 0.004, 'armpit_wrist': 3.70e-06},
+            bike_fit
+        )
 
     def assertDictAlmostEqual(self, expected, actual, places=2):
         self.assertEqual(len(expected), len(actual))

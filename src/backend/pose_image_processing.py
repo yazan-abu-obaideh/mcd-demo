@@ -17,11 +17,13 @@ class PoserAnalyzer:
         return _decompose_to_dictionary(_analyze(camera_height, image_path)[0])
 
     def get_bike_fit(self, bike: dict, body_dimensions: dict):
-        return _prob_dists(
-            self._to_bike_vector(bike),
-            _dict_to_body_vector(body_dimensions, 5.5, 107),
-            150
-        )
+        prob_dists = _prob_dists(self._to_bike_vector(bike),
+                                 _dict_to_body_vector(body_dimensions, 5.5, 107), 150)
+        return {
+            "knee": prob_dists[0],
+            "back": prob_dists[1],
+            "armpit_wrist": prob_dists[2]
+        }
 
     def _to_bike_vector(self, bike: dict):
         all_keys_present = {"seat_x", "seat_y", "handle_bar_x", "handle_bar_y", "crank_length"}.issubset(
