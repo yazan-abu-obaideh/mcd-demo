@@ -1,12 +1,53 @@
+import os.path
+import sys
+
 import tensorflow as tf
 import numpy as np
 import backend.utils as utils
-from movenet import Movenet
+from backend.movenet import Movenet
 
-movenet = Movenet('movenet_thunder')
+_movenet = Movenet(os.path.join(os.path.dirname(__file__),
+                                "resources/movenet_thunder.tflite"))
 
 
-def detect(input_tensor, inference_count=10):
+class PoserAnalyzer:
+    def get_body_dimensions(self, camera_height, image_path):
+        return _decompose_to_dictionary(_analyze(camera_height, image_path)[0])
+
+
+def _analyze(height, imgroute):
+    calc, overlayed = _calculation(height, imgroute, output_overlayed=True)
+    calc = [height] + calc
+    return calc, overlayed
+
+
+def _decompose_to_dictionary(prediction_array):
+    """
+    Input: Array format [B: shoulder height, C: Inseam, D: Thigh, E:Arm length, F: Eye to shoulder]
+    DOES NOT MODIFY INPUT
+    Output: Returns dictionary "dimension name": Value in inches
+      INCLUDES OFFSET BY HEIGHT
+    """
+    base = {
+        "height": prediction_array[0],
+        "sh_height": prediction_array[1],
+        "hip_to_ankle": (prediction_array[2]),
+        "hip_to_knee": prediction_array[3],
+        "shoulder_to_wrist": prediction_array[4],
+        # "sh_width": prediction_array[5],
+    }
+    # GETTING OFFSETS
+    # Ankle height from floor to lateral malleolus and grip center to wrist are the same ratio
+    ankle_wrist_offset = 0.04 * base["height"]
+    base["arm_len"] = base["shoulder_to_wrist"] + ankle_wrist_offset
+    base["tor_len"] = base["sh_height"] - base["hip_to_ankle"] - ankle_wrist_offset
+    base["low_leg"] = base["hip_to_ankle"] - base["hip_to_knee"] + ankle_wrist_offset
+    base["up_leg"] = base["hip_to_knee"]
+
+    return base
+
+
+def _detect(input_tensor, inference_count=10):
     """Runs detection on an input image.
 
     Args:
@@ -22,24 +63,24 @@ def detect(input_tensor, inference_count=10):
     """
 
     # Detect pose using the full input image
-    movenet.detect(input_tensor.numpy(), reset_crop_region=True)
+    _movenet.detect(input_tensor.numpy(), reset_crop_region=True)
 
     # Repeatedly using previous detection result to identify the region of
     # interest and only croping that region to improve detection accuracy
     for _ in range(inference_count - 1):
-        person = movenet.detect(input_tensor.numpy(),
-                                reset_crop_region=False)
+        person = _movenet.detect(input_tensor.numpy(),
+                                 reset_crop_region=False)
 
     return person
 
 
-def calculation(heights, imgroute, output_overlayed=True):
+def _calculation(heights, imgroute, output_overlayed=True):
     z = imgroute
     image = tf.io.read_file(z)
     # height = heights
     image = tf.io.decode_jpeg(image)
     pheight = image.get_shape()[0]
-    person = detect(image)
+    person = _detect(image)
     keys = []
 
     # Y-axis Distortion Correction

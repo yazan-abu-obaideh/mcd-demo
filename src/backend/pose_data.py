@@ -21,6 +21,7 @@ from typing import List, NamedTuple
 
 import numpy as np
 
+
 class BodyPart(enum.Enum):
     """Enum representing human body keypoints detected by pose estimation models."""
     NOSE = 0
