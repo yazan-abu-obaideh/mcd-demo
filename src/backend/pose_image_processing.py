@@ -1,9 +1,11 @@
 import os.path
-import sys
 
-import tensorflow as tf
 import numpy as np
+import tensorflow as tf
+from scipy.stats import norm
+
 import backend.utils as utils
+from backend._validation_utils import validate
 from backend.movenet import Movenet
 
 _movenet = Movenet(os.path.join(os.path.dirname(__file__),
@@ -14,11 +16,88 @@ class PoserAnalyzer:
     def get_body_dimensions(self, camera_height, image_path):
         return _decompose_to_dictionary(_analyze(camera_height, image_path)[0])
 
+    def get_bike_fit(self, bike: dict, body_dimensions: dict):
+        return _prob_dists(
+            self._to_bike_vector(bike),
+            _dict_to_body_vector(body_dimensions, 5.5, 107),
+            150
+        )
+
+    def _to_bike_vector(self, bike: dict):
+        all_keys_present = {"seat_x", "seat_y", "handle_bar_x", "handle_bar_y", "crank_length"}.issubset(
+            set(bike.keys()))
+        validate(all_keys_present, "Invalid bike - missing parameters")
+        return np.array([
+            bike["seat_x"],
+            bike["seat_y"],
+            bike["handle_bar_x"],
+            bike["handle_bar_y"],
+            bike["crank_length"]
+        ]).reshape((5, 1))
+
 
 def _analyze(height, imgroute):
     calc, overlayed = _calculation(height, imgroute, output_overlayed=True)
     calc = [height] + calc
     return calc, overlayed
+
+
+def _prob_dists(bike_vector, body_vector, arm_angle, use="road"):
+    """
+    Computes probability of deviation from optimal for each body angle
+    """
+    # arm angle in radians:
+    # arm_angle = float(arm_angle * (np.pi / 180))
+    # min knee extension angle over sweep 0-2pi
+    our_knee_angle = min(
+        [
+            _knee_extension_angle(bike_vector, body_vector, angle * 0.2)
+            for angle in range(0, 30)
+        ]
+    )
+
+    # back angle, armpit to elbow angle, armpit to wrist angle
+    our_back_angle, our_awrist_angle = _back_armpit_angles(
+        bike_vector, body_vector, arm_angle
+    )
+
+    k_ang_prob = _prob(
+        _to_radians(_USE_DICT[use]["opt_knee_angle"][0]),
+        _to_radians(_USE_DICT[use]["opt_knee_angle"][1]),
+        our_knee_angle,
+    )
+    b_ang_prob = _prob(
+        _to_radians(_USE_DICT[use]["opt_back_angle"][0]),
+        _to_radians(_USE_DICT[use]["opt_back_angle"][1]),
+        our_back_angle,
+    )
+    aw_ang_prob = _prob(
+        _to_radians(_USE_DICT[use]["opt_awrist_angle"][0]),
+        _to_radians(_USE_DICT[use]["opt_awrist_angle"][1]),
+        our_awrist_angle,
+    )
+    print(f"knee extension: {_to_degrees(our_knee_angle)}")
+    print(f"back angle: {_to_degrees(our_back_angle)}")
+    print(f"armpit wrist: {_to_degrees(our_awrist_angle)}")
+
+    return k_ang_prob, b_ang_prob, aw_ang_prob
+
+
+def _dict_to_body_vector(user_dict, foot_len, ankle_angle):
+    """
+    Input: dict from decompose_to_dictionary, foot length, ankle angle degrees
+    Output: body vector
+    """
+    return np.array(
+        [user_dict["low_leg"], user_dict["up_leg"], user_dict["tor_len"], user_dict["arm_len"], foot_len,
+         _to_radians(ankle_angle)]).reshape(6, 1)
+
+
+def _to_radians(angle_in_degrees):
+    """
+    Converts degrees to radians
+    """
+    return float(angle_in_degrees / 180) * np.pi
 
 
 def _decompose_to_dictionary(prediction_array):
@@ -123,9 +202,11 @@ def _calculation(heights, imgroute, output_overlayed=True):
 
     d2 = distance1(keys[7].coordinate.x, keys[7].coordinate.y, keys[9].coordinate.x, keys[9].coordinate.y)
 
-    e1 = distance1(keys[1].coordinate.x, keys[1].coordinate.y, keys[3].coordinate.x, keys[3].coordinate.y) + distance1(
+    e1 = distance1(keys[1].coordinate.x, keys[1].coordinate.y, keys[3].coordinate.x,
+                   keys[3].coordinate.y) + distance1(
         keys[3].coordinate.x, keys[3].coordinate.y, keys[5].coordinate.x, keys[5].coordinate.y)
-    e2 = distance1(keys[0].coordinate.x, keys[0].coordinate.y, keys[2].coordinate.x, keys[2].coordinate.y) + distance1(
+    e2 = distance1(keys[0].coordinate.x, keys[0].coordinate.y, keys[2].coordinate.x,
+                   keys[2].coordinate.y) + distance1(
         keys[2].coordinate.x, keys[2].coordinate.y, keys[4].coordinate.x, keys[4].coordinate.y)
 
     f1 = distance1(keys[0].coordinate.x, keys[0].coordinate.y, keys[1].coordinate.x, keys[1].coordinate.y)
@@ -142,3 +223,208 @@ def _calculation(heights, imgroute, output_overlayed=True):
         return pred, overlayed
 
     return pred
+
+
+_USE_DICT = {
+    "road": {
+        "opt_knee_angle": (37.5, 5),
+        "opt_back_angle": (45, 5),
+        "opt_awrist_angle": (90, 5),
+        "opt_elbow_angle": (160, 10),
+        "opt_ankle_angle": (100.0, 5.0),
+        "opt_hip_angle_closed": (60, 5),
+    },
+    "mtb": {
+        "opt_knee_angle": (37.5, 2.5),
+        "opt_back_angle": (45, 5),
+        "opt_elbow_angle": (160, 10),
+        "opt_ankle_angle": (100.0, 5.0),
+        "opt_hip_angle_closed": (60, 5),
+    },
+    "tt": {
+        "opt_knee_angle": (37.5, 2.5),
+        "opt_back_angle": (45, 5),
+        "opt_elbow_angle": (160, 10),
+        "opt_ankle_angle": (100.0, 5.0),
+        "opt_hip_angle_closed": (60, 5),
+    },
+    "commute": {
+        "opt_knee_angle": (37.5, 2.5),
+        "opt_back_angle": (45, 5),
+        "opt_elbow_angle": (160, 10),
+        "opt_ankle_angle": (100.0, 5.0),
+        "opt_hip_angle_closed": (60, 5),
+    },
+}
+
+
+def _prob(mean, sd, value):
+    """
+    Returns probability of value or larger given mean and sd
+    """
+    dist = abs((value - mean)) / sd
+    return 1 - norm.cdf(dist, loc=0, scale=1)
+
+
+def _knee_extension_angle(bike_vector, body_vector, CA, tor=False):
+    """
+    Input:
+        bike vector, body vector, crank angle
+        np array bike vector:
+            [SX, SY, HX, HY, CL]^T
+            (seat_x, seat_y, hbar_x, hbar_y, crank len)
+        np array body vector:
+            [LL, UL, TL, AL, FL, AA]
+            (lowleg, upleg, torso len, arm len, foot len, ankl angle)
+        CA = crank angle:
+            crank angle fom horizontal in radians
+        Origin is bottom bracket
+
+    Output:
+        Knee extension angle
+        OR
+        None if not valid coords (i.e. NaA appeared)
+
+    """
+    # decomposing body vector
+    sq_body = np.square(body_vector)
+
+    LL = body_vector[0, 0]
+    UL = body_vector[1, 0]
+    TL = body_vector[2, 0]
+    AL = body_vector[3, 0]
+    FL = body_vector[4, 0]
+    AA = body_vector[5, 0]
+
+    LL_s = sq_body[0, 0]
+    UL_s = sq_body[1, 0]
+    TL_s = sq_body[2, 0]
+    AL_s = sq_body[3, 0]
+    FL_s = sq_body[4, 0]
+    AA_s = sq_body[5, 0]
+
+    # decomposing bike vector
+    sq_bike = np.square(bike_vector)
+
+    SX = bike_vector[0, 0]
+    SY = bike_vector[1, 0]
+    HX = bike_vector[2, 0]
+    HY = bike_vector[3, 0]
+    CL = bike_vector[4, 0]
+
+    SX_s = sq_bike[0, 0]
+    SY_s = sq_bike[1, 0]
+    HX_s = sq_bike[2, 0]
+    HY_s = sq_bike[3, 0]
+    CL_s = sq_bike[4, 0]
+
+    x_1 = np.sqrt(LL_s + FL_s - (2 * LL * FL * np.cos(AA)))
+
+    LX = CL * np.cos(CA) - SX
+    LY = SY - CL * np.sin(CA)
+
+    x_2 = np.sqrt((LX ** 2 + LY ** 2))
+
+    alpha_1 = np.arccos((x_1 ** 2 - UL_s - x_2 ** 2) / (-2 * UL * x_2))
+    if np.isnan(alpha_1):
+        return None
+
+    alpha_2 = np.arctan2(LY, LX) - alpha_1
+
+    LLY = LY - UL * np.sin(alpha_2)
+    LLX = LX - UL * np.cos(alpha_2)
+
+    alpha_3 = np.arctan2(LLY, LLX) - alpha_2
+
+    alpha_4 = np.arccos((FL_s - LL_s - x_1 ** 2) / (-2 * LL * x_1))
+    if np.isnan(alpha_4):
+        return None
+
+    return alpha_3 + alpha_4
+
+
+def _back_armpit_angles(bike_vector, body_vector, elbow_angle):
+    """
+    Input: bike_vector, body_vector, elbow_angle
+    Output: back angle, armpit to elbow angle, armpit to wrist angle in radians
+
+     np array bike vector:
+            [SX, SY, HX, HY, CL]^T
+    np array body vector:
+            [LL, UL, TL, AL, FL, AA]
+
+    TL = UL
+    UA = LL
+    La = FL
+    AA = ARM Angle
+    CL = 0
+    hx = -sx
+    hy = -sy
+    """
+    elbow_angle = elbow_angle * (np.pi / 180)
+
+    LL = body_vector[0, 0]
+    UL = body_vector[1, 0]
+    TL = body_vector[2, 0]
+    AL = float(body_vector[3, 0])
+    FL = body_vector[4, 0]
+    AA = float(body_vector[5, 0])
+
+    # decomposing bike vector
+
+    SX = bike_vector[0, 0]
+    SY = bike_vector[1, 0]
+    HX = bike_vector[2, 0]
+    HY = bike_vector[3, 0]
+    CL = bike_vector[4, 0]
+
+    # BACK ANGLE
+    # Calculating straightline distance between handlebars and seat
+    sth_dist = ((HY - SY) ** 2 + (HX - SX) ** 2) ** 0.5
+
+    # Calculating angle offset for torso angle
+    sth_ang = np.arctan2((HY - SY), (HX - SX))
+
+    # Uses new dist and law of cosines to find torso angle
+    x_1 = (AL / 2) ** 2 + (AL / 2) ** 2 - 2 * (AL / 2) * (AL / 2) * np.cos(elbow_angle)
+    tors_ang = np.arccos((TL ** 2 + sth_dist ** 2 - x_1) / (2 * TL * sth_dist))
+    if np.isnan(tors_ang):
+        return None, None
+
+    # Adds offset to get back angle with horizontal
+    back_angle = tors_ang + sth_ang
+
+    # ARMPIT TO WRIST ANGLE
+    # ARMPIT TO WRIST DIRECTLY WITH LAW OF COSINES
+    armpit_to_wrist = np.arccos((TL ** 2 + x_1 - sth_dist ** 2) / (2 * TL * (x_1 ** 0.5)))
+
+    # return angles in radians
+    return back_angle, armpit_to_wrist
+
+
+def _to_degrees(angle_in_radians):
+    return float(angle_in_radians * (180 / np.pi))
+
+
+def _all_angles(bike_vector, body_vector, arm_angle):
+    """
+    Input: bike, body, arm_angle in degrees
+    Output: tuple (min_ke angle, back angle, awrist angle) in degrees
+    """
+
+    # min knee extension angle over sweep 0-2pi
+    ke_ang = [
+        item for item in (_knee_extension_angle(bike_vector, body_vector, angle * 0.2)
+                          for angle in range(0, 32)) if item is not None
+    ]
+    if ke_ang == [] or len(ke_ang) != 32:
+        ke_ang = None
+    else:
+        ke_ang = min(ke_ang)
+
+    # back angle, armpit to elbow angle, armpit to wrist angle
+    b_ang, aw_ang = _back_armpit_angles(bike_vector, body_vector, arm_angle)
+
+    return [_to_degrees(ang) if ang is not None else None for ang in [ke_ang, b_ang, aw_ang]]
+
+
