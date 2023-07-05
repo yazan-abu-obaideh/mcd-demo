@@ -1,4 +1,8 @@
 import unittest
+
+import numpy as np
+import pandas as pd
+
 from backend.pose_image_processing import PoserAnalyzer
 
 
@@ -15,6 +19,18 @@ class ImageAnalyzerTest(unittest.TestCase):
              'low_leg': 18.971, 'up_leg': 15.196},
             analysis
         )
+
+    def test_multiple_bikes(self):
+        body_dimensions = self.analyzer.get_body_dimensions(75, "resources/image2.jpeg")
+        bike = {
+            "seat_x": -9,
+            "seat_y": 27,
+            "handle_bar_x": 16.5,
+            "handle_bar_y": 25.5,
+            "crank_length": 7,
+        }
+        dataframe = pd.DataFrame.from_records([bike, bike, bike])
+        print(self.analyzer.get_bikes_fit(dataframe.values, body_dimensions))
 
     def test_get_bike_loss_from_image(self):
         body_dimensions = self.analyzer.get_body_dimensions(75, "resources/image2.jpeg")
