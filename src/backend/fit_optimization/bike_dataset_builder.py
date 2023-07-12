@@ -1,3 +1,4 @@
+from backend.fit_analysis.fit_analyzer import FitAnalyzer
 from backend.pose_analysis.pose_image_processing import PoserAnalyzer
 
 BODY_DIMENSIONS = {'height': 75, 'sh_height': 61.09855828510818, 'hip_to_ankle': 31.167514055725047,
@@ -34,4 +35,4 @@ def build_bikes():
 
 
 def build_performances():
-    return PoserAnalyzer().get_bikes_fit(build_bikes(), BODY_DIMENSIONS)
+    return FitAnalyzer().get_bikes_fit(build_bikes(), BODY_DIMENSIONS)

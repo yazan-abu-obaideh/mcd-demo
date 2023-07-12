@@ -19,5 +19,3 @@ class ImageAnalyzerTest(McdDemoTestCase):
              'low_leg': 18.971, 'up_leg': 15.196},
             analysis
         )
-
-
