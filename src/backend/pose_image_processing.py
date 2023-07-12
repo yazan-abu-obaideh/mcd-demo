@@ -27,7 +27,14 @@ class PoserAnalyzer:
         }
 
     def get_bikes_fit(self, bikes: List[Dict], body_dimensions: dict) -> List[Dict]:
-        return [self.get_bike_fit(bike, body_dimensions) for bike in bikes]
+        bikes_fit = []
+        for bike in bikes:
+            try:
+                fit = self.get_bike_fit(bike, body_dimensions)
+            except (TypeError, ValueError):
+                fit = {key: float("inf") for key in ["knee", "back", "armpit_wrist"]}
+            bikes_fit.append(fit)
+        return bikes_fit
 
     def _to_bike_vector(self, bike: dict):
         all_keys_present = {"seat_x", "seat_y", "handle_bar_x", "handle_bar_y", "crank_length"}.issubset(
