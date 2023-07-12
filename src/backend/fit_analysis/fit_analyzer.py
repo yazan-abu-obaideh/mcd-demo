@@ -69,9 +69,6 @@ def _prob_dists(bikes, body_vector, arm_angle, use="road"):
         _to_radians(_USE_DICT[use]["opt_awrist_angle"][1]),
         our_awrist_angle,
     )
-    print(f"knee extension: {_to_degrees(our_knee_angle)}")
-    print(f"back angle: {_to_degrees(our_back_angle)}")
-    print(f"armpit wrist: {_to_degrees(our_awrist_angle)}")
 
     return k_ang_prob, b_ang_prob, aw_ang_prob
 
