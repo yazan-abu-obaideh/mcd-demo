@@ -7,6 +7,7 @@ class BikeOptimizerTest(McdDemoTestCase):
         self.optimizer = BikeOptimizer()
 
     def test_optimize(self):
+        """We need to reliably generate n bikes..."""
         optimized_bikes = self.optimizer.optimize(
             seed_bike={"seat_x": -9, "seat_y": 27, "handle_bar_x": 16.5, "handle_bar_y": 25.5, "crank_length": 7, },
             user_dimensions={'height': 75, 'sh_height': 61.09855828510818, 'hip_to_ankle': 31.167514055725047,
