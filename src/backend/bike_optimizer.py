@@ -1,10 +1,9 @@
 import pandas as pd
+from decode_mcd import DataPackage, DesignTargets, MultiObjectiveProblem, CounterfactualsGenerator, ContinuousTarget
 from pymoo.core.variable import Real
 
-from backend.bike_dataset_builder import build_bikes, build_performances, BODY_DIMENSIONS
-from backend.pose_image_processing import PoserAnalyzer
-from decode_mcd import DataPackage, DesignTargets, MultiObjectiveProblem, CounterfactualsGenerator, ContinuousTarget
-import numpy as np
+from backend.fit_analysis.bike_dataset_builder import build_bikes, build_performances, BODY_DIMENSIONS
+from backend.pose_analysis.pose_image_processing import PoserAnalyzer
 
 
 def predict(bikes: pd.DataFrame):
@@ -21,7 +20,7 @@ data_package = DataPackage(
         ContinuousTarget(label='back', lower_bound=0, upper_bound=0.01),
         ContinuousTarget(label='armpit_wrist', lower_bound=0, upper_bound=0.01),
     ]),
-    datatypes=[Real(bounds=(-1000, 1000)) for _ in range(5)]
+    datatypes=[Real(bounds=(-100, 100)) for _ in range(5)]
 )
 
 problem = MultiObjectiveProblem(
@@ -31,8 +30,8 @@ problem = MultiObjectiveProblem(
 )
 
 generator = CounterfactualsGenerator(
-    problem, 1500, initialize_from_dataset=False, verbose=True
+    problem, 750, initialize_from_dataset=False, verbose=True
 )
-generator.generate(15)
+generator.generate(5)
 print(generator.sample_with_weights(num_samples=10, cfc_weight=1, diversity_weight=1,
                                     gower_weight=1, avg_gower_weight=1, ))

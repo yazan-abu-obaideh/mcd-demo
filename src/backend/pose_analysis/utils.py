@@ -17,7 +17,7 @@ import math
 from typing import List, Tuple
 
 import cv2
-from backend.pose_data import Person
+from backend.pose_analysis.pose_data import Person
 import numpy as np
 
 # map edges to a RGB color
