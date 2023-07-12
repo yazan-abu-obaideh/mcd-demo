@@ -1,5 +1,5 @@
 import os.path
-from typing import Tuple
+from typing import Tuple, List, Dict
 
 import numpy as np
 import tensorflow as tf
@@ -26,8 +26,8 @@ class PoserAnalyzer:
             "armpit_wrist": prob_dists[2][0]
         }
 
-    def get_bikes_fit(self, bikes: np.ndarray, body_dimensions: dict) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
-        return _prob_dists(bikes, _dict_to_body_vector(body_dimensions, 5.5, 107), 150)
+    def get_bikes_fit(self, bikes: List[Dict], body_dimensions: dict) -> List[Dict]:
+        return [self.get_bike_fit(bike, body_dimensions) for bike in bikes]
 
     def _to_bike_vector(self, bike: dict):
         all_keys_present = {"seat_x", "seat_y", "handle_bar_x", "handle_bar_y", "crank_length"}.issubset(

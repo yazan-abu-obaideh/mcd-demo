@@ -1,8 +1,7 @@
 import pandas as pd
-from decode_mcd.data_package import DataPackage
-from decode_mcd.design_targets import *
-from decode_mcd.multi_objective_problem import MultiObjectiveProblem
-from decode_mcd.counterfactuals_generator import CounterfactualsGenerator
+from backend.bike_dataset_builder import build_bikes, build_performances
+from decode_mcd import DataPackage, DesignTargets, MultiObjectiveProblem, CounterfactualsGenerator
+import numpy as np
 
 
 def predict(bikes: pd.DataFrame):
