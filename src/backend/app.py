@@ -4,7 +4,7 @@ from contextlib import redirect_stdout
 from io import StringIO
 from time import sleep
 
-from flask import Flask
+from flask import Flask, stream_template
 
 from backend.fit_optimization.bike_optimizer import BikeOptimizer
 
@@ -26,22 +26,6 @@ class StreamingStringIO(StringIO):
             return super().write(__s)
 
 
-@app.route("/logs")
-def get_log():
-    lines = queue.Queue()
-
-    def gen_logs():
-        string_io = StringIO()
-        with redirect_stdout(string_io):
-            print("we have logs!")
-            sleep(1)
-
-    thread = threading.Thread(target=gen_logs)
-    thread.start()
-
-    # return [line for line in lines.]
-
-
 @app.route("/optimize")
 def optimize():
     lines = queue.Queue()
@@ -57,7 +41,7 @@ def optimize():
                                  'low_leg': 18.971306184088018,
                                  'up_leg': 15.196207871637029})
             lines.put(POISON_PILL)
-            lines.put(b"counterfactuals!!")
+            lines.put(counterfactuals_dataframe.to_dict("records"))
 
     def stream_logs():
         while True:
@@ -69,7 +53,7 @@ def optimize():
 
     threading.Thread(target=run_optimize).start()
 
-    return stream_logs()
+    return stream_template("index.html", logs=stream_logs())
 
 
 @app.route("/health")
