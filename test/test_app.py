@@ -1,4 +1,5 @@
 import unittest
+from http import HTTPStatus
 from multiprocessing import Process
 from time import sleep
 
@@ -16,10 +17,10 @@ class AppTest(unittest.TestCase):
         cls.APP_PROCESS.start()
         cls.handle_timeout()
 
-    def test_stall(self):
-        while True:
-            print("stalling...")
-            sleep(10)
+    def test_health(self):
+        health_response = requests.get(self.build_end_point("health"))
+        self.assertEqual("UP", health_response.json()["status"])
+        self.assertEqual(HTTPStatus.OK, health_response.status_code)
 
     @classmethod
     def tearDownClass(cls) -> None:
@@ -37,4 +38,8 @@ class AppTest(unittest.TestCase):
 
     @classmethod
     def get_health(cls):
-        return requests.get("http://localhost:5000/health")
+        return requests.get(AppTest.build_end_point("health"))
+
+    @staticmethod
+    def build_end_point(suffix):
+        return f"http://localhost:5000/{suffix}"
