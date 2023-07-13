@@ -1,12 +1,12 @@
 import queue
 import threading
-from time import sleep
-
-from flask import Flask, Response
-
-from backend.fit_optimization.bike_optimizer import BikeOptimizer
 from contextlib import redirect_stdout
 from io import StringIO
+from time import sleep
+
+from flask import Flask
+
+from backend.fit_optimization.bike_optimizer import BikeOptimizer
 
 POISON_PILL = None
 
