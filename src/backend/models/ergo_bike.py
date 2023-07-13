@@ -1,7 +1,7 @@
 import attrs
 
 
-@attrs.define(slots=True, frozen=True)
+@attrs.define(frozen=True)
 class ErgoBike:
     seat_x: float
     seat_y: float
