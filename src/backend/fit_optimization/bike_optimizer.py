@@ -2,6 +2,7 @@ import attrs
 from decode_mcd import DataPackage, MultiObjectiveProblem, CounterfactualsGenerator
 
 from backend.fit_optimization.optimization_constants import *
+from backend.models.body_dimensions import BodyDimensions
 from backend.models.ergo_bike import ErgoBike
 
 
@@ -9,7 +10,9 @@ class BikeOptimizer:
     def __init__(self):
         pass
 
-    def optimize(self, seed_bike: ErgoBike, user_dimensions):
+    def optimize(self, seed_bike: ErgoBike, user_dimensions: BodyDimensions):
+        user_dimensions = attrs.asdict(user_dimensions)
+
         def predict(bikes: pd.DataFrame):
             return pd.DataFrame.from_records(ANALYZER.get_bikes_fit(bikes.to_dict('records'),
                                                                     user_dimensions))

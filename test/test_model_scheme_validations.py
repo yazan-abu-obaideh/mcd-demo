@@ -48,3 +48,9 @@ class ModelValidationsTest(unittest.TestCase):
             handle_bar_y=35,
             crank_length=35,
         ), map_request_to_model(self.base_request, ErgoBike))
+
+    def test_handles_non_dicts(self):
+        with self.assertRaises(UserInputException) as e:
+            # noinspection PyTypeChecker
+            map_request_to_model(15, ErgoBike)
+        self.assertEqual(e.exception.args[0], "Expected json, got 15 instead")

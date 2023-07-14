@@ -5,6 +5,7 @@ from backend.exceptions import UserInputException
 
 
 def map_request_to_model(request: dict, model: Type):
+    validate(isinstance(request, dict), f"Expected json, got {request} instead")
     actual_keys = request.keys()
     scheme = _get_scheme(model)
     validated_request = {}
