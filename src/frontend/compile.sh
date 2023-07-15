@@ -1,2 +1,2 @@
-tsc client.ts
-mv client.js target/client.js
+tsc js/client.ts
+mv js/client.js js/target/client.js
