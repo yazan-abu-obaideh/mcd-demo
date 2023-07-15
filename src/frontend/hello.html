@@ -5,12 +5,22 @@
     <title>MCD</title>
 
     <script type="text/javascript" src="client.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
 </head>
-<body onload="getHeaderContent()">
+<body>
 
-<h1> Hello, Yazan and others </h1>
-<h2 id="header"> WORDLY!</h2>
-<h2 id="optimizationResponse"> Your optimized bikes! </h2>
-<button onclick="optimizeBike()"> Optimize</button>
+    <div class="px-4 py-5 my-5 text-center">
+        <img class="d-block mx-auto mb-4" src="assets/decode_logo.png" alt="" width="225" height="82">
+        <h1 class="display-5 fw-bold text-body-emphasis">Multiobjective Counterfactuals for Design</h1>
+        <div class="col-lg-6 mx-auto">
+          <p class="lead mb-4">MCD is an automated design recommendation framework that can help you generate performant and realistic designs. While this demo uses bike designs, 
+            MCD is a generic framework that can be configured to handle almost any design problem - regardless of the number or nature of constraints or objectives.  
+          </p>
+          <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+            <button type="button" class="btn btn-primary btn-lg px-4 gap-3">Try it yourself!</button>
+          </div>
+        </div>
+      </div>    
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
 </body>
 </html>

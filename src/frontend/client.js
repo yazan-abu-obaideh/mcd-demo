@@ -1,5 +1,8 @@
-    // Function to retrieve the header content from the API
+   const thing = Math.random();
+   
+   // Function to retrieve the header content from the API
     function getHeaderContent() {
+        console.log(thing);
         const xhr = new XMLHttpRequest();
         xhr.open("GET", "http://localhost:5000/health", true);
         xhr.onreadystatechange = function () {
@@ -10,7 +13,10 @@
         };
         xhr.send();
       }
+      
+      
       function optimizeBike() {
+        console.log(thing);
         let url = "http://localhost:5000/optimize";
         const requestBody =  {
         "seed-bike": {
@@ -23,8 +29,7 @@
         "body-dimensions": {"height": 75, "sh_height": 61.09855828510818, "hip_to_ankle": 31.167514055725047,
                                "hip_to_knee": 15.196207871637029, "shoulder_to_wrist": 13.538605228960089,
                                "arm_len": 16.538605228960087, "tor_len": 26.931044229383136,
-                               "low_leg": 18.971306184088018, "up_leg": 15.196207871637029}
-  };
+                               "low_leg": 18.971306184088018, "up_leg": 15.196207871637029}};
   
     fetch(url, {
       method: "POST",
@@ -33,22 +38,16 @@
       },
       body: JSON.stringify(requestBody)
     })
-    .then(function(response) {
+    .then((response) => {
       if (response.ok) {
-      let resText = response.text();
-      document.getElementById("optimizationResponse").innerText = resText;
+        let resText = response.text();
+        document.getElementById("optimizationResponse").innerText = resText;
         return resText;
       }
       throw new Error("Request failed with status: " + response.status);
     })
-    .then(function(headerContent) {
-      document.getElementById("header").innerText = headerContent;
-    })
-    .catch(function(error) {
+    .catch((error) => {
       console.log(error);
     });
-  
-  
-  
       }
   
