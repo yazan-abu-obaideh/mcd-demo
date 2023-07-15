@@ -107,4 +107,4 @@ function utilizeHandler(handler: (response: JSON) => void, response: Response) {
   response.text().then((responseText) => handler(JSON.parse(responseText)));
 }
 
-export default getHealth;
+// export default getHealth;
