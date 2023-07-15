@@ -1,0 +1,13 @@
+{
+    "name": "MCD Demo Client",
+    "description": "",
+    "authors": "Yazan",
+    "version": "1.0.0",
+    "main": "pathToMain",
+    "scripts": {
+        "test": "jest"
+    },
+    "devDependencies": {
+        "@types/jest": "^29.5.3"
+    }
+}
