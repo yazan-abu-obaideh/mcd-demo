@@ -20,7 +20,9 @@ function submitRequest() {
     console.log("Submitted!");
     console.log(document.getElementById("user-height-input").value);
     console.log(document.getElementById("camera-height-input").value);
-    console.log(form.elements["seedBike"].value);  
+    console.log(form.elements["seedBike"].value);
+  } else {
+    form.reportValidity();
   }
 }
 
@@ -66,7 +68,6 @@ function restCall() {
     .catch((error) => {
       console.log(error);
     });
-
 }
 
 function optimizeBike() {
