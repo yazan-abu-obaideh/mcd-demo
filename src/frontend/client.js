@@ -1,18 +1,4 @@
-const thing = Math.random();
-
-// Function to retrieve the header content from the API
-function getHeaderContent() {
-  console.log(thing);
-  const xhr = new XMLHttpRequest();
-  xhr.open("GET", "http://localhost:5000/health", true);
-  xhr.onreadystatechange = function () {
-    if (xhr.readyState === 4 && xhr.status === 200) {
-      const headerContent = xhr.responseText;
-      document.getElementById("header").innerText = headerContent;
-    }
-  };
-  xhr.send();
-}
+const apiUrl = "http://localhost:5000";
 
 function submitRequest() {
   const form = document.getElementById("problem-form-form");
@@ -26,90 +12,45 @@ function submitRequest() {
   }
 }
 
-function restCall() {
-  console.log(thing);
-  let url = "http://localhost:5000/optimize";
-  const requestBody = {
-    "seed-bike": {
-      seat_x: -9,
-      seat_y: 27,
-      handle_bar_x: 16.5,
-      handle_bar_y: 25.5,
-      crank_length: 7,
+function getHealth() {
+  restfulGet(
+    "/health",
+    (responseJson) => {
+      console.log("Success " + responseJson["status"]);
     },
-    "body-dimensions": {
-      height: 75,
-      sh_height: 61.09855828510818,
-      hip_to_ankle: 31.167514055725047,
-      hip_to_knee: 15.196207871637029,
-      shoulder_to_wrist: 13.538605228960089,
-      arm_len: 16.538605228960087,
-      tor_len: 26.931044229383136,
-      low_leg: 18.971306184088018,
-      up_leg: 15.196207871637029,
-    },
-  };
+    (errorResponse) => {
+      console.log("Boo! " + errorResponse["message"]);
+    }
+  );
+}
 
-  fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(requestBody),
+function restfulPost(urlSuffix, requestBody, successHandler, errorResponseHandler) {
+  restfulCall(urlSuffix, JSON.stringify(requestBody), "POST", successHandler, errorResponseHandler);
+}
+
+function restfulGet(urlSuffix, successHandler, errorResponseHandler) {
+  restfulCall(urlSuffix, "", "GET", successHandler, errorResponseHandler);
+}
+
+function restfulCall(urlSuffix, requestBody, requestMethod, successHandler, errorResponseHandler) {
+  fetch(apiUrl.concat(urlSuffix), {
+    headers: { "Content-Type": "application/json" },
+    requestMethod: requestMethod,
+    requestBody: requestBody
   })
     .then((response) => {
-      if (response.ok) {
-        let resText = response.text();
-        document.getElementById("optimizationResponse").innerText = resText;
-        return resText;
+      if (200 <= response.status && response.status < 300) {
+        utilizeHandler(successHandler, response);
+      } else {
+        utilizeHandler(errorResponseHandler, response);
       }
-      throw new Error("Request failed with status: " + response.status);
     })
-    .catch((error) => {
-      console.log(error);
+    .catch((exception) => {
+      console.log("Something went wrong: " + exception);
     });
 }
 
-function optimizeBike() {
-  console.log(thing);
-  let url = "http://localhost:5000/optimize";
-  const requestBody = {
-    "seed-bike": {
-      seat_x: -9,
-      seat_y: 27,
-      handle_bar_x: 16.5,
-      handle_bar_y: 25.5,
-      crank_length: 7,
-    },
-    "body-dimensions": {
-      height: 75,
-      sh_height: 61.09855828510818,
-      hip_to_ankle: 31.167514055725047,
-      hip_to_knee: 15.196207871637029,
-      shoulder_to_wrist: 13.538605228960089,
-      arm_len: 16.538605228960087,
-      tor_len: 26.931044229383136,
-      low_leg: 18.971306184088018,
-      up_leg: 15.196207871637029,
-    },
-  };
 
-  fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(requestBody),
-  })
-    .then((response) => {
-      if (response.ok) {
-        let resText = response.text();
-        document.getElementById("optimizationResponse").innerText = resText;
-        return resText;
-      }
-      throw new Error("Request failed with status: " + response.status);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+function utilizeHandler(handler, response) {
+  response.text().then((responseText) => handler(JSON.parse(responseText)));
 }
