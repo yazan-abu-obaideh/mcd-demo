@@ -34,86 +34,137 @@
           constraints or objectives.
         </p>
         <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-          <button type="button" class="btn btn-primary btn-lg px-4 gap-3">
-            Try it yourself!
-          </button>
+          <a href="#problem-form-div">
+            <button type="button" class="btn btn-primary btn-lg px-4 gap-3">
+              Try it yourself!
+            </button>
+          </a>
         </div>
       </div>
     </div>
 
-    <div class="problem-form">
-      <form>
-        <div id="seed-bike-select-div" class="my-3">
-          <div class="container text-center">
-            <h3>Select Seed Bike</h3>
-            <div class="row">
-              <div class="col">
-                <img
-                  class="seed-bike-img"
-                  src="assets/bike_1.png"
-                  alt="seed-bike-1"
-                />
-                <br />
-                <input
-                  id="seed1"
-                  name="seedBike"
-                  type="radio"
-                  class="form-check-input"
-                  checked
-                  required
-                />
-                <label class="form-check-label" for="seed1">Stylish blue</label>
-              </div>
-              <div class="col">
-                <img
-                  class="seed-bike-img"
-                  src="assets/bike_2.png"
-                  alt="seed-bike-2"
-                />
-                <br />
-                <input
-                  id="seed2"
-                  name="seedBike"
-                  type="radio"
-                  class="form-check-input"
-                  required
-                />
-                <label class="form-check-label" for="seed2">Sturdy red</label>
-              </div>
-              <div class="col">
-                <img
-                  class="seed-bike-img"
-                  src="assets/bike_3.png"
-                  alt="seed-bike-3"
-                />
-                <br />
-                <input
-                  id="seed3"
-                  name="seedBike"
-                  type="radio"
-                  class="form-check-input"
-                  required
-                />
-                <label class="form-check-label" for="seed3"
-                  >Cyberpunk black</label
-                >
+    <div id="problem-form-div">
+      <form id="problem-form-form">
+        <div class="container">
+          <div id="seed-bike-select-div" class="my-3">
+            <div class="container text-center">
+              <h3>Select Seed Bike</h3>
+              <div class="row">
+                <div class="col">
+                  <img
+                    class="seed-bike-img"
+                    src="assets/bike_1.png"
+                    alt="seed-bike-1"
+                  />
+                  <br />
+                  <input
+                    id="seed1"
+                    value="seed1"
+                    name="seedBike"
+                    type="radio"
+                    class="form-check-input"
+                    checked
+                    required
+                  />
+                  <label class="form-check-label" for="seed1"
+                    >Stylish blue</label
+                  >
+                </div>
+                <div class="col">
+                  <img
+                    class="seed-bike-img"
+                    src="assets/bike_2.png"
+                    alt="seed-bike-2"
+                  />
+                  <br />
+                  <input
+                    id="seed2"
+                    value="seed2"
+                    name="seedBike"
+                    type="radio"
+                    class="form-check-input"
+                    required
+                  />
+                  <label class="form-check-label" for="seed2">Sturdy red</label>
+                </div>
+                <div class="col">
+                  <img
+                    class="seed-bike-img"
+                    src="assets/bike_3.png"
+                    alt="seed-bike-3"
+                  />
+                  <br />
+                  <input
+                    id="seed3"
+                    value="seed3"
+                    name="seedBike"
+                    type="radio"
+                    class="form-check-input"
+                    required
+                  />
+                  <label class="form-check-label" for="seed3"
+                    >Cyberpunk black</label
+                  >
+                </div>
               </div>
             </div>
           </div>
-        </div>
+          <div class="container">
+            <div class="row problem-form-row">
+              <div class="col-6">
+                <input type="file" id="user-img-upload" required/>
+                <label class="form-label" for="user-img-upload"
+                  >Upload image of person</label
+                >
+              </div>
+            </div>
+            <div class="row problem-form-row">
+              <div class="col-3">
+                <input
+                  type="number"
+                  class="form-control"
+                  id="user-height-input"
+                  step="0.01"
+                  required
+                />
+                <label class="form-label" for="user-height-input">
+                  User Height in Inches
+                </label>
+              </div>
+              <div class="col-3">
+                <input
+                  form="problem-form-form"
+                  type="number"
+                  class="form-control"
+                  id="camera-height-input"
+                  step="0.01"
+                  required
+                />
+                <label class="form-label" for="camera-height-input">
+                  Camera Height in Inches
+                </label>
+              </div>
+            </div>
+          </div>
 
-        <div>
-          <label for="cc-name" class="form-label">Name on card</label>
-          <input
-            type="text"
-            class="form-control"
-            id="cc-name"
-            placeholder=""
-            required
-          />
+          <div class="problem-form-row">
+            <button
+              class="btn btn-primary"
+              type="submit"
+              target="hiddenFrame"
+              onclick="submitRequest()"
+              href=""
+            >
+              Submit form
+            </button>
+          </div>
         </div>
       </form>
     </div>
+
+
+    <iframe title="hiddenFrame" name="hiddenFrame" width="0" height="0" border="0" style="display: none;"></iframe>
+
 
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
