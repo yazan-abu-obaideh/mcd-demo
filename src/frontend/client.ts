@@ -47,7 +47,7 @@ function getHealth() {
   restfulGet(
     "/health",
     (responseJson) => {
-      console.log("Success " + responseJson);
+      console.log("Success " + responseJson["status"]);
     },
     (errorResponse) => {
       console.log("Boo! " + errorResponse["message"]);
@@ -80,7 +80,7 @@ function restfulGet(
 
 function restfulCall(
   urlSuffix: string,
-  requestBody: Object | null,
+  requestBody: string | null,
   requestMethod: string,
   successHandler: (response: JSON) => void,
   errorResponseHandler: (response: JSON) => void
@@ -88,7 +88,7 @@ function restfulCall(
   fetch(apiUrl.concat(urlSuffix), {
     headers: { "Content-Type": "application/json" },
     method: requestMethod,
-    body: JSON.stringify(requestBody),
+    body: requestBody,
   })
     .then((response) => {
       if (200 <= response.status && response.status < 300) {
@@ -105,3 +105,5 @@ function restfulCall(
 function utilizeHandler(handler: (response: JSON) => void, response: Response) {
   response.text().then((responseText) => handler(JSON.parse(responseText)));
 }
+
+module.exports = getHealth;
