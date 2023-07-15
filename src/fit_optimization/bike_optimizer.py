@@ -1,9 +1,10 @@
 import attrs
 from decode_mcd import DataPackage, MultiObjectiveProblem, CounterfactualsGenerator
 
-from backend.fit_optimization.optimization_constants import *
-from backend.models.body_dimensions import BodyDimensions
-from backend.models.ergo_bike import ErgoBike
+from models.body_dimensions import BodyDimensions
+from models.ergo_bike import ErgoBike
+from fit_optimization.optimization_constants import *
+import pandas as pd
 
 
 class BikeOptimizer:

@@ -1,4 +1,4 @@
-from backend.exceptions import UserInputException
+from exceptions import UserInputException
 
 
 def validate(condition: bool, exception_message: str):

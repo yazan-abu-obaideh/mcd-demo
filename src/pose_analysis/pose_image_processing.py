@@ -3,11 +3,11 @@ import os.path
 import numpy as np
 import tensorflow as tf
 
-import backend.pose_analysis.utils as utils
-from backend.pose_analysis.movenet import Movenet
+import pose_analysis.utils as utils
+from pose_analysis.movenet import Movenet
 
 _movenet = Movenet(os.path.join(os.path.dirname(__file__),
-                                "../../resources/movenet_thunder.tflite"))
+                                "../resources/movenet_thunder.tflite"))
 
 
 class PoserAnalyzer:

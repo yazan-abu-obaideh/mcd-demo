@@ -1,6 +1,6 @@
-from backend.fit_optimization.bike_optimizer import BikeOptimizer
-from backend.models.body_dimensions import BodyDimensions
-from backend.models.ergo_bike import ErgoBike
+from fit_optimization.bike_optimizer import BikeOptimizer
+from models.body_dimensions import BodyDimensions
+from models.ergo_bike import ErgoBike
 from test_utils import McdDemoTestCase
 
 

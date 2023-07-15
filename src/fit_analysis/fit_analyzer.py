@@ -3,7 +3,7 @@ from typing import List, Dict
 import numpy as np
 from scipy.stats import norm
 
-from backend._validation_utils import validate
+from _validation_utils import validate
 
 
 class FitAnalyzer:

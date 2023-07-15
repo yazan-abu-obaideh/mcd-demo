@@ -2,8 +2,8 @@ import pandas as pd
 from decode_mcd import ContinuousTarget, DesignTargets
 from pymoo.core.variable import Real
 
-from backend.fit_optimization.bike_dataset_builder import build_performances, build_bikes
-from backend.fit_analysis.fit_analyzer import FitAnalyzer
+from fit_optimization.bike_dataset_builder import build_performances, build_bikes
+from fit_analysis.fit_analyzer import FitAnalyzer
 
 AMPIT_WRIST_TARGET = ContinuousTarget(label='armpit_wrist', lower_bound=0, upper_bound=0.01)
 

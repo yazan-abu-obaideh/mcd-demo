@@ -1,4 +1,4 @@
-from backend.pose_analysis.pose_image_processing import PoserAnalyzer
+from pose_analysis.pose_image_processing import PoserAnalyzer
 from test_utils import McdDemoTestCase
 
 

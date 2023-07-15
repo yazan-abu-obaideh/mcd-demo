@@ -1,8 +1,8 @@
 import unittest
 
-from backend.exceptions import UserInputException
-from backend.models.ergo_bike import ErgoBike
-from backend.models.model_scheme_validations import map_request_to_model
+from exceptions import UserInputException
+from models.ergo_bike import ErgoBike
+from models.model_scheme_validations import map_request_to_model
 
 
 class ModelValidationsTest(unittest.TestCase):

@@ -1,11 +1,11 @@
 from flask import Flask, make_response, request
 from flask_cors import CORS
 
-from backend.exceptions import UserInputException
-from backend.fit_optimization.bike_optimizer import BikeOptimizer
-from backend.models.body_dimensions import BodyDimensions
-from backend.models.ergo_bike import ErgoBike
-from backend.models.model_scheme_validations import map_request_to_model
+from exceptions import UserInputException
+from fit_optimization.bike_optimizer import BikeOptimizer
+from models.body_dimensions import BodyDimensions
+from models.ergo_bike import ErgoBike
+from models.model_scheme_validations import map_request_to_model
 
 app = Flask(__name__)
 CORS(app)

@@ -1,4 +1,4 @@
-from backend.fit_analysis.fit_analyzer import FitAnalyzer
+from fit_analysis.fit_analyzer import FitAnalyzer
 from test_utils import McdDemoTestCase
 
 

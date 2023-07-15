@@ -1,7 +1,7 @@
 from typing import get_type_hints, Type
 
-from backend._validation_utils import validate
-from backend.exceptions import UserInputException
+from _validation_utils import validate
+from exceptions import UserInputException
 
 
 def map_request_to_model(request: dict, model: Type):
