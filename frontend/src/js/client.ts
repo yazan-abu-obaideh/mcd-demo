@@ -1,5 +1,14 @@
 const apiUrl = "http://localhost:5000";
 
+async function getServerHealth(): Promise<Response> {
+    return await fetch(apiUrl.concat("/health"), {
+      headers: { "Content-Type": "application/json" },
+      method: "GET",
+      // body: requestBody,
+    });
+  }
+
+
 function submitRequest() {
   const form: HTMLFormElement = document.getElementById(
     "problem-form-form"
@@ -107,4 +116,4 @@ function utilizeHandler(handler: (response: JSON) => void, response: Response) {
   response.text().then((responseText) => handler(JSON.parse(responseText)));
 }
 
-// export default getHealth;
+export default getServerHealth;
