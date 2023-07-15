@@ -48,6 +48,7 @@ function getHealth() {
     "/health",
     (responseJson) => {
       console.log("Success " + responseJson["status"]);
+      return responseJson;
     },
     (errorResponse) => {
       console.log("Boo! " + errorResponse["message"]);
@@ -106,4 +107,4 @@ function utilizeHandler(handler: (response: JSON) => void, response: Response) {
   response.text().then((responseText) => handler(JSON.parse(responseText)));
 }
 
-module.exports = getHealth;
+export default getHealth;

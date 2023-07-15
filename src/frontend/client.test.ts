@@ -1,7 +1,7 @@
-// const getHealth = require("./client");
+import getHealth from "./client";
 
 
 test('adds 1 + 2 to equal 3', () => {
-    expect(5 + 5).toBe(10);
+    expect(getHealth()).toBe({"status": "UP"});
   });
   
