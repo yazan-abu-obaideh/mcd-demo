@@ -1,7 +1,9 @@
 const apiUrl = "http://localhost:5000";
 
 function submitRequest() {
-  const form = document.getElementById("problem-form-form");
+  const form: HTMLFormElement = document.getElementById(
+    "problem-form-form"
+  ) as HTMLFormElement;
   if (form.checkValidity()) {
     optimizeSeedBike(
       {
@@ -28,7 +30,7 @@ function submitRequest() {
   }
 }
 
-function optimizeSeedBike(seedBike, bodyDimensions) {
+function optimizeSeedBike(seedBike: Object, bodyDimensions: Object) {
   restfulPost(
     "/optimize",
     { "seed-bike": seedBike, "body-dimensions": bodyDimensions },
@@ -45,7 +47,7 @@ function getHealth() {
   restfulGet(
     "/health",
     (responseJson) => {
-      console.log("Success " + responseJson["status"]);
+      console.log("Success " + responseJson);
     },
     (errorResponse) => {
       console.log("Boo! " + errorResponse["message"]);
@@ -54,10 +56,10 @@ function getHealth() {
 }
 
 function restfulPost(
-  urlSuffix,
-  requestBody,
-  successHandler,
-  errorResponseHandler
+  urlSuffix: string,
+  requestBody: Object,
+  successHandler: (response: JSON) => void,
+  errorResponseHandler: (response: JSON) => void
 ) {
   restfulCall(
     urlSuffix,
@@ -68,21 +70,25 @@ function restfulPost(
   );
 }
 
-function restfulGet(urlSuffix, successHandler, errorResponseHandler) {
+function restfulGet(
+  urlSuffix: string,
+  successHandler: (response: JSON) => void,
+  errorResponseHandler: (response: JSON) => void
+) {
   restfulCall(urlSuffix, null, "GET", successHandler, errorResponseHandler);
 }
 
 function restfulCall(
-  urlSuffix,
-  requestBody,
-  requestMethod,
-  successHandler,
-  errorResponseHandler
+  urlSuffix: string,
+  requestBody: Object | null,
+  requestMethod: string,
+  successHandler: (response: JSON) => void,
+  errorResponseHandler: (response: JSON) => void
 ) {
   fetch(apiUrl.concat(urlSuffix), {
     headers: { "Content-Type": "application/json" },
     method: requestMethod,
-    body: requestBody,
+    body: JSON.stringify(requestBody),
   })
     .then((response) => {
       if (200 <= response.status && response.status < 300) {
@@ -96,6 +102,6 @@ function restfulCall(
     });
 }
 
-function utilizeHandler(handler, response) {
+function utilizeHandler(handler: (response: JSON) => void, response: Response) {
   response.text().then((responseText) => handler(JSON.parse(responseText)));
 }
