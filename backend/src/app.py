@@ -16,7 +16,14 @@ optimizer = BikeOptimizer(image_analyzer)
 
 @app.errorhandler(UserInputException)
 def handleUserError(exception: UserInputException):
+    print(exception)
     return make_response({"message": exception.args[0]}, 400)
+
+
+@app.errorhandler(Exception)
+def handle_internal_server_error(exception):
+    print(exception)
+    return make_response({"message": "Something went wrong"}, 500)
 
 
 @app.route("/optimize-seed", methods=["POST"])
@@ -25,7 +32,7 @@ def optimize_seed_bike():
     return optimizer.optimize_seed_bike(_request["seedBikeId"],
                                         map_base64_image_to_bytes(_request["imageBase64"]),
                                         _request["personHeight"],
-                                        _request["cameraHeight"])
+                                        _request["cameraHeight"]).to_dict("records")
 
 
 @app.route("/optimize", methods=["POST"])

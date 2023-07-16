@@ -112,7 +112,7 @@
           <div class="container">
             <div class="row problem-form-row">
               <div class="col-6">
-                <input type="file" id="user-img-upload" required />
+                <input type="file" id="user-img-upload" name="user-img" required />
                 <label class="form-label" for="user-img-upload"
                   >Upload image of person</label
                 >
@@ -157,7 +157,9 @@
 
     <div id="server-response-form" class="text-center p-md-5">
       <h2>MCD Server Response</h2>
-      <button class="btn btn-bd-primary" onclick="getHealth()"> Get Health! </button>
+      <button class="btn btn-bd-primary" onclick="getHealth()">
+        Get Health!
+      </button>
     </div>
 
     <script
