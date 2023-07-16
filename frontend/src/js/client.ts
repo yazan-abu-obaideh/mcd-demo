@@ -1,39 +1,66 @@
 const apiUrl = "http://localhost:5000";
 
 async function getServerHealth(): Promise<Response> {
-    return await fetch(apiUrl.concat("/health"), {
-      headers: { "Content-Type": "application/json" },
-      method: "GET",
-      // body: requestBody,
-    });
-  }
+  return await fetch(apiUrl.concat("/health"), {
+    headers: { "Content-Type": "application/json" },
+    method: "GET",
+    // body: requestBody,
+  });
+}
 
+async function postSeedBikeOptimization(
+  seedBikeId: string,
+  personImage: string,
+  personHeight: number,
+  cameraHeight: number
+) {
+  return await fetch(apiUrl.concat("/optimize-seed"), {
+    headers: { "Content-Type": "application/json" },
+    method: "POST",
+    body: JSON.stringify({
+      seedBikeId: seedBikeId,
+      personImage: personImage,
+      personHeight: personHeight,
+      cameraHeight: cameraHeight,
+    }),
+  });
+}
+
+async function postOptimizationRequest(
+  seedBike: object,
+  bodyDimensions: object
+): Promise<Response> {
+  return await fetch(apiUrl.concat("/optimize"), {
+    headers: { "Content-Type": "application/json" },
+    method: "POST",
+    body: JSON.stringify({
+      "seed-bike": seedBike,
+      "body-dimensions": bodyDimensions,
+    }),
+  });
+}
 
 function submitRequest() {
   const form: HTMLFormElement = document.getElementById(
     "problem-form-form"
   ) as HTMLFormElement;
   if (form.checkValidity()) {
-    optimizeSeedBike(
-      {
-        seat_x: -9,
-        seat_y: 27,
-        handle_bar_x: 16.5,
-        handle_bar_y: 25.5,
-        crank_length: 7,
-      },
-      {
-        height: 75,
-        sh_height: 61.09855828510818,
-        hip_to_ankle: 31.167514055725047,
-        hip_to_knee: 15.196207871637029,
-        shoulder_to_wrist: 13.538605228960089,
-        arm_len: 16.538605228960087,
-        tor_len: 26.931044229383136,
-        low_leg: 18.971306184088018,
-        up_leg: 15.196207871637029,
-      }
-    );
+    console.log("Valid form. Submitting request...");
+    console.log(form.get("seedBike"));
+    postSeedBikeOptimization(
+      "1", 
+      (new FormData(form)).get("user-img").toString(),
+      25,
+      75
+    )
+    .then((response) => {
+      console.log(response.status);
+    })
+    .catch((exception) => {
+      console.log("Exception occurred " + exception);
+    })
+    
+    ;
   } else {
     form.reportValidity();
   }
@@ -116,4 +143,4 @@ function utilizeHandler(handler: (response: JSON) => void, response: Response) {
   response.text().then((responseText) => handler(JSON.parse(responseText)));
 }
 
-export default getServerHealth;
+// export { getServerHealth, postOptimizationRequest, postSeedBikeOptimization };
