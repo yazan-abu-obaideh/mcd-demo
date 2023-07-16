@@ -1,5 +1,7 @@
 from unittest import TestCase
 
+from exceptions import UserInputException
+
 
 class McdDemoTestCase(TestCase):
 
@@ -8,3 +10,8 @@ class McdDemoTestCase(TestCase):
         for key, value in actual.items():
             self.assertTrue(key in expected)
             self.assertAlmostEqual(value, expected[key], places=places)
+
+    def assertRaisesWithMessage(self, faulty_call: callable, exception_message):
+        with self.assertRaises(expected_exception=UserInputException) as context:
+            faulty_call()
+        self.assertEqual(exception_message, context.exception.args[0])

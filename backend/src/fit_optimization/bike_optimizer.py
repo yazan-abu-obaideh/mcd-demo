@@ -16,7 +16,6 @@ class BikeOptimizer:
         seed_bike = self._get_bike_by_id(seed_bike_id)
         body_dimensions = self.image_analysis_service.analyze_bytes(camera_height, image)
         print(f"{person_height=}")
-        print(f"{camera_height=}")
         return self.optimize(seed_bike, body_dimensions)
 
     def optimize(self, seed_bike: ErgoBike, user_dimensions: BodyDimensions):

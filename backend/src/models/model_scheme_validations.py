@@ -1,7 +1,16 @@
+import base64
+import binascii
 from typing import get_type_hints, Type
 
 from _validation_utils import validate
 from exceptions import UserInputException
+
+
+def map_base64_image_to_bytes(base64str: str):
+    try:
+        return base64.b64decode(base64str)
+    except binascii.Error:
+        raise UserInputException("Invalid image")
 
 
 def map_request_to_model(request: dict, model: Type):

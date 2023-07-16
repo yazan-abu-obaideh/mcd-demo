@@ -9,6 +9,11 @@ class BikeOptimizerTest(McdDemoTestCase):
     def setUp(self) -> None:
         self.optimizer = BikeOptimizer(PoserAnalyzer())
 
+    def test_invalid_seed_id(self):
+        # noinspection PyTypeChecker
+        self.assertRaisesWithMessage(lambda: self.optimizer.optimize_seed_bike(
+            "DOES_NOT_EXIST", b"", None, None), "Invalid seed bike ID")
+
     def test_optimize(self):
         """We need to reliably generate n bikes..."""
         optimized_bikes = self.optimizer.optimize(

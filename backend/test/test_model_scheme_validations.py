@@ -2,10 +2,11 @@ import unittest
 
 from exceptions import UserInputException
 from models.ergo_bike import ErgoBike
-from models.model_scheme_validations import map_request_to_model
+from models.model_scheme_validations import map_request_to_model, map_base64_image_to_bytes
+from test_utils import McdDemoTestCase
 
 
-class ModelValidationsTest(unittest.TestCase):
+class ModelValidationsTest(McdDemoTestCase):
     def setUp(self) -> None:
         self.base_request = {
             "seat_x": 5,
@@ -14,6 +15,15 @@ class ModelValidationsTest(unittest.TestCase):
             "handle_bar_y": 35,
             "crank_length": 35
         }
+
+    def test_map_invalid_base64_to_bytes(self):
+        self.assertRaisesWithMessage(
+            lambda: self.assertEqual("", map_base64_image_to_bytes("K")),
+            "Invalid image"
+        )
+
+    def test_map_to_bytes(self):
+        self.assertEqual(b'01010101', map_base64_image_to_bytes("MDEwMTAxMDE="))
 
     def test_invalid_type(self):
         # noinspection PyTypedDict
@@ -50,7 +60,6 @@ class ModelValidationsTest(unittest.TestCase):
         ), map_request_to_model(self.base_request, ErgoBike))
 
     def test_handles_non_dicts(self):
-        with self.assertRaises(UserInputException) as e:
-            # noinspection PyTypeChecker
-            map_request_to_model(15, ErgoBike)
-        self.assertEqual(e.exception.args[0], "Expected json, got 15 instead")
+        # noinspection PyTypeChecker
+        self.assertRaisesWithMessage(lambda: map_request_to_model(15, ErgoBike),
+                                     "Expected json, got 15 instead")

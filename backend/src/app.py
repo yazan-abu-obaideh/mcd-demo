@@ -5,7 +5,7 @@ from exceptions import UserInputException
 from fit_optimization.bike_optimizer import BikeOptimizer
 from models.body_dimensions import BodyDimensions
 from models.ergo_bike import ErgoBike
-from models.model_scheme_validations import map_request_to_model
+from models.model_scheme_validations import map_request_to_model, map_base64_image_to_bytes
 from pose_analysis.pose_image_processing import PoserAnalyzer
 
 app = Flask(__name__)
@@ -21,7 +21,11 @@ def handleUserError(exception: UserInputException):
 
 @app.route("/optimize-seed", methods=["POST"])
 def optimize_seed_bike():
-    pass
+    _request = request.json
+    return optimizer.optimize_seed_bike(_request["seedBikeId"],
+                                        map_base64_image_to_bytes(_request["imageBase64"]),
+                                        _request["personHeight"],
+                                        _request["cameraHeight"])
 
 
 @app.route("/optimize", methods=["POST"])
