@@ -19,3 +19,27 @@ PERFORMANCES = pd.DataFrame.from_records(build_performances())
 ANALYZER = FitAnalyzer()
 all_bikes = build_bikes()
 DESIGNS = pd.DataFrame.from_records(all_bikes)
+
+SEED_BIKES_MAP = {
+    "1": {
+        "seat_x": -9,
+        "seat_y": 27,
+        "handle_bar_x": 16.5,
+        "handle_bar_y": 25.5,
+        "crank_length": 7,
+    },
+    "2": {
+        "seat_x": -10,
+        "seat_y": 24,
+        "handle_bar_x": 13.5,
+        "handle_bar_y": 29.5,
+        "crank_length": 10,
+    },
+    "3": {
+        "seat_x": -7,
+        "seat_y": 30,
+        "handle_bar_x": 18.5,
+        "handle_bar_y": 22.5,
+        "crank_length": 4,
+    }
+}

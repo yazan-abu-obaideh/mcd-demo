@@ -4,6 +4,7 @@ import numpy as np
 import tensorflow as tf
 
 import pose_analysis.utils as utils
+from models.body_dimensions import BodyDimensions
 from pose_analysis.movenet import Movenet
 
 _movenet = Movenet(os.path.join(os.path.dirname(__file__),
@@ -14,9 +15,18 @@ class PoserAnalyzer:
     def get_body_dimensions(self, camera_height, image_path):
         return _decompose_to_dictionary(_analyze(camera_height, image_path)[0])
 
+    def analyze_bytes(self, camera_height, image_bytes) -> BodyDimensions:
+        return BodyDimensions(**_decompose_to_dictionary(_analyze_with_bytes(camera_height, image_bytes)[0]))
+
 
 def _analyze(height, imgroute):
-    calc, overlayed = _calculation(height, imgroute, output_overlayed=True)
+    calc, overlayed = _calculation_with_img_path(height, imgroute, output_overlayed=True)
+    calc = [height] + calc
+    return calc, overlayed
+
+
+def _analyze_with_bytes(height, img_bytes):
+    calc, overlayed = _calculation_with_img_bytes(height, img_bytes, output_overlayed=True)
     calc = [height] + calc
     return calc, overlayed
 
@@ -74,11 +84,16 @@ def _detect(input_tensor, inference_count=10):
     return person
 
 
-def _calculation(heights, imgroute, output_overlayed=True):
-    z = imgroute
-    image = tf.io.read_file(z)
+def _calculation_with_img_bytes(heights, img_bytes, output_overlayed=True):
+    return _calculation(heights, tf.io.decode_image(img_bytes), output_overlayed)
+
+
+def _calculation_with_img_path(heights, imgroute, output_overlayed=True):
     # height = heights
-    image = tf.io.decode_jpeg(image)
+    return _calculation(heights, tf.io.decode_jpeg(tf.io.read_file(imgroute)), output_overlayed)
+
+
+def _calculation(heights, image, output_overlayed=True):
     pheight = image.get_shape()[0]
     person = _detect(image)
     keys = []

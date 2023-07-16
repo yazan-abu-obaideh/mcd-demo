@@ -1,12 +1,13 @@
 from fit_optimization.bike_optimizer import BikeOptimizer
 from models.body_dimensions import BodyDimensions
 from models.ergo_bike import ErgoBike
+from pose_analysis.pose_image_processing import PoserAnalyzer
 from test_utils import McdDemoTestCase
 
 
 class BikeOptimizerTest(McdDemoTestCase):
     def setUp(self) -> None:
-        self.optimizer = BikeOptimizer()
+        self.optimizer = BikeOptimizer(PoserAnalyzer())
 
     def test_optimize(self):
         """We need to reliably generate n bikes..."""
