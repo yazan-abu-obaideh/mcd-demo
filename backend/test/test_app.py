@@ -1,3 +1,4 @@
+import json
 import unittest
 from http import HTTPStatus
 from multiprocessing import Process
@@ -16,6 +17,20 @@ class AppTest(unittest.TestCase):
         cls.APP_PROCESS = Process(target=app.run)
         cls.APP_PROCESS.start()
         cls.handle_timeout()
+
+    def test_bad_request(self):
+        response = requests.post(self.build_end_point("/optimize-seed"), data=json.dumps({
+            "seedBikeId": "DOES_NOT_EXIST",
+            "imageBase64": "",
+            "cameraHeight": 45,
+            "personHeight": 45
+        }), headers={"Content-Type": "application/json"})
+        self.assertEqual(HTTPStatus.BAD_REQUEST, response.status_code)
+        self.assertEqual("Invalid seed bike ID", response.json()["message"])
+
+    def test_not_found(self):
+        health_response = requests.get(self.build_end_point("healthy"))
+        self.assertEqual(HTTPStatus.NOT_FOUND, health_response.status_code)
 
     def test_health(self):
         health_response = requests.get(self.build_end_point("health"))

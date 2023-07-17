@@ -1,7 +1,7 @@
 from flask import Flask, make_response, request
 from flask_cors import CORS
 
-from exceptions import UserInputException
+from controller_advice import register_error_handlers
 from fit_optimization.bike_optimizer import BikeOptimizer
 from models.body_dimensions import BodyDimensions
 from models.ergo_bike import ErgoBike
@@ -12,18 +12,7 @@ app = Flask(__name__)
 CORS(app)
 image_analyzer = PoserAnalyzer()
 optimizer = BikeOptimizer(image_analyzer)
-
-
-@app.errorhandler(UserInputException)
-def handleUserError(exception: UserInputException):
-    print(exception)
-    return make_response({"message": exception.args[0]}, 400)
-
-
-@app.errorhandler(Exception)
-def handle_internal_server_error(exception):
-    print(exception)
-    return make_response({"message": "Something went wrong"}, 500)
+register_error_handlers(app)
 
 
 @app.route("/optimize-seed", methods=["POST"])
