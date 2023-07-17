@@ -1,4 +1,5 @@
 const apiUrl = "http://localhost:5000";
+const problemFormId = "problem-form-form";
 
 async function getServerHealth(): Promise<Response> {
   return await fetch(apiUrl.concat("/health"), {
@@ -10,7 +11,7 @@ async function getServerHealth(): Promise<Response> {
 
 async function postSeedBikeOptimization(
   seedBikeId: string,
-  personImage: string,
+  imageBase64: string,
   personHeight: number,
   cameraHeight: number
 ) {
@@ -19,7 +20,7 @@ async function postSeedBikeOptimization(
     method: "POST",
     body: JSON.stringify({
       seedBikeId: seedBikeId,
-      imageBase64: personImage,
+      imageBase64: imageBase64,
       personHeight: personHeight,
       cameraHeight: cameraHeight,
     }),
@@ -40,55 +41,61 @@ async function postOptimizationRequest(
   });
 }
 
-function submitRequest() {
+function readFile(
+  inputElementId: string,
+  successHandler: (fileReader: FileReader) => void
+) {
+  const reader = new FileReader();
+  reader.readAsArrayBuffer(getFileById(inputElementId));
+  reader.onloadend = () => {
+    successHandler(reader);
+  };
+}
+
+function getFileById(inputElementId: string): File {
+  return (document.getElementById(inputElementId) as HTMLInputElement).files[0];
+}
+
+function submitProblemForm() {
   const form: HTMLFormElement = document.getElementById(
-    "problem-form-form"
+    problemFormId
   ) as HTMLFormElement;
   if (form.checkValidity()) {
+    submitValidForm(form);
+  } else {
+    showFormErrors(form);
+  }
+}
 
-    const reader = new FileReader();
+function showFormErrors(form: HTMLFormElement) {
+  form.reportValidity();
+}
 
-    let file = (document.getElementById("user-img-upload") as HTMLInputElement).files[0];
-    console.log(file.name);
-    console.log("Type: ")
-    console.log(typeof(file));
-
-    reader.readAsArrayBuffer(file);
-
-    reader.onloadend = function() {
-      // Encode the file as a Base64 string
-      console.log("read file!")
-      const base64File: string = arrayBufferToBase64(reader.result as ArrayBuffer);
-      postSeedBikeOptimization(
-        "1",
-        base64File,
-        25,
-        75
-      )
+function submitValidForm(form: HTMLFormElement) {
+  readFile("user-img-upload", (reader) => {
+    console.log("read file!");
+    const base64File: string = arrayBufferToBase64(
+      reader.result as ArrayBuffer
+    );
+    postSeedBikeOptimization("1", base64File, 25, 75)
       .then((response) => {
         console.log(response.status);
       })
       .catch((exception) => {
         console.log("Exception occurred " + exception);
-      })  
-    }
-    console.log("Valid form. Submitting request...");
-    
-    ;
-  } else {
-    form.reportValidity();
-  }
+      });
+  });
+  console.log("Valid form. Submitting request...");
 }
 
 function arrayBufferToBase64(arrayBuffer: ArrayBuffer) {
-  let binary = '';
+  let binary = "";
   const bytes = new Uint8Array(arrayBuffer);
   const len = bytes.byteLength;
 
   for (let i = 0; i < len; i++) {
     binary += String.fromCharCode(bytes[i]);
   }
-
   return btoa(binary);
 }
 
