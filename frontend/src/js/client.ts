@@ -77,15 +77,27 @@ function submitValidForm(form: HTMLFormElement) {
     const base64File: string = arrayBufferToBase64(
       reader.result as ArrayBuffer
     );
-    postSeedBikeOptimization("1", base64File, 25, 75)
+    const formData: FormData = new FormData(form);
+    postSeedBikeOptimization(formData.get("seedBike") as string, base64File, 
+    Number(formData.get("user-height") as string), Number(formData.get("camera-height") as string))
       .then((response) => {
-        console.log(response.status);
+        handleOptimizationResponse(response);
       })
       .catch((exception) => {
         console.log("Exception occurred " + exception);
       });
   });
   console.log("Valid form. Submitting request...");
+}
+
+function handleOptimizationResponse(response: Response) {
+  if (response.status == 200) {
+    console.log("worked!")
+    document.getElementById("mcd-logs-consumer").textContent = "Optimization Request Succeeded";
+    document.getElementById("generated-designs-list").innerHTML = "<li> bike 1 </li>";
+  } else {
+    console.log("Failed!")
+  }
 }
 
 function arrayBufferToBase64(arrayBuffer: ArrayBuffer) {

@@ -36,6 +36,7 @@ class AppTest(unittest.TestCase):
         health_response = requests.get(self.build_end_point("health"))
         self.assertEqual("UP", health_response.json()["status"])
         self.assertEqual(HTTPStatus.OK, health_response.status_code)
+        self.assertEqual("*", health_response.headers["Access-Control-Allow-Origin"])
 
     @classmethod
     def tearDownClass(cls) -> None:
