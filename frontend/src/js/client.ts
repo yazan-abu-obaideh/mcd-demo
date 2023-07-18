@@ -92,12 +92,19 @@ function submitValidForm(form: HTMLFormElement) {
 
 function handleOptimizationResponse(response: Response) {
   if (response.status == 200) {
-    console.log("worked!")
-    document.getElementById("mcd-logs-consumer").textContent = "Optimization Request Succeeded";
-    document.getElementById("generated-designs-list").innerHTML = "<li> bike 1 </li>";
+    handleSuccessfulOptimizationResponse(response);
+    
   } else {
     console.log("Failed!")
   }
+}
+
+function handleSuccessfulOptimizationResponse(response: Response) {
+  response.text().then((responseText) => {
+    const responseJson: object = JSON.parse(responseText);
+    document.getElementById("mcd-logs-consumer").textContent = responseJson["logs"];
+    document.getElementById("generated-designs-list").innerHTML = bikesToHtml(responseJson["bikes"]);
+  });
 }
 
 function arrayBufferToBase64(arrayBuffer: ArrayBuffer) {
@@ -188,4 +195,18 @@ function utilizeHandler(handler: (response: JSON) => void, response: Response) {
   response.text().then((responseText) => handler(JSON.parse(responseText)));
 }
 
+
+function bikesToHtml(bikes: Array<object>): string {
+  let bikesHtml = "";
+  bikes.forEach(bike => {
+    bikesHtml += `<li> Crank Length: ${parseNumber(bike["crank_length"])} | 
+    Handle Bar X: ${parseNumber(bike["handle_bar_x"])} Handle Bar Y: ${parseNumber(bike["handle_bar_y"])} 
+    Seat X: ${parseNumber(bike["seat_x"])} Seat Y: ${parseNumber(bike["seat_y"])} </li>`
+  });
+  return bikesHtml;
+}
+
+function parseNumber(numberAsString: string): number {
+  return Number(Number(numberAsString).toFixed(3));
+}
 // export { getServerHealth, postOptimizationRequest, postSeedBikeOptimization };
