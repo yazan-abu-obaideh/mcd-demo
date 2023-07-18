@@ -8,6 +8,22 @@ from models.ergo_bike import ErgoBike
 from pose_analysis.pose_image_processing import PoserAnalyzer
 
 
+class LoggingGenerator(CounterfactualsGenerator):
+    """Note that the logs_list is never 'cleaned'... Instances of LoggingGenerator
+    are single-use objects and should be garbage-collected ASAP"""
+    def __init__(self, problem: MultiObjectiveProblem, pop_size: int):
+        super().__init__(problem, pop_size, initialize_from_dataset=False, verbose=True)
+        self.logs_list = []
+
+    def _log(self, log_message):
+        self.logs_list.append(log_message)
+        super()._log(log_message)
+
+    def _verbose_log(self, log_message):
+        self.logs_list.append(log_message)
+        super()._verbose_log(log_message)
+
+
 class BikeOptimizer:
     def __init__(self, image_analysis_service: PoserAnalyzer):
         self.image_analysis_service = image_analysis_service
@@ -33,10 +49,12 @@ class BikeOptimizer:
             datatypes=FEATURES_DATATYPES
         )
         problem = MultiObjectiveProblem(data_package, predict, [])
-        generator = CounterfactualsGenerator(problem, 750, initialize_from_dataset=False, verbose=True)
+        generator = LoggingGenerator(problem, 750)
         generator.generate(5)
-        return generator.sample_with_weights(num_samples=10, cfc_weight=1, diversity_weight=1,
-                                             gower_weight=1, avg_gower_weight=1, )
+
+        bikes = generator.sample_with_weights(num_samples=10, cfc_weight=1, diversity_weight=1, gower_weight=1,
+                                              avg_gower_weight=1, )
+        return {"bikes": bikes.to_dict("records"), "logs": generator.logs_list}
 
     def _get_bike_by_id(self, seed_bike_id):
         seed_bike = SEED_BIKES_MAP.get(seed_bike_id)

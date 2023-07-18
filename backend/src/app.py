@@ -18,13 +18,12 @@ register_error_handlers(app)
 @app.route("/optimize-seed", methods=["POST"])
 def optimize_seed_bike():
     _request = request.json
-    return make_response({
-        "logs": "MCD doing things!\nMCD did things!",
-        "bikes": optimizer.optimize_seed_bike(_request["seedBikeId"],
-                                              map_base64_image_to_bytes(_request["imageBase64"]),
-                                              _request["personHeight"],
-                                              _request["cameraHeight"]).to_dict("records")
-    })
+    return make_response(
+        optimizer.optimize_seed_bike(_request["seedBikeId"],
+                                     map_base64_image_to_bytes(_request["imageBase64"]),
+                                     _request["personHeight"],
+                                     _request["cameraHeight"])
+    )
 
 
 @app.route("/optimize", methods=["POST"])

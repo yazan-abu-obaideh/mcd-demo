@@ -102,7 +102,7 @@ function handleOptimizationResponse(response: Response) {
 function handleSuccessfulOptimizationResponse(response: Response) {
   response.text().then((responseText) => {
     const responseJson: object = JSON.parse(responseText);
-    document.getElementById("mcd-logs-consumer").textContent = responseJson["logs"];
+    document.getElementById("mcd-logs-consumer").innerHTML = logsToHtml(responseJson["logs"]);
     document.getElementById("generated-designs-list").innerHTML = bikesToHtml(responseJson["bikes"]);
   });
 }
@@ -208,5 +208,13 @@ function bikesToHtml(bikes: Array<object>): string {
 
 function parseNumber(numberAsString: string): number {
   return Number(Number(numberAsString).toFixed(3));
+}
+
+function logsToHtml(logs: Array<string>): string {
+  let inner = "";
+  logs.forEach(logMessage => {
+    inner += logMessage + "<br>"
+  });
+return `<p> ${inner} </p>`
 }
 // export { getServerHealth, postOptimizationRequest, postSeedBikeOptimization };
