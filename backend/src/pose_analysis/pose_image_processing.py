@@ -4,8 +4,10 @@ import numpy as np
 import tensorflow as tf
 
 import pose_analysis.utils as utils
+from exceptions import UserInputException
 from models.body_dimensions import BodyDimensions
 from pose_analysis.movenet import Movenet
+from tensorflow.python.framework.errors_impl import InvalidArgumentError
 
 _movenet = Movenet(os.path.join(os.path.dirname(__file__),
                                 "../resources/movenet_thunder.tflite"))
@@ -85,7 +87,15 @@ def _detect(input_tensor, inference_count=10):
 
 
 def _calculation_with_img_bytes(heights, img_bytes, output_overlayed=True):
-    return _calculation(heights, tf.io.decode_image(img_bytes), output_overlayed)
+    decoded_image = _decode_image(img_bytes)
+    return _calculation(heights, decoded_image, output_overlayed)
+
+
+def _decode_image(img_bytes):
+    try:
+        return tf.io.decode_image(img_bytes)
+    except InvalidArgumentError as e:
+        raise UserInputException("Unknown image file format. One of JPEG, PNG, GIF, BMP required.")
 
 
 def _calculation_with_img_path(heights, imgroute, output_overlayed=True):

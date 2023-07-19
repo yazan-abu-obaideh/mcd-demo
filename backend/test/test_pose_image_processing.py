@@ -8,6 +8,12 @@ class ImageAnalyzerTest(McdDemoTestCase):
     def setUp(self) -> None:
         self.analyzer = PoserAnalyzer()
 
+    def test_analyze_invalid_image(self):
+        self.assertRaisesWithMessage(
+            lambda: self.analyzer.analyze_bytes(75, b"RANDOM_GARBAGE_NOT_AN_IMAGE"),
+            "Unknown image file format. One of JPEG, PNG, GIF, BMP required."
+        )
+
     def test_analyze_bytes(self):
         with open("resources/image2.jpeg", "rb") as file:
             self.assertDictAlmostEqual(

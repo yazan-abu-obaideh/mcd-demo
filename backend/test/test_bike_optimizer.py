@@ -22,4 +22,4 @@ class BikeOptimizerTest(McdDemoTestCase):
                                            hip_to_knee=15.196207871637029, shoulder_to_wrist=13.538605228960089,
                                            arm_len=16.538605228960087, tor_len=26.931044229383136,
                                            low_leg=18.971306184088018, up_leg=15.196207871637029))
-        self.assertGreaterEqual(len(optimized_bikes), 3)
+        self.assertGreaterEqual(len(optimized_bikes["bikes"]), 3)
