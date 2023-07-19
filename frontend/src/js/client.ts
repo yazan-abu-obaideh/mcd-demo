@@ -217,4 +217,9 @@ function logsToHtml(logs: Array<string>): string {
   });
 return `<p> ${inner} </p>`
 }
+
+function onShowLogs() {
+    document.getElementById("collapse-logs-div")?.scrollIntoView();
+}
+
 // export { getServerHealth, postOptimizationRequest, postSeedBikeOptimization };
