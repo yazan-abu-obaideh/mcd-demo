@@ -14,7 +14,7 @@
     <link href="styles.css" rel="stylesheet" />
   </head>
   <body>
-    <div class="px-4 py-5 my-5 text-center">
+    <div class="text-center m-5">
       <img
         class="d-block mx-auto mb-4"
         src="assets/decode_logo.png"
@@ -43,19 +43,19 @@
       </div>
     </div>
 
-    <div id="server-health-response-form" class="text-center p-md-5">
+    <!-- <div id="server-health-response-form" class="text-center p-md-5">
       <h2>MCD Server Response</h2>
       <button type="button" class="btn btn-bd-primary" onclick="getHealth()">
         Get Health!
       </button>
     </div>
-
-    <div id="problem-form-div">
+ -->
+    <div id="problem-form-div" class="container border p-3">
       <form id="problem-form-form">
-        <div id="seed-bike-selection-container" class="container border p-5">
-          <h3 class="center">Select Seed Bike</h3>
-          <div class="row">
-            <div class="col">
+        <div id="seed-bike-selection-container" class="m-3">
+          <h3>Select Seed Bike</h3>
+          <div class="row p-5">
+            <div class="col seed-bike-div">
               <img
                 class="seed-bike-img"
                 src="assets/bike_1.png"
@@ -73,7 +73,7 @@
               />
               <label class="form-check-label" for="seed1">Stylish blue</label>
             </div>
-            <div class="col">
+            <div class="col seed-bike-div">
               <img
                 class="seed-bike-img"
                 src="assets/bike_2.png"
@@ -90,7 +90,7 @@
               />
               <label class="form-check-label" for="seed2">Sturdy red</label>
             </div>
-            <div class="col">
+            <div class="col seed-bike-div">
               <img
                 class="seed-bike-img"
                 src="assets/bike_3.png"
@@ -111,10 +111,10 @@
             </div>
           </div>
         </div>
-        <div id="person-image-container" class="container border p-5">
+        <div id="person-image-container" class="m-3">
           <h3>Upload Rider Image</h3>
           <div class="p-3">
-            <div class="row problem-form-row">
+            <div class="row flex-cont">
               <div class="col-6">
                 <input
                   class="form-control"
@@ -125,7 +125,7 @@
                 />
               </div>
             </div>
-            <div class="row problem-form-row">
+            <div class="row flex-cont">
               <div class="col-3">
                 <input
                   type="number"
@@ -154,7 +154,7 @@
                 </label>
               </div>
             </div>
-            <div class="row problem-form-row">
+            <div class="row flex-cont">
               <div class="col-6">
                 <input
                   form="problem-form-form"
@@ -171,17 +171,19 @@
               </div>
             </div>
           </div>
+          <div class="p-3">
+            <div class="row flex-cont">
+              <button class="btn btn-danger" onclick="submitProblemForm()">
+                Optimize!
+              </button>
+            </div>
+          </div>
         </div>
       </form>
-      <div class="problem-form-row">
-        <button class="btn btn-primary" onclick="submitProblemForm()">
-          Optimize!
-        </button>
-      </div>
     </div>
 
-    <div
-      class="container justify-content-sm-center text-center border"
+    <!-- <div
+      class="container justify-content-sm-center text-center border fully-hidden-div"
       id="optimization-response-div"
     >
       <h3 class="text-center p-md-5">Generated Designs</h3>
@@ -194,7 +196,7 @@
         <h5>List of Generated Designs</h5>
         <ul id="generated-designs-list"></ul>
       </div>
-    </div>
+    </div> -->
 
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"

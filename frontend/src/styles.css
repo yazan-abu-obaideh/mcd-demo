@@ -1,8 +1,12 @@
+body {
+  padding: 5px;
+}
+
 .seed-bike-img {
   height: 100px;
   width: auto;
 }
-.problem-form-row {
+.flex-cont {
   display: flex;
   justify-content: center;
   padding: 5px;
@@ -21,4 +25,18 @@ input::-webkit-inner-spin-button {
 input[type="number"] {
   -moz-appearance: textfield;
 }
+
+.seed-bike-div {
+  text-align: center;
+}
+
+.fully-hidden-div {
+  height: 0vh;
+  width: 0vw;
+  visibility: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+
 /* ^ disable arrows in numeric input ^ */
