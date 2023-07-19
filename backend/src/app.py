@@ -8,11 +8,17 @@ from models.ergo_bike import ErgoBike
 from models.model_scheme_validations import map_request_to_model, map_base64_image_to_bytes
 from pose_analysis.pose_image_processing import PoserAnalyzer
 
-app = Flask(__name__)
-CORS(app)
+
+def build_app() -> Flask:
+    _app = Flask(__name__)
+    CORS(_app)
+    register_error_handlers(_app)
+    return _app
+
+
+app = build_app()
 image_analyzer = PoserAnalyzer()
 optimizer = BikeOptimizer(image_analyzer)
-register_error_handlers(app)
 
 
 @app.route("/optimize-seed", methods=["POST"])
