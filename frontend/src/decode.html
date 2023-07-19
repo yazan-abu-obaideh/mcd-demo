@@ -117,6 +117,7 @@
                 <input
                   class="form-control"
                   type="file"
+                  accept=".jpg, .jpeg, .png, .svg"
                   id="user-img-upload"
                   name="user-img"
                   required
@@ -125,6 +126,10 @@
             </div>
             <div class="row flex-cont">
               <div class="col-3">
+                <label class="form-label" for="user-height-input">
+                  User Height (Inches)
+                </label>
+
                 <input
                   type="number"
                   class="form-control"
@@ -133,11 +138,11 @@
                   step="0.01"
                   required
                 />
-                <label class="form-label" for="user-height-input">
-                  User Height (Inches)
-                </label>
               </div>
               <div class="col-3">
+                <label class="form-label" for="camera-height-input">
+                  Camera Height (Inches)
+                </label>
                 <input
                   form="problem-form-form"
                   type="number"
@@ -147,13 +152,13 @@
                   step="0.01"
                   required
                 />
-                <label class="form-label" for="camera-height-input">
-                  Camera Height (Inches)
-                </label>
               </div>
             </div>
             <div class="row flex-cont">
               <div class="col-6">
+                <label class="form-label" for="camera-distance-input">
+                  Camera Distance (Inches)
+                </label>
                 <input
                   form="problem-form-form"
                   type="number"
@@ -163,15 +168,16 @@
                   step="0.01"
                   required
                 />
-                <label class="form-label" for="camera-distance-input">
-                  Camera Distance (Inches)
-                </label>
               </div>
             </div>
           </div>
           <div class="p-3">
             <div class="row flex-cont">
-              <button type="button" class="btn btn-danger" onclick="submitProblemForm()">
+              <button
+                type="button"
+                class="btn btn-danger"
+                onclick="submitProblemForm()"
+              >
                 Optimize!
               </button>
             </div>
@@ -179,10 +185,18 @@
         </div>
       </form>
     </div>
-    <div id="server-response-div" class="container border rounded p-3" style="display: none;">
+    <div
+      id="server-response-div"
+      class="container border rounded p-3"
+      style="display: none"
+    >
       <h2>Generated Designs</h2>
       <div id="loading-or-result-div" class="container p-3">
-        <div id="response-loading-div" class="text-center" style="display: block">
+        <div
+          id="response-loading-div"
+          class="text-center"
+          style="display: block"
+        >
           <div
             class="spinner-border"
             style="width: 3rem; height: 3rem"
@@ -194,9 +208,8 @@
             <p>MCD is generating designs...</p>
           </div>
         </div>
-        <div id="response-received-div" class="p-3" style="display: none;">
-          <div id="generated-designs-consumer" class="mb-2">
-          </div>
+        <div id="response-received-div" class="p-3" style="display: none">
+          <div id="generated-designs-consumer" class="mb-2"></div>
           <a
             class="btn btn-danger btn-sm"
             data-bs-toggle="collapse"
@@ -207,8 +220,7 @@
             Show Generator Logs
           </a>
           <div class="collapse m-3" id="collapse-logs-div">
-            <div class="card card-body" id="mcd-logs-consumer">
-            </div>
+            <div class="card card-body" id="mcd-logs-consumer"></div>
           </div>
         </div>
       </div>
