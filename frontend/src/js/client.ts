@@ -1,5 +1,6 @@
 const apiUrl = "http://localhost:5000";
 const problemFormId = "problem-form-form";
+const responseDivId = "server-response-div";
 
 async function getServerHealth(): Promise<Response> {
   return await fetch(apiUrl.concat("/health"), {
@@ -61,10 +62,18 @@ function submitProblemForm() {
     problemFormId
   ) as HTMLFormElement;
   if (form.checkValidity()) {
+    showResponseDiv();
     submitValidForm(form);
   } else {
     showFormErrors(form);
   }
+}
+
+function showResponseDiv() {
+  const responseDiv = document.getElementById(responseDivId);
+  setLoading(true);
+  responseDiv.setAttribute("style", "display: block;");
+  responseDiv.scrollIntoView();
 }
 
 function showFormErrors(form: HTMLFormElement) {
@@ -87,7 +96,6 @@ function submitValidForm(form: HTMLFormElement) {
         console.log("Exception occurred " + exception);
       });
   });
-  console.log("Valid form. Submitting request...");
 }
 
 function handleOptimizationResponse(response: Response) {
@@ -102,9 +110,23 @@ function handleOptimizationResponse(response: Response) {
 function handleSuccessfulOptimizationResponse(response: Response) {
   response.text().then((responseText) => {
     const responseJson: object = JSON.parse(responseText);
+    setLoading(false);
     document.getElementById("mcd-logs-consumer").innerHTML = logsToHtml(responseJson["logs"]);
-    document.getElementById("generated-designs-list").innerHTML = bikesToHtml(responseJson["bikes"]);
+    document.getElementById("generated-designs-consumer").innerHTML = bikesToHtml(responseJson["bikes"]);
   });
+}
+
+function setLoading(loading: boolean) {
+  if (loading) {
+    setResponseDivChildrenVisilbity('block', 'none');
+  } else {
+    setResponseDivChildrenVisilbity('none', 'block');
+  }
+}
+
+function setResponseDivChildrenVisilbity(loadingDisplay: string, responseDisplay: string) {
+  document.getElementById("response-loading-div")?.setAttribute("style", `display: ${loadingDisplay}`);
+  document.getElementById("response-received-div")?.setAttribute("style", `display: ${responseDisplay}`);
 }
 
 function arrayBufferToBase64(arrayBuffer: ArrayBuffer) {
@@ -199,11 +221,15 @@ function utilizeHandler(handler: (response: JSON) => void, response: Response) {
 function bikesToHtml(bikes: Array<object>): string {
   let bikesHtml = "";
   bikes.forEach(bike => {
-    bikesHtml += `<li> Crank Length: ${parseNumber(bike["crank_length"])} | 
-    Handle Bar X: ${parseNumber(bike["handle_bar_x"])} Handle Bar Y: ${parseNumber(bike["handle_bar_y"])} 
-    Seat X: ${parseNumber(bike["seat_x"])} Seat Y: ${parseNumber(bike["seat_y"])} </li>`
+    bikesHtml += bikeToHtml(bike)
   });
   return bikesHtml;
+}
+
+function bikeToHtml(bike: object) {
+  return `<div class="container text-center border rounded mb-1"> Crank Length: ${parseNumber(bike["crank_length"])} | 
+    Handle Bar X: ${parseNumber(bike["handle_bar_x"])} Handle Bar Y: ${parseNumber(bike["handle_bar_y"])} 
+    Seat X: ${parseNumber(bike["seat_x"])} Seat Y: ${parseNumber(bike["seat_y"])} </div>`;
 }
 
 function parseNumber(numberAsString: string): number {
