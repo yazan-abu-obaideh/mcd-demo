@@ -1,25 +1,13 @@
 import platform
-import queue
+import select
 import subprocess
 import time
-import select
 
 TIMEOUT_GRANULARITY = 1
 
 TIMEOUT_SECONDS = 5
 
 DEFAULT_MAX_SIZE = 3
-
-
-class RendererPool:
-    def __init__(self, max_size=DEFAULT_MAX_SIZE):
-        self._pool = queue.Queue(maxsize=max_size)
-
-    def replace_renderer(self, renderer):
-        self._pool.put(renderer)
-
-    def take_renderer(self):
-        return self._pool.get()
 
 
 def _seconds_to_millis(seconds):
