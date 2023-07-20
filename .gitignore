@@ -3,3 +3,5 @@
 **/target/
 **/node_modules/
 **/*.jar
+**/BikeCAD_17.1_configuration/
+**/META-INF/
