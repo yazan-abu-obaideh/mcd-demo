@@ -1,6 +1,29 @@
 import platform
+import queue
 import subprocess
 import time
+import select
+
+TIMEOUT_GRANULARITY = 1
+
+TIMEOUT_SECONDS = 5
+
+DEFAULT_MAX_SIZE = 3
+
+
+class RendererPool:
+    def __init__(self, max_size=DEFAULT_MAX_SIZE):
+        self._pool = queue.Queue(maxsize=max_size)
+
+    def replace_renderer(self, renderer):
+        self._pool.put(renderer)
+
+    def take_renderer(self):
+        return self._pool.get()
+
+
+def _seconds_to_millis(seconds):
+    return seconds * 1000
 
 
 class BikeCAD:
@@ -11,6 +34,10 @@ class BikeCAD:
             self._expected_success = b'Done!\n'
 
         self._instance = self._start_bike_cad_Instance()
+        self._output_listener = select.poll()
+        self._output_listener.register(self._instance.stdout, select.POLLIN)
+        self._error_listener = select.poll()
+        self._error_listener.register(self._instance.stderr, select.POLLIN)
 
     def _start_bike_cad_Instance(self):
         p = subprocess.Popen('java -jar console_BikeCAD_final.jar'.split(' '), stdin=subprocess.PIPE,
@@ -34,32 +61,37 @@ class BikeCAD:
         self._instance.kill()
 
     def _run(self, command):
+        print("Running...")
         self._instance.stdin.write(bytes(command, 'UTF-8'))
         self._instance.stdin.flush()
         self._await_termination()
 
     def _await_termination(self):
-        print("awaiting...")
-        _process_signal = self._instance.communicate()
-        print(_process_signal)
-        # while self._no_success_signal() and self._no_error_signal():
-        #     print("Done...")
-        #     time.sleep(0.01)
+        start_time = time.time()
+        while (time.time() - start_time) < TIMEOUT_SECONDS:
+            if self._received_output_event(timeout=TIMEOUT_GRANULARITY):
+                if self._check_output_for_success():
+                    return
+            if self._received_error_event(timeout=TIMEOUT_GRANULARITY):
+                raise Exception(f"An exception occurred: {self._instance.stderr.readline()}")
+        self.kill()
+        raise TimeoutError("Process timed out...")
 
-    def _no_success_signal(self):
-        return self._instance.stdout.readline() != self._expected_success
+    def _received_output_event(self, timeout):
+        return self._output_listener.poll(_seconds_to_millis(timeout))
 
-    def _no_error_signal(self):
-        error_signal = self._instance.stderr.readline()
-        has_error = error_signal is not None
-        if has_error:
-            print(error_signal)
-        return has_error
+    def _received_error_event(self, timeout):
+        return self._error_listener.poll(_seconds_to_millis(timeout))
+
+    def _check_output_for_success(self):
+        signal = self._instance.stdout.readline()
+        print(signal)
+        return signal == self._expected_success
 
 
 if __name__ == "__main__":
-    inst = BikeCAD()
+    bikeCAD = BikeCAD()
     start = time.time()
-    inst.export_pngs("small")
+    bikeCAD.export_pngs("small")
     print(f"{time.time() - start}")
-    inst.kill()
+    bikeCAD.kill()
