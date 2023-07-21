@@ -9,8 +9,17 @@ class BikeCAD:
             self._expected_success = b'Done!\r\n'
         else:
             self._expected_success = b'Done!\n'
-        event_loop = asyncio.get_event_loop()
-        self._executor = asyncio.run_coroutine_threadsafe(init_instance(), event_loop).result()
+        self._event_loop = asyncio.new_event_loop()
+        self._instance = self._event_loop.run_until_complete(self._init_instance())
+        print("Started!")
+
+    async def _init_instance(self):
+        process = await asyncio.create_subprocess_shell(b"java -jar console_BikeCAD_final.jar",
+                                                        stdin=subprocess.PIPE,
+                                                        stdout=subprocess.PIPE,
+                                                        stderr=subprocess.PIPE)
+        print("Process built!")
+        return process
 
     def export_svgs(self, folder):
         self._run("svg<>" + folder + "\n")
@@ -25,50 +34,43 @@ class BikeCAD:
         self._run("pnglist<>" + "<>".join(files) + "\n")
 
     def kill(self):
-        self._executor.kill()
+        self._instance.kill()
 
     def _run(self, command):
         print("Running...")
-        self._executor.stdin.write(bytes(command, 'UTF-8'))
+        self._instance.stdin.write(bytes(command, 'UTF-8'))
         self._await_termination()
 
+    def _await_termination(self):
 
-async def init_instance():
-    process = await asyncio.create_subprocess_shell(b"java -jar console_BikeCAD_final.jar",
-                                                    stdin=subprocess.PIPE,
-                                                    stdout=subprocess.PIPE,
-                                                    stderr=subprocess.PIPE)
-    return process
+        async def get_latest_signal():
+            return await self._instance.stdout.readline()
 
+        async def get_error_signal():
+            return await self._instance.stderr.readline()
 
-async def do_everything():
-    instance_ = await init_instance()
-    instance_.stdin.write(bytes("svg<>small\n", "utf-8"))
+        async def await_termination_timed():
+            await asyncio.wait_for(await_termination(), 10)
 
-    # instance_.stdin.flush()
+        async def await_termination():
+            while True:
+                print("Loop...")
+                try:
+                    signal = await asyncio.wait_for(get_latest_signal(), 1)
+                    print(f"{signal=}")
+                    if signal == b"Done!\n":
+                        return
+                except asyncio.exceptions.TimeoutError:
+                    pass
+                try:
+                    signal = await asyncio.wait_for(get_error_signal(), 1)
+                    print(f"{signal=}")
+                    raise Exception(f"Something went wrong: {signal}")
+                except asyncio.exceptions.TimeoutError:
+                    pass
 
-    async def get_latest_signal():
-        return await instance_.stdout.readline()
-
-    async def get_error_signal():
-        return await instance_.stderr.readline()
-
-    while True:
-        print("Loop...")
-        try:
-            signal = await asyncio.wait_for(get_latest_signal(), 1)
-            print(f"{signal=}")
-            if signal == b"Done!\n":
-                return
-        except asyncio.exceptions.TimeoutError:
-            pass
-        try:
-            signal = await asyncio.wait_for(get_error_signal(), 1)
-            print(f"{signal=}")
-            raise Exception(f"Something went wrong: {signal}")
-        except asyncio.exceptions.TimeoutError:
-            pass
+        self._event_loop.run_until_complete(await_termination_timed())
 
 
-result = asyncio.run(do_everything())
-print(result)
+bikeCad = BikeCAD()
+bikeCad.export_pngs("small")
