@@ -1,6 +1,7 @@
 from flask import Flask, make_response, request
 from flask_cors import CORS
 
+from bike_rendering.bikeCad_renderer import BikeCAD
 from controller_advice import register_error_handlers
 from fit_optimization.bike_optimizer import BikeOptimizer
 from models.body_dimensions import BodyDimensions
@@ -19,6 +20,12 @@ def build_app() -> Flask:
 app = build_app()
 image_analyzer = PoserAnalyzer()
 optimizer = BikeOptimizer(image_analyzer)
+renderer = BikeCAD()
+
+
+@app.route("/render-bike", methods=["POST"])
+def render_bike():
+    return renderer.render(request.data.decode("utf-8"))
 
 
 @app.route("/optimize-seed", methods=["POST"])
