@@ -12,15 +12,17 @@ def register_error_handlers(app: Flask):
     @app.errorhandler(UserInputException)
     def handle_user_error(exception: UserInputException):
         print(exception)
-        return make_response({MESSAGE: exception.args[0]}, HTTPStatus.BAD_REQUEST)
+        return _make_error_response(exception.args[0], HTTPStatus.BAD_REQUEST)
 
     @app.errorhandler(werkzeug.exceptions.HTTPException)
     def handle_werkzeug(exception: werkzeug.exceptions.HTTPException):
         print(exception)
-        return make_response({MESSAGE: exception.description}, exception.code)
+        return _make_error_response(exception.description, exception.code)
 
     @app.errorhandler(Exception)
     def handle_internal_server_error(exception):
         print(exception)
-        print(type(exception))
-        return make_response({MESSAGE: "Something went wrong"}, HTTPStatus.INTERNAL_SERVER_ERROR)
+        return _make_error_response("Something went wrong", HTTPStatus.INTERNAL_SERVER_ERROR)
+
+    def _make_error_response(message, status_code):
+        return make_response({MESSAGE: message}, status_code)

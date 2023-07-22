@@ -7,7 +7,7 @@ from asyncio import subprocess
 WINDOWS = "Windows"
 
 TIMEOUT_GRANULARITY = 0.5
-TIMEOUT = 25
+TIMEOUT = 10
 
 
 class BikeCAD:
@@ -24,17 +24,26 @@ class BikeCAD:
         self.kill()
 
     def render(self, bike_xml):
-        bike_file_name = f"{str(uuid.uuid4())}.bcad"
-        bike_path = f"{os.path.dirname(__file__)}/bikes/{bike_file_name}"
-        with open(bike_path, "w") as file:
-            file.write(bike_xml)
+        bike_path = self._generate_bike_path()
+        self._write_to_file(bike_path, bike_xml)
         self.export_svg_from_list([bike_path])
-        # os.remove(bike_path)
-        image_path = str(bike_path).replace("bcad", "svg")
+        os.remove(bike_path)
+        image_path = bike_path.replace("bcad", "svg")
+        image_bytes = self._read_image(image_path)
+        os.remove(image_path)
+        return image_bytes
+
+    def _read_image(self, image_path):
         with open(image_path, "rb") as file:
             image_bytes = file.read()
-        # os.remove(image_path)
         return image_bytes
+
+    def _write_to_file(self, bike_path, bike_xml):
+        with open(bike_path, "w") as file:
+            file.write(bike_xml)
+
+    def _generate_bike_path(self):
+        return f"{os.path.dirname(__file__)}/bikes/{str(uuid.uuid4())}.bcad"
 
     def export_svgs(self, folder):
         self._run("svg<>" + folder + "\n")
