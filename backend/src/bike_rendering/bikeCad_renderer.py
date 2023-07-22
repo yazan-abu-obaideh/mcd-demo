@@ -1,8 +1,11 @@
 import asyncio
 import os
 import platform
+import threading
 import uuid
 from asyncio import subprocess
+
+from exceptions import InternalError
 
 WINDOWS = "Windows"
 
@@ -13,8 +16,10 @@ TIMEOUT = 10
 class BikeCAD:
     def __init__(self):
         self._expected_success = self._get_expected_success()
-        self._event_loop = asyncio.new_event_loop()
-        self._instance = self._event_loop.run_until_complete(self._init_instance())
+        self._event_loop_lock = threading.Lock()
+        with self._event_loop_lock:
+            self._event_loop = asyncio.new_event_loop()
+            self._instance = self._event_loop.run_until_complete(self._init_instance())
         print("Started!")
 
     def __enter__(self):
@@ -26,7 +31,7 @@ class BikeCAD:
     def render(self, bike_xml):
         bike_path = self._generate_bike_path()
         self._write_to_file(bike_path, bike_xml)
-        self.export_svg_from_list([bike_path])
+        self._export_svg_from_list([bike_path])
         os.remove(bike_path)
         image_path = bike_path.replace("bcad", "svg")
         image_bytes = self._read_image(image_path)
@@ -45,16 +50,16 @@ class BikeCAD:
     def _generate_bike_path(self):
         return f"{os.path.dirname(__file__)}/bikes/{str(uuid.uuid4())}.bcad"
 
-    def export_svgs(self, folder):
+    def _export_svgs(self, folder):
         self._run("svg<>" + folder + "\n")
 
-    def export_pngs(self, folder):
+    def _export_pngs(self, folder):
         self._run("png<>" + folder + "\n")
 
-    def export_svg_from_list(self, files):
+    def _export_svg_from_list(self, files):
         self._run("svglist<>" + "<>".join(files) + "\n")
 
-    def export_png_from_list(self, files):
+    def _export_png_from_list(self, files):
         self._run("pnglist<>" + "<>".join(files) + "\n")
 
     async def _init_instance(self):
@@ -83,7 +88,10 @@ class BikeCAD:
             return await self._instance.stderr.readline()
 
         async def await_termination_timed():
-            await asyncio.wait_for(await_termination(), TIMEOUT)
+            try:
+                await asyncio.wait_for(await_termination(), TIMEOUT)
+            except asyncio.exceptions.TimeoutError:
+                raise InternalError("Something went wrong: rendering took too long")
 
         async def await_termination():
             while True:
@@ -102,7 +110,8 @@ class BikeCAD:
                 except asyncio.exceptions.TimeoutError:
                     pass
 
-        self._event_loop.run_until_complete(await_termination_timed())
+        with self._event_loop_lock:
+            self._event_loop.run_until_complete(await_termination_timed())
 
     def _get_expected_success(self):
         if platform.system() == WINDOWS:

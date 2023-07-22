@@ -3,7 +3,7 @@ from http import HTTPStatus
 import werkzeug.exceptions
 from flask import Flask, make_response
 
-from exceptions import UserInputException
+from exceptions import UserInputException, InternalError
 
 MESSAGE = "message"
 
@@ -13,6 +13,11 @@ def register_error_handlers(app: Flask):
     def handle_user_error(exception: UserInputException):
         print(exception)
         return _make_error_response(exception.args[0], HTTPStatus.BAD_REQUEST)
+
+    @app.errorhandler(InternalError)
+    def handle_internal_error(exception: InternalError):
+        print(exception)
+        return _make_error_response(exception.args[0], HTTPStatus.INTERNAL_SERVER_ERROR)
 
     @app.errorhandler(werkzeug.exceptions.HTTPException)
     def handle_werkzeug(exception: werkzeug.exceptions.HTTPException):
