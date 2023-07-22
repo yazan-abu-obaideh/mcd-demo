@@ -1,25 +1,40 @@
 import asyncio
+import os
 import platform
+import uuid
 from asyncio import subprocess
+
+WINDOWS = "Windows"
+
+TIMEOUT_GRANULARITY = 0.5
+TIMEOUT = 25
 
 
 class BikeCAD:
     def __init__(self):
-        if platform.system() == "Windows":
-            self._expected_success = b'Done!\r\n'
-        else:
-            self._expected_success = b'Done!\n'
+        self._expected_success = self._get_expected_success()
         self._event_loop = asyncio.new_event_loop()
         self._instance = self._event_loop.run_until_complete(self._init_instance())
         print("Started!")
 
-    async def _init_instance(self):
-        process = await asyncio.create_subprocess_shell(b"java -jar console_BikeCAD_final.jar",
-                                                        stdin=subprocess.PIPE,
-                                                        stdout=subprocess.PIPE,
-                                                        stderr=subprocess.PIPE)
-        print("Process built!")
-        return process
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.kill()
+
+    def render(self, bike_xml):
+        bike_file_name = f"{str(uuid.uuid4())}.bcad"
+        bike_path = f"{os.path.dirname(__file__)}/bikes/{bike_file_name}"
+        with open(bike_path, "w") as file:
+            file.write(bike_xml)
+        self.export_svg_from_list([bike_path])
+        # os.remove(bike_path)
+        image_path = str(bike_path).replace("bcad", "svg")
+        with open(image_path, "rb") as file:
+            image_bytes = file.read()
+        # os.remove(image_path)
+        return image_bytes
 
     def export_svgs(self, folder):
         self._run("svg<>" + folder + "\n")
@@ -32,6 +47,15 @@ class BikeCAD:
 
     def export_png_from_list(self, files):
         self._run("pnglist<>" + "<>".join(files) + "\n")
+
+    async def _init_instance(self):
+        command = f"java -jar {os.path.dirname(__file__)}/console_BikeCAD_final.jar"
+        process = await asyncio.create_subprocess_shell(bytes(command, 'utf-8'),
+                                                        stdin=subprocess.PIPE,
+                                                        stdout=subprocess.PIPE,
+                                                        stderr=subprocess.PIPE)
+        print("BikeCAD instance running")
+        return process
 
     def kill(self):
         self._instance.kill()
@@ -50,20 +74,20 @@ class BikeCAD:
             return await self._instance.stderr.readline()
 
         async def await_termination_timed():
-            await asyncio.wait_for(await_termination(), 10)
+            await asyncio.wait_for(await_termination(), TIMEOUT)
 
         async def await_termination():
             while True:
                 print("Loop...")
                 try:
-                    signal = await asyncio.wait_for(get_latest_signal(), 1)
+                    signal = await asyncio.wait_for(get_latest_signal(), TIMEOUT_GRANULARITY)
                     print(f"{signal=}")
                     if signal == b"Done!\n":
                         return
                 except asyncio.exceptions.TimeoutError:
                     pass
                 try:
-                    signal = await asyncio.wait_for(get_error_signal(), 1)
+                    signal = await asyncio.wait_for(get_error_signal(), TIMEOUT_GRANULARITY)
                     print(f"{signal=}")
                     raise Exception(f"Something went wrong: {signal}")
                 except asyncio.exceptions.TimeoutError:
@@ -71,6 +95,8 @@ class BikeCAD:
 
         self._event_loop.run_until_complete(await_termination_timed())
 
-
-bikeCad = BikeCAD()
-bikeCad.export_pngs("small")
+    def _get_expected_success(self):
+        if platform.system() == WINDOWS:
+            return b'Done!\r\n'
+        else:
+            return b'Done!\n'
