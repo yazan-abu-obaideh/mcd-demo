@@ -58,4 +58,4 @@ class AppTest(unittest.TestCase):
 
     @staticmethod
     def build_end_point(suffix):
-        return f"http://localhost:5000/{suffix}"
+        return f"http://localhost:5000/api/v1/{suffix}"

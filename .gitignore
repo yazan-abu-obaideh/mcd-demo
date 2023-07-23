@@ -5,3 +5,4 @@
 **/*.jar
 **/BikeCAD_17.1_configuration/
 **/META-INF/
+nginx/secrets/

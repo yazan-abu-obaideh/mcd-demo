@@ -1,0 +1,31 @@
+version: "3.8"
+services:
+  nginx:
+    container_name: "proxy"
+    build:
+      context: .
+      dockerfile: nginx.dockerfile
+    depends_on:
+      app:
+        condition: service_healthy
+    ports:
+      - "8000:443"
+      - "8080:80"
+  app:
+    container_name: "app"
+    hostname: app
+    environment:
+      - APP_HOSTNAME=app
+      - APP_WORKERS=4
+      - APP_ROOT_DIR=backend/src/
+      - APP_PORT=8080
+      - RENDERER_POOL_SIZE=3
+      - RENDERER_TIMEOUT_GRANULARITY=1
+      - RENDERER_TIMEOUT=15
+    restart: always
+    healthcheck:
+      test: curl --fail app:8080/api/v1/health || exit 1
+      interval: 10s
+    build:
+      context: .
+      dockerfile: app.dockerfile

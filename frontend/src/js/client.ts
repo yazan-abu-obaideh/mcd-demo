@@ -1,6 +1,8 @@
-const apiUrl = "http://localhost:5000";
+const apiUrl = "http://localhost:5000/api/v1";
+const bikeStore = {};
 const problemFormId = "problem-form-form";
 const responseDivId = "server-response-div";
+const urlCreator = window.URL || window.webkitURL;
 
 async function getServerHealth(): Promise<Response> {
   return await fetch(apiUrl.concat("/health"), {
@@ -54,6 +56,42 @@ function readFile(
 
 function getFileById(inputElementId: string): File {
   return (document.getElementById(inputElementId) as HTMLInputElement).files[0];
+}
+
+function postRenderBikeRequest(bike: object): Promise<Response> {
+  return fetch(apiUrl.concat("/render-bike-object"), {
+    headers: { "Content-Type": "application/json" },
+    method: "POST",
+    body: JSON.stringify({
+      bike: bike,
+    }),
+  });
+}
+
+function renderBikeById(bikeId: string) {
+  postRenderBikeRequest(bikeStore[bikeId]).then((response) => {
+    response.blob().then((responseBlob) => {
+      handleRenderedBikeImage(bikeId, responseBlob);
+      hideRenderButton(bikeId);
+    });
+  });
+}
+
+function handleRenderedBikeImage(bikeId: string, responseBlob: Blob) {
+  const outputImg = document.getElementById(
+    getBikeImgId(bikeId)
+  ) as HTMLImageElement;
+  outputImg.src = urlCreator.createObjectURL(responseBlob);
+  outputImg.setAttribute("style", "display: inline");
+}
+
+function renderBike() {
+  postRenderBikeRequest({}).then((response) => {
+    response.blob().then((responseBlob) => {
+      let outputImg = document.getElementById("bike-img") as HTMLImageElement;
+      outputImg.src = urlCreator.createObjectURL(responseBlob);
+    });
+  });
 }
 
 function submitProblemForm() {
@@ -153,25 +191,51 @@ function arrayBufferToBase64(arrayBuffer: ArrayBuffer) {
 function bikesToHtml(bikes: Array<object>): string {
   let bikesHtml = "";
   bikes.forEach((bike) => {
-    bikesHtml += bikeToHtml(bike);
+    const bikeId = persistBike(bike);
+    bikesHtml += bikeToHtml(bikeId, bike);
   });
   return bikesHtml;
 }
 
-function bikeToHtml(bike: object) {
-  return `<div class="container text-center border rounded mb-1"> Crank Length: ${parseNumber(
-    bike["crank_length"]
-  )} | 
-    Handle Bar X: ${parseNumber(
-      bike["handle_bar_x"]
-    )} Handle Bar Y: ${parseNumber(bike["handle_bar_y"])} 
-    Seat X: ${parseNumber(bike["seat_x"])} Seat Y: ${parseNumber(
-    bike["seat_y"]
-  )} </div>`;
+function bikeToHtml(bikeId: string, bike: object) {
+  return `
+  ${generateBikeDescription(bike)}
+  <br>
+  ${generateRenderButton(bikeId)}
+    <br>
+     ${generateRenderedImgElement(bikeId)}
+  </div>`;
 }
 
-function parseNumber(numberAsString: string): number {
-  return Number(Number(numberAsString).toFixed(3));
+function generateBikeDescription(bike: object): string {
+  return `<div class="container text-center border rounded mb-1 p-3"> Crank Length: ${formatNumber(
+    bike["crank_length"]
+  )} | 
+  Handle Bar X: ${formatNumber(
+    bike["handle_bar_x"]
+  )} Handle Bar Y: ${formatNumber(bike["handle_bar_y"])} 
+  Seat X: ${formatNumber(bike["seat_x"])} Seat Y: ${formatNumber(
+    bike["seat_y"]
+  )}`;
+}
+
+function generateRenderedImgElement(bikeId: string): string {
+  return `<div class="m-3 text-center"> <img class="rendered-bike-img" id='${getBikeImgId(
+    bikeId
+  )}' alt="rendered bike image" style="display: none"> </div>`;
+}
+
+function generateRenderButton(bikeId: string): string {
+  return `<button type="button" id='${getBikeBtnId(
+    bikeId
+  )}' class="btn btn-danger btn-sm m-2"
+  onclick='${renderBikeById.name}("${bikeId}")'> 
+    Render Bike </button>
+`;
+}
+
+function formatNumber(numberAsString: string): string {
+  return Number(numberAsString).toFixed(3);
 }
 
 function logsToHtml(logs: Array<string>): string {
@@ -186,4 +250,44 @@ function onShowLogs() {
   document.getElementById("collapse-logs-div")?.scrollIntoView();
 }
 
+function generateUuid(): string {
+  const S4 = function (): string {
+    return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+  };
+  return (
+    S4() +
+    S4() +
+    "-" +
+    S4() +
+    "-" +
+    S4() +
+    "-" +
+    S4() +
+    "-" +
+    S4() +
+    S4() +
+    S4()
+  );
+}
+
+function persistBike(bike: object): string {
+  const bikeId = generateUuid();
+  bikeStore[bikeId] = bike;
+  return bikeId;
+}
+
+function getBikeImgId(bikeId: string) {
+  // deterministic
+  return `bike-img-${bikeId}`;
+}
+
+function getBikeBtnId(bikeId: string) {
+  // deterministic
+  return `render-bike-btn-${bikeId}`;
+}
+
+function hideRenderButton(bikeId: string) {
+  const buttonElement = document.getElementById(getBikeBtnId(bikeId));
+  buttonElement?.setAttribute("style", "display: none");
+}
 // export { getServerHealth, postOptimizationRequest, postSeedBikeOptimization };

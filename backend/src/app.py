@@ -1,6 +1,7 @@
 from flask import Flask, make_response, request
 from flask_cors import CORS
 
+from app_config.service_parameters import RENDERER_POOL_SIZE
 from bike_rendering.bikeCad_renderer import RenderingService
 from controller_advice import register_error_handlers
 from fit_optimization.bike_optimizer import BikeOptimizer
@@ -8,7 +9,6 @@ from models.body_dimensions import BodyDimensions
 from models.ergo_bike import ErgoBike
 from models.model_scheme_validations import map_request_to_model, map_base64_image_to_bytes
 from pose_analysis.pose_image_processing import PoserAnalyzer
-from app_config.service_parameters import RENDERER_POOL_SIZE
 
 
 def build_app() -> Flask:
@@ -18,18 +18,30 @@ def build_app() -> Flask:
     return _app
 
 
+def endpoint(url):
+    return f"/api/v1/{url}"
+
+
 app = build_app()
 image_analyzer = PoserAnalyzer()
 optimizer = BikeOptimizer(image_analyzer)
 rendering_service = RenderingService(RENDERER_POOL_SIZE)
 
 
-@app.route("/render-bike", methods=["POST"])
+@app.route(endpoint("/render-bike"), methods=["POST"])
 def render_bike():
     return rendering_service.render(request.data.decode("utf-8"))
 
 
-@app.route("/optimize-seed", methods=["POST"])
+@app.route(endpoint("/render-bike-object"), methods=["POST"])
+def render_bike_object():
+    with open("../test/resources/bike.bcad", "r") as file:
+        response = make_response(rendering_service.render(file.read()))
+        response.headers["Content-Type"] = "image/svg+xml"
+        return response
+
+
+@app.route(endpoint("/optimize-seed"), methods=["POST"])
 def optimize_seed_bike():
     _request = request.json
     return make_response(
@@ -40,7 +52,7 @@ def optimize_seed_bike():
     )
 
 
-@app.route("/optimize", methods=["POST"])
+@app.route(endpoint("/optimize"), methods=["POST"])
 def optimize():
     seed_bike = map_request_to_model(request.json["seed-bike"], ErgoBike)
     body_dimensions = map_request_to_model(request.json["body-dimensions"], BodyDimensions)
@@ -48,10 +60,6 @@ def optimize():
     return make_response(res)
 
 
-@app.route("/health")
+@app.route(endpoint("/health"))
 def health():
     return make_response({"status": "UP"})
-
-
-if __name__ == '__main__':
-    app.run(debug=True)

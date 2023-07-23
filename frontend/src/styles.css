@@ -38,5 +38,10 @@ input[type="number"] {
   padding: 0;
 }
 
+.rendered-bike-img {
+  width: 25vw;
+  height: auto;
+}
+
 
 /* ^ disable arrows in numeric input ^ */
