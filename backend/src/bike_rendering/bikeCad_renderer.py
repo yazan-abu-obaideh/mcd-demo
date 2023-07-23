@@ -1,26 +1,45 @@
 import asyncio
 import os
 import platform
+import queue
 import threading
 import uuid
 from asyncio import subprocess
+import logging
+from app_config.service_parameters import RENDERER_TIMEOUT, RENDERER_TIMEOUT_GRANULARITY
 
 from exceptions import InternalError
 
+LOGGER_NAME = "BikeCadLogger"
+
 WINDOWS = "Windows"
 
-TIMEOUT_GRANULARITY = 0.5
-TIMEOUT = 10
+
+class RenderingService:
+    def __init__(self, renderer_pool_size):
+        self._renderer_pool = queue.Queue(maxsize=renderer_pool_size)
+        for i in range(renderer_pool_size):
+            self._renderer_pool.put(BikeCad())
+
+    def render(self, bike_xml):
+        renderer = self._get_renderer()
+        result = renderer.render(bike_xml)
+        self._renderer_pool.put(renderer)  # This will never block as is - no new elements
+        # are ever added, so the pool will always have remove for borrowed renderers.
+        return result
+
+    def _get_renderer(self):
+        return self._renderer_pool.get(timeout=RENDERER_TIMEOUT / 2)
 
 
-class BikeCAD:
+class BikeCad:
     def __init__(self):
         self._expected_success = self._get_expected_success()
         self._event_loop_lock = threading.Lock()
         with self._event_loop_lock:
             self._event_loop = asyncio.new_event_loop()
             self._instance = self._event_loop.run_until_complete(self._init_instance())
-        print("Started!")
+        self._log_info("Started BikeCAD process!")
 
     def __enter__(self):
         return self
@@ -68,14 +87,14 @@ class BikeCAD:
                                                         stdin=subprocess.PIPE,
                                                         stdout=subprocess.PIPE,
                                                         stderr=subprocess.PIPE)
-        print("BikeCAD instance running")
+        self._log_info("BikeCAD instance running")
         return process
 
     def kill(self):
         self._instance.kill()
 
     def _run(self, command):
-        print("Running...")
+        self._log_info(f"Running command {command}...")
         self._instance.stdin.write(bytes(command, 'UTF-8'))
         self._await_termination()
 
@@ -89,26 +108,21 @@ class BikeCAD:
 
         async def await_termination_timed():
             try:
-                await asyncio.wait_for(await_termination(), TIMEOUT)
+                await asyncio.wait_for(await_termination(), RENDERER_TIMEOUT)
             except asyncio.exceptions.TimeoutError:
+                self._log_error(f"Renderer timed out!")
                 raise InternalError("Something went wrong: rendering took too long")
 
         async def await_termination():
             while True:
-                print("Loop...")
-                try:
-                    signal = await asyncio.wait_for(get_latest_signal(), TIMEOUT_GRANULARITY)
-                    print(f"{signal=}")
-                    if signal == b"Done!\n":
-                        return
-                except asyncio.exceptions.TimeoutError:
-                    pass
-                try:
-                    signal = await asyncio.wait_for(get_error_signal(), TIMEOUT_GRANULARITY)
-                    print(f"{signal=}")
+                self._log_info("Loop...")
+                signal = await self._wait_or_pass(get_latest_signal())
+                if signal == b"Done!\n":
+                    return
+                signal = await self._wait_or_pass(get_error_signal())
+                if signal:
+                    self._log_error(f"Renderer threw an exception! {signal}")
                     raise Exception(f"Something went wrong: {signal}")
-                except asyncio.exceptions.TimeoutError:
-                    pass
 
         with self._event_loop_lock:
             self._event_loop.run_until_complete(await_termination_timed())
@@ -118,3 +132,17 @@ class BikeCAD:
             return b'Done!\r\n'
         else:
             return b'Done!\n'
+
+    async def _wait_or_pass(self, future):
+        try:
+            signal = await asyncio.wait_for(future, RENDERER_TIMEOUT_GRANULARITY / 2)
+            self._log_info(f"{signal}")
+            return signal
+        except asyncio.exceptions.TimeoutError:
+            return None
+
+    def _log_info(self, log_message):
+        logging.getLogger(LOGGER_NAME).info(log_message)
+
+    def _log_error(self, log_message):
+        logging.getLogger(LOGGER_NAME).error(log_message)
