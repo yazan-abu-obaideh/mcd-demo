@@ -6,7 +6,7 @@ from time import sleep
 
 import requests
 
-from app import app
+from optimization_app import app
 
 
 class AppTest(unittest.TestCase):

@@ -1,22 +1,21 @@
 from flask import Flask, make_response, request
 from flask_cors import CORS
 
-from app_config.service_parameters import RENDERER_POOL_SIZE
-from bike_rendering.bikeCad_renderer import RenderingService
+from app_config.app_parameters import LOGGING_LEVEL
+from app_constants import APP_LOGGER
 from controller_advice import register_error_handlers
 from fit_optimization.bike_optimizer import BikeOptimizer
 from models.body_dimensions import BodyDimensions
 from models.ergo_bike import ErgoBike
 from models.model_scheme_validations import map_request_to_model, map_base64_image_to_bytes
 from pose_analysis.pose_image_processing import PoserAnalyzer
-from app_constants import APP_LOGGER
-import logging
 
 
 def build_app() -> Flask:
     _app = Flask(__name__)
     CORS(_app)
     register_error_handlers(_app)
+    APP_LOGGER.setLevel(LOGGING_LEVEL)
     return _app
 
 
@@ -26,22 +25,7 @@ def endpoint(url):
 
 image_analyzer = PoserAnalyzer()
 optimizer = BikeOptimizer(image_analyzer)
-rendering_service = RenderingService(RENDERER_POOL_SIZE)
-APP_LOGGER.setLevel(logging.INFO)
 app = build_app()
-
-
-@app.route(endpoint("/render-bike"), methods=["POST"])
-def render_bike():
-    return rendering_service.render(request.data.decode("utf-8"))
-
-
-@app.route(endpoint("/render-bike-object"), methods=["POST"])
-def render_bike_object():
-    with open("../test/resources/bike.bcad", "r") as file:
-        response = make_response(rendering_service.render(file.read()))
-        response.headers["Content-Type"] = "image/svg+xml"
-        return response
 
 
 @app.route(endpoint("/optimize-seed"), methods=["POST"])

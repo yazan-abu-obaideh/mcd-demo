@@ -6,7 +6,7 @@ import threading
 import uuid
 from asyncio import subprocess
 import logging
-from app_config.service_parameters import RENDERER_TIMEOUT, RENDERER_TIMEOUT_GRANULARITY
+from app_config.rendering_parameters import RENDERER_TIMEOUT, RENDERER_TIMEOUT_GRANULARITY
 
 from exceptions import InternalError
 
