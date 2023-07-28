@@ -9,6 +9,8 @@ from models.body_dimensions import BodyDimensions
 from models.ergo_bike import ErgoBike
 from models.model_scheme_validations import map_request_to_model, map_base64_image_to_bytes
 from pose_analysis.pose_image_processing import PoserAnalyzer
+from app_constants import APP_LOGGER
+import logging
 
 
 def build_app() -> Flask:
@@ -22,10 +24,11 @@ def endpoint(url):
     return f"/api/v1/{url}"
 
 
-app = build_app()
 image_analyzer = PoserAnalyzer()
 optimizer = BikeOptimizer(image_analyzer)
 rendering_service = RenderingService(RENDERER_POOL_SIZE)
+APP_LOGGER.setLevel(logging.INFO)
+app = build_app()
 
 
 @app.route(endpoint("/render-bike"), methods=["POST"])

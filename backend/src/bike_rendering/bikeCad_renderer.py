@@ -82,7 +82,7 @@ class BikeCad:
         self._run("pnglist<>" + "<>".join(files) + "\n")
 
     async def _init_instance(self):
-        command = f"java -jar {os.path.dirname(__file__)}/console_BikeCAD_final.jar"
+        command = f"java -Djava.awt.headless=false -jar  {os.path.dirname(__file__)}/console_BikeCAD_final.jar"
         process = await asyncio.create_subprocess_shell(bytes(command, 'utf-8'),
                                                         stdin=subprocess.PIPE,
                                                         stdout=subprocess.PIPE,
