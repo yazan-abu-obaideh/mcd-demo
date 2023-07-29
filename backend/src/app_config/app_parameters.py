@@ -1,4 +1,5 @@
 import logging
-import os
 
-LOGGING_LEVEL = os.getenv("APP_LOGGING_LEVEL", logging.INFO)
+from app_config._config_utils import get_config
+
+LOGGING_LEVEL = get_config("APP_LOGGING_LEVEL", logging.INFO)
