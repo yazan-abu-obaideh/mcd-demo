@@ -1,0 +1,1 @@
+docker build -f app.dockerfile . -t jyguru/mcd-demo-app:2023july30
