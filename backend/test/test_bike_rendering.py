@@ -12,6 +12,18 @@ class BikeRendererTest(McdDemoTestCase):
                 self.assertIsNotNone(renderer.render(file.read()))
 
     def test_render_bike_object(self):
+        # 'HT Length', 'HT LX', 'ST Length'
+        bike = {"DT Length": 555.7422710300327, "HT Length": 540.5674859296399, "HT Angle": 73.0,
+                "HT LX": 140.89997584848615,
+                "Stack": 0.7, "ST Length": 0.25, "ST Angle": 55.34892932796525,
+                "Seatpost LENGTH": 0.293, "Saddle height": 0.5,
+                "Stem length": 0.8,
+                "Stem angle": -11.162277491363763, "Headset spacers": 0.47,
+                "Crank length": 0.75,
+                "Handlebar style": 2}
+        RenderingService(renderer_pool_size=1).render_object(bike)
+
+    def test_render__bike_object(self):
         with open(self.resource_path("optimization_response.txt"), "r") as file:
             optimization_response = json.load(file)
         for bike in optimization_response["bikes"]:

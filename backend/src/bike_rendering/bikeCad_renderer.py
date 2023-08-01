@@ -47,7 +47,7 @@ class RenderingService:
         for response_key, cad_key in OPTIMIZED_TO_CAD.items():
             xml_handler.update_entry_value(xml_handler.find_entry_by_key(cad_key),
                                            str(bike_object[response_key]))
-        return self.render(xml_handler.get_all_entries_string())
+        return self.render(xml_handler.get_content_string())
 
     def render(self, bike_xml):
         renderer = self._get_renderer()
