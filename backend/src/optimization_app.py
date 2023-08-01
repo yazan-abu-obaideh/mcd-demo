@@ -5,9 +5,7 @@ from app_config.app_parameters import LOGGING_LEVEL
 from app_constants import APP_LOGGER
 from controller_advice import register_error_handlers
 from fit_optimization.bike_optimizer import BikeOptimizer
-from models.body_dimensions import BodyDimensions
-from models.ergo_bike import ErgoBike
-from models.model_scheme_validations import map_request_to_model, map_base64_image_to_bytes
+from models.model_scheme_validations import map_base64_image_to_bytes
 from pose_analysis.pose_image_processing import PoserAnalyzer
 
 
@@ -41,9 +39,7 @@ def optimize_seed_bike():
 
 @app.route(endpoint("/optimize"), methods=["POST"])
 def optimize():
-    seed_bike = map_request_to_model(request.json["seed-bike"], ErgoBike)
-    body_dimensions = map_request_to_model(request.json["body-dimensions"], BodyDimensions)
-    res = optimizer.optimize(seed_bike, body_dimensions).to_dict("records")
+    res = optimizer.optimize(request.json["seed-bike"], request.json["body-dimensions"]).to_dict("records")
     return make_response(res)
 
 

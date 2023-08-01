@@ -1,6 +1,4 @@
 from fit_optimization.bike_optimizer import BikeOptimizer
-from models.body_dimensions import BodyDimensions
-from models.ergo_bike import ErgoBike
 from pose_analysis.pose_image_processing import PoserAnalyzer
 from test_utils import McdDemoTestCase
 
@@ -16,10 +14,40 @@ class BikeOptimizerTest(McdDemoTestCase):
 
     def test_optimize(self):
         """We need to reliably generate n bikes..."""
+        LL = 22 * 25.4
+        UL = 22 * 25.4
+        TL = 21 * 25.4
+        AL = 24 * 25.4
+        FL = 5.5 * 25.4
+        AA = 105
+        SW = 12 * 25.4
+        HT = 71 * 25.4
+
         optimized_bikes = self.optimizer.optimize(
-            seed_bike=ErgoBike(seat_x=-9, seat_y=27, handle_bar_x=16.5, handle_bar_y=25.5, crank_length=7),
-            user_dimensions=BodyDimensions(height=75, sh_height=61.09855828510818, hip_to_ankle=31.167514055725047,
-                                           hip_to_knee=15.196207871637029, shoulder_to_wrist=13.538605228960089,
-                                           arm_len=16.538605228960087, tor_len=26.931044229383136,
-                                           low_leg=18.971306184088018, up_leg=15.196207871637029))
+            seed_bike={
+                "DT Length": 664.021,
+                "HT Length": 135.6,
+                "HT Angle": 73.0,
+                "HT LX": 50.0,
+                "Stack": 565.6,
+                "ST Length": 588.7,
+                "ST Angle": 72.5,
+                "Seatpost LENGTH": 300.0,
+                "Saddle height": 768.0,
+                "Stem length": 120.0,
+                "Stem angle": -10.0,
+                "Headset spacers": 15.0,
+                "Crank length": 172.5,
+                "Handlebar style": 0,
+            },
+            user_dimensions={
+                "lower_leg": LL,
+                "upper_leg": UL,
+                "torso_length": TL,
+                "ankle_angle": AA,
+                "foot_length": FL,
+                "arm_length": AL,
+                "shoulder_to_wrist": SW,
+                "height": HT,
+            })
         self.assertGreaterEqual(len(optimized_bikes["bikes"]), 3)

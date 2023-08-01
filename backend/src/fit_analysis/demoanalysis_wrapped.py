@@ -7,12 +7,12 @@ INFINITY = float("inf")
 
 def to_body_vector(body: dict):
     return np.array([
-        body["low_leg"],
-        body["up_leg"],
-        body["tor_len"],
-        body["arm_len"],
-        body["foot length"],
-        body["ankle angle"],
+        body["lower_leg"],
+        body["upper_leg"],
+        body["torso_length"],
+        body["arm_length"],
+        body["foot_length"],
+        body["ankle_angle"],
         body["shoulder_to_wrist"],
         body["height"],
     ])

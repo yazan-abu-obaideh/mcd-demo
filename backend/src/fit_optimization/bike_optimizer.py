@@ -1,10 +1,10 @@
-import attrs
+import time
+
 from decode_mcd import DataPackage, MultiObjectiveProblem, CounterfactualsGenerator
 
 from _validation_utils import validate
+from fit_analysis.demoanalysis_wrapped import calculate_angles, to_body_vector
 from fit_optimization.optimization_constants import *
-from models.body_dimensions import BodyDimensions
-from models.ergo_bike import ErgoBike
 from pose_analysis.pose_image_processing import PoserAnalyzer
 
 
@@ -35,25 +35,26 @@ class BikeOptimizer:
         print(f"{person_height=}")
         return self.optimize(seed_bike, body_dimensions)
 
-    def optimize(self, seed_bike: ErgoBike, user_dimensions: BodyDimensions):
+    def optimize(self, seed_bike: dict, user_dimensions: dict):
         # noinspection PyTypeChecker
-        user_dimensions = attrs.asdict(user_dimensions)
 
         def predict(_bikes: pd.DataFrame):
-            return pd.DataFrame.from_records(ANALYZER.get_bikes_fit(_bikes.to_dict('records'),
-                                                                    user_dimensions))
+            start = time.time()
+            response = calculate_angles(_bikes.values, to_body_vector(user_dimensions))
+            print(f"Took {time.time() - start}")
+            return response
 
         # noinspection PyTypeChecker
         data_package = DataPackage(
             features_dataset=DESIGNS,
             predictions_dataset=PERFORMANCES,
-            query_x=pd.DataFrame.from_records([attrs.asdict(seed_bike)]),
+            query_x=pd.DataFrame.from_records([seed_bike]),
             design_targets=TARGETS,
             datatypes=FEATURES_DATATYPES
         )
         problem = MultiObjectiveProblem(data_package, predict, [])
-        generator = LoggingGenerator(problem, 750)
-        generator.generate(5)
+        generator = LoggingGenerator(problem, 1500)
+        generator.generate(3)
 
         bikes = generator.sample_with_weights(num_samples=10, cfc_weight=1, diversity_weight=1, gower_weight=1,
                                               avg_gower_weight=1, )
@@ -62,4 +63,4 @@ class BikeOptimizer:
     def _get_bike_by_id(self, seed_bike_id):
         seed_bike = SEED_BIKES_MAP.get(seed_bike_id)
         validate(seed_bike is not None, "Invalid seed bike ID")
-        return ErgoBike(**seed_bike)
+        return seed_bike

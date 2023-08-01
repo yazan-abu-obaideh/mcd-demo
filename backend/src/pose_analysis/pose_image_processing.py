@@ -5,7 +5,6 @@ import tensorflow as tf
 
 import pose_analysis.utils as utils
 from exceptions import UserInputException
-from models.body_dimensions import BodyDimensions
 from pose_analysis.movenet import Movenet
 from tensorflow.python.framework.errors_impl import InvalidArgumentError
 
@@ -17,8 +16,8 @@ class PoserAnalyzer:
     def get_body_dimensions(self, camera_height, image_path):
         return _decompose_to_dictionary(_analyze(camera_height, image_path)[0])
 
-    def analyze_bytes(self, camera_height, image_bytes) -> BodyDimensions:
-        return BodyDimensions(**_decompose_to_dictionary(_analyze_with_bytes(camera_height, image_bytes)[0]))
+    def analyze_bytes(self, camera_height, image_bytes):
+        return _decompose_to_dictionary(_analyze_with_bytes(camera_height, image_bytes)[0])
 
 
 def _analyze(height, imgroute):
