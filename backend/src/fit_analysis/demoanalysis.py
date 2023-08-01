@@ -1,11 +1,11 @@
 import os
+import pickle
+
+import numpy as np
+import pandas as pd
 
 from fit_analysis.interfacepoints import interface_points
 from fit_analysis.vectorizedangles import all_angles, validity_mask
-import numpy as np
-import pickle
-import pandas as pd
-import time
 
 # from sklearn.neural_network import MLPRegressor
 
