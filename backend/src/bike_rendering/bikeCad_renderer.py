@@ -21,6 +21,9 @@ class RenderingService:
         for i in range(renderer_pool_size):
             self._renderer_pool.put(BikeCad())
 
+    def render_object(self, bike_object):
+        pass
+
     def render(self, bike_xml):
         renderer = self._get_renderer()
         result = renderer.render(bike_xml)
