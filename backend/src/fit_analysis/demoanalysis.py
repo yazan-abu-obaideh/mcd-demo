@@ -155,8 +155,8 @@ def bike_body_calculation(bikes, body):
     # Broadcast body array and arm_angles for ergonomic angles calculation
     br_arm_angles = np.ones((len(bikes), 1)) * DEFAULT_ARM_ANGLE
     br_angles_body = np.broadcast_to(body, (len(bikes), 8))
-    out_angles = pd.DataFrame(all_angles(int_points, br_angles_body, br_arm_angles),
-                              columns=["Knee Extension", "Back Angle", "Armpit Angle"])
+    return pd.DataFrame(all_angles(int_points, br_angles_body, br_arm_angles),
+                        columns=["Knee Extension", "Back Angle", "Armpit Angle"])
 
     # Calculate augmented parameters
     out_aug = augmented_parameters(int_points, body)
@@ -184,27 +184,3 @@ def bike_body_calculation(bikes, body):
     out = np.hstack((no_nan_angles.values, pred_aero))
     out_df = pd.DataFrame(out, columns=["Knee Extension", "Back Angle", "Armpit Angle", "Aerodynamic Drag"])
     return out_df
-
-
-if __name__ == "__main__":
-    bikes_df = pd.read_csv("bike_vector_df.csv").iloc[:, 1:]
-    # print("bikes df\n",bikes_df)
-    int_points_global = interface_points(bikes_df.values)
-    # print("int_points_global\n", int_points_global)
-    LL = 22 * 25.4
-    UL = 22 * 25.4
-    TL = 21 * 25.4
-    AL = 24 * 25.4
-    FL = 5.5 * 25.4
-    AA = 105
-    SW = 12 * 25.4
-    HT = 71 * 25.4
-    body = np.array([[LL, UL, TL, AL, FL, AA, SW, HT]])
-    # body = np.broadcast_to(body, (len(bikes_df), 8))
-    # print("body\n",body)
-
-    # #Test bike_body_calculation
-    start = time.time()
-    res = bike_body_calculation(bikes_df.values, body)
-    tot_time = time.time() - start
-    print(f"Result in {tot_time} time:\n", res)
