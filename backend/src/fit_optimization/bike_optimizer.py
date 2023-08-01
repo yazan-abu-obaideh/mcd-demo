@@ -3,6 +3,7 @@ import time
 from decode_mcd import DataPackage, MultiObjectiveProblem, CounterfactualsGenerator
 
 from _validation_utils import validate
+from app_config.optimization_parameters import OPTIMIZER_GENERATIONS, OPTIMIZER_POPULATION
 from fit_analysis.demoanalysis_wrapped import calculate_angles, to_body_vector
 from fit_optimization.optimization_constants import *
 from pose_analysis.pose_image_processing import PoserAnalyzer
@@ -45,6 +46,16 @@ class BikeOptimizer:
             return response
 
         # noinspection PyTypeChecker
+        generator = self._build_generator(predict, seed_bike)
+        generator.generate(OPTIMIZER_GENERATIONS)
+
+        sampling_start = time.time()
+        bikes = generator.sample_with_weights(num_samples=10, cfc_weight=1, diversity_weight=1, gower_weight=1,
+                                              avg_gower_weight=1, include_dataset=False)
+        print(f"sampling took {time.time() - sampling_start}")
+        return {"bikes": bikes.to_dict("records"), "logs": generator.logs_list}
+
+    def _build_generator(self, predict, seed_bike):
         data_package = DataPackage(
             features_dataset=DESIGNS,
             predictions_dataset=PERFORMANCES,
@@ -53,14 +64,8 @@ class BikeOptimizer:
             datatypes=FEATURES_DATATYPES
         )
         problem = MultiObjectiveProblem(data_package, predict, [])
-        generator = LoggingGenerator(problem, 300)
-        generator.generate(25)
-
-        sampling_start = time.time()
-        bikes = generator.sample_with_weights(num_samples=10, cfc_weight=1, diversity_weight=1, gower_weight=1,
-                                              avg_gower_weight=1, include_dataset=False)
-        print(f"sampling took {time.time() - sampling_start}")
-        return {"bikes": bikes.to_dict("records"), "logs": generator.logs_list}
+        generator = LoggingGenerator(problem, OPTIMIZER_POPULATION)
+        return generator
 
     def _get_bike_by_id(self, seed_bike_id):
         seed_bike = SEED_BIKES_MAP.get(seed_bike_id)
