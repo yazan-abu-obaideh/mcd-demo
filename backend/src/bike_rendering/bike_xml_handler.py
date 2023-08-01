@@ -4,6 +4,26 @@ from bs4 import BeautifulSoup
 
 TEMPLATE_ENTRY = "<entry key='k'>1</entry>"
 
+CAD_TO_MODEL_MAP = {'CS textfield': 'CS Length', 'BB textfield': 'BB Drop', 'Stack': 'Stack',
+                    'Head angle': 'HT Angle', 'Head tube length textfield': 'HT Length',
+                    'Seat stay junction': 'SS E', 'Seat angle': 'ST Angle', 'DT Length': 'DT Length',
+                    'Seat tube length': 'ST Length', 'BB diameter': 'BB OD', 'ttd': 'TT OD',
+                    'Head tube diameter': 'HT OD', 'dtd': 'DT OD', 'csd': 'CS OD', 'ssd': 'SS OD',
+                    'Seat tube diameter': 'ST OD', 'Wall thickness Bottom Bracket': 'BB Thickness',
+                    'Wall thickness Top tube': 'TT Thickness',
+                    'Wall thickness Head tube': 'HT Thickness',
+                    'Wall thickness Down tube': 'DT Thickness',
+                    'Wall thickness Chain stay': 'CS Thickness',
+                    'Wall thickness Seat stay': 'SS Thickness',
+                    'Wall thickness Seat tube': 'ST Thickness',
+                    'BB length': 'BB Length', 'Chain stay position on BB': 'CS F',
+                    'SSTopZOFFSET': 'SS Z',
+                    'Head tube upper extension2': 'HT UX', 'Seat tube extension2': 'ST UX',
+                    'Head tube lower extension2': 'HT LX', 'SEATSTAYbrdgshift': 'SSB Offset',
+                    'CHAINSTAYbrdgshift': 'CSB Offset', 'Dropout spacing': 'Dropout Offset',
+                    'CHAINSTAYbrdgCheck': 'CSB_Include', 'SEATSTAYbrdgCheck': 'SSB_Include',
+                    'SEATSTAYbrdgdia1': 'SSB OD', 'CHAINSTAYbrdgdia1': 'CSB OD'}
+
 
 class BikeXmlHandler:
     """Stateful (AND NOT THREAD-SAFE) xml handler. Parses values using a supplied functional parser and
