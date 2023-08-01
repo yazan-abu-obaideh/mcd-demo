@@ -17,5 +17,5 @@ class McdDemoTestCase(TestCase):
             faulty_call()
         self.assertEqual(exception_message, context.exception.args[0])
 
-    def test_resource_path(self, resource_name):
-        return os.path.join(os.path.dirname(__file__), "resources", resource_name)
+    def resource_path(self, file_name):
+        return os.path.join(os.path.dirname(__file__), "resources", file_name)

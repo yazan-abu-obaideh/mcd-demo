@@ -2,4 +2,5 @@ from test_utils import McdDemoTestCase
 
 
 class OptimizeAndRenderEndTOEndTest(McdDemoTestCase):
-    pass
+    def test_e2e(self):
+        pass

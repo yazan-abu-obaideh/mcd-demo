@@ -7,12 +7,15 @@ import uuid
 from asyncio import subprocess
 import logging
 from app_config.rendering_parameters import RENDERER_TIMEOUT, RENDERER_TIMEOUT_GRANULARITY
+from bike_rendering.bike_xml_handler import BikeXmlHandler
 
 from exceptions import InternalError
 
 LOGGER_NAME = "BikeCadLogger"
 
 WINDOWS = "Windows"
+
+DEFAULT_BIKE_PATH = os.path.join(os.path.dirname(__file__), "../resources/PlainRoadbikestandardized.txt")
 
 
 class RenderingService:
@@ -22,7 +25,11 @@ class RenderingService:
             self._renderer_pool.put(BikeCad())
 
     def render_object(self, bike_object):
-        pass
+        xml_handler = BikeXmlHandler()
+        with open(DEFAULT_BIKE_PATH, "r") as file:
+            xml_handler.set_xml(file.read())
+        xml_handler.update_entry_value(xml_handler.find_entry_by_key(""),
+                                       "")
 
     def render(self, bike_xml):
         renderer = self._get_renderer()
