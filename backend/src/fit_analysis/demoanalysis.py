@@ -23,7 +23,7 @@ from fit_analysis.vectorizedangles import all_angles, validity_mask
 
 
 # GLOBAL MODEL
-with open(f"{os.path.dirname(__file__)}/new_formatted_model.pkl", "rb") as file:
+with open(os.path.join(os.path.dirname(__file__), "../resources/new_formatted_model.pkl"), "rb") as file:
     global_model = pickle.load(file)[2]
 
 
