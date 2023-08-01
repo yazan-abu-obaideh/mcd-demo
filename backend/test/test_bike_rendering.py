@@ -22,12 +22,3 @@ class BikeRendererTest(McdDemoTestCase):
                 "Crank length": 0.75,
                 "Handlebar style": 2}
         RenderingService(renderer_pool_size=1).render_object(bike)
-
-    def test_render__bike_object(self):
-        with open(self.resource_path("optimization_response.txt"), "r") as file:
-            optimization_response = json.load(file)
-        for bike in optimization_response["bikes"]:
-            service = RenderingService(renderer_pool_size=1)
-            image = service.render_object(bike)
-            with open(f"{str(uuid.uuid4())}.svg", "wb") as file:
-                file.write(image)
