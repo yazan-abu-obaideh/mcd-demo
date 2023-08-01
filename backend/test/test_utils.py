@@ -1,3 +1,4 @@
+import os.path
 from unittest import TestCase
 
 from exceptions import UserInputException
@@ -15,3 +16,6 @@ class McdDemoTestCase(TestCase):
         with self.assertRaises(expected_exception=UserInputException) as context:
             faulty_call()
         self.assertEqual(exception_message, context.exception.args[0])
+
+    def test_resource_path(self, resource_name):
+        return os.path.join(os.path.dirname(__file__), "resources", resource_name)
