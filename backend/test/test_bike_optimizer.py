@@ -1,3 +1,5 @@
+import json
+
 from fit_optimization.bike_optimizer import BikeOptimizer
 from pose_analysis.pose_image_processing import PoserAnalyzer
 from test_utils import McdDemoTestCase
@@ -11,6 +13,11 @@ class BikeOptimizerTest(McdDemoTestCase):
         # noinspection PyTypeChecker
         self.assertRaisesWithMessage(lambda: self.optimizer.optimize_seed_bike(
             "DOES_NOT_EXIST", b"", None, None), "Invalid seed bike ID")
+
+    def _test_reliability(self):
+        for i in range(25):
+            self.test_optimize()
+            print(i)
 
     def test_optimize(self):
         """We need to reliably generate n bikes..."""
@@ -50,4 +57,6 @@ class BikeOptimizerTest(McdDemoTestCase):
                 "shoulder_to_wrist": SW,
                 "height": HT,
             })
-        self.assertGreaterEqual(len(optimized_bikes["bikes"]), 3)
+        self.assertGreaterEqual(len(optimized_bikes["bikes"]), 5)
+        with open("resources/optimization_response.txt", "w") as file:
+            json.dump(optimized_bikes, file)

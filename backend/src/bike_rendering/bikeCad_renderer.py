@@ -17,6 +17,22 @@ WINDOWS = "Windows"
 
 DEFAULT_BIKE_PATH = os.path.join(os.path.dirname(__file__), "../resources/PlainRoadbikestandardized.txt")
 
+OPTIMIZED_TO_CAD = {
+    "ST Angle": "Seat angle",
+    "HT Length": "Head tube length textfield",
+    "HT Angle": "Head angle",
+    "HT LX": "Head tube lower extension2",
+    'Stack': 'Stack',
+    "ST Length": "Seat tube length",
+    "Seatpost LENGTH": "Seatpost LENGTH",
+    "Saddle height": "Saddle height",
+    "Stem length": "Stem length",
+    "Crank length": "Crank length",
+    "Headset spacers": "Headset spacers",
+    "Stem angle": "Stem angle",
+    "Handlebar style": "Handlebar style",
+}
+
 
 class RenderingService:
     def __init__(self, renderer_pool_size):
@@ -28,14 +44,16 @@ class RenderingService:
         xml_handler = BikeXmlHandler()
         with open(DEFAULT_BIKE_PATH, "r") as file:
             xml_handler.set_xml(file.read())
-        xml_handler.update_entry_value(xml_handler.find_entry_by_key(""),
-                                       "")
+        for response_key, cad_key in OPTIMIZED_TO_CAD.items():
+            xml_handler.update_entry_value(xml_handler.find_entry_by_key(cad_key),
+                                           str(bike_object[response_key]))
+        return self.render(xml_handler.get_all_entries_string())
 
     def render(self, bike_xml):
         renderer = self._get_renderer()
         result = renderer.render(bike_xml)
         self._renderer_pool.put(renderer)  # This will never block as is - no new elements
-        # are ever added, so the pool will always have remove for borrowed renderers.
+        # are ever added, so the pool will always have room for borrowed renderers.
         return result
 
     def _get_renderer(self):
