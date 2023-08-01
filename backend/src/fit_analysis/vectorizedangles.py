@@ -1,6 +1,6 @@
 import numpy as np
 from scipy.stats import norm
-from usecases import USE_DICT
+from fit_analysis.usecases import USE_DICT
 
 
 # #####

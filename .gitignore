@@ -6,3 +6,5 @@
 **/BikeCAD_17.1_configuration/
 **/META-INF/
 nginx/secrets/
+/backend/src/data_wrangling/original_datasets/
+/backend/src/data_wrangling/generated/

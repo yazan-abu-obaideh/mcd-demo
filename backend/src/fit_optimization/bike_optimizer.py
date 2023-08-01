@@ -11,6 +11,7 @@ from pose_analysis.pose_image_processing import PoserAnalyzer
 class LoggingGenerator(CounterfactualsGenerator):
     """Note that the logs_list is never 'cleaned'... Instances of LoggingGenerator
     are single-use objects and should be garbage-collected ASAP"""
+
     def __init__(self, problem: MultiObjectiveProblem, pop_size: int):
         super().__init__(problem, pop_size, initialize_from_dataset=False, verbose=True)
         self.logs_list = []
@@ -35,12 +36,14 @@ class BikeOptimizer:
         return self.optimize(seed_bike, body_dimensions)
 
     def optimize(self, seed_bike: ErgoBike, user_dimensions: BodyDimensions):
+        # noinspection PyTypeChecker
         user_dimensions = attrs.asdict(user_dimensions)
 
-        def predict(bikes: pd.DataFrame):
-            return pd.DataFrame.from_records(ANALYZER.get_bikes_fit(bikes.to_dict('records'),
+        def predict(_bikes: pd.DataFrame):
+            return pd.DataFrame.from_records(ANALYZER.get_bikes_fit(_bikes.to_dict('records'),
                                                                     user_dimensions))
 
+        # noinspection PyTypeChecker
         data_package = DataPackage(
             features_dataset=DESIGNS,
             predictions_dataset=PERFORMANCES,

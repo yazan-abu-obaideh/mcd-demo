@@ -1,7 +1,7 @@
-import os.path
+import os
 
-from interfacepoints import interface_points
-from vectorizedangles import all_angles, validity_mask
+from fit_analysis.interfacepoints import interface_points
+from fit_analysis.vectorizedangles import all_angles, validity_mask
 import numpy as np
 import pickle
 import pandas as pd
@@ -13,10 +13,10 @@ import time
 ####################
 # Bike and Body Ergonomics and Aerodynamics Calculation
 # Main Function to Call: bike_body_calculation(bikes, body)
-# 
+#
 # Inputs are bike vector array (nx14) and body vector (1x8)
 # Input Units: mm and degrees SX is behind BB
-# 
+#
 # Output: Pandas dataframe of knee extension, back angle, armpit angle, aerodynamic drag (nx4)
 # Output Units: degrees and Newtons (at 10m/s wind speed)
 ####################
@@ -100,7 +100,7 @@ def aerodynamic_drag(int_points, body, augmented_params):
         int_points = [hx, hy, sx, sy, cl]
         body = [LL, UL, TL, AL, FL, AA, SW, HT]
         augmented_params = [back vertical height, head height, thigh width, leg area, frontal surface area]
-    Output: 
+    Output:
         aerodynamic drag (nx1) in Newtons
     !!! Units in Meters !!!
     !!! Will not work if there are NaNs in input !!!
@@ -137,7 +137,7 @@ def bike_body_calculation(bikes, body):
     !!! LOAD MODEL IN GLOBAL FRAME TO SAVE TIME !!!
     """
     # **** LOAD THIS IN WRAPPER FUNCTION ****
-    # Initializing model from pkl file 
+    # Initializing model from pkl file
     # model = pickle.load(open("model.pkl", "rb"))[2]
     # model = GLOBAL_AERO_MODEL
     # **** LOAD THIS IN WRAPPER FUNCTION ****
@@ -145,8 +145,8 @@ def bike_body_calculation(bikes, body):
     # Constants
     DEFAULT_ARM_ANGLE = 150
 
-    # Calculate interface points 
-    #   NOTE: standard offsets are in mm 
+    # Calculate interface points
+    #   NOTE: standard offsets are in mm
     #   input and output should be treated as mm
     int_points = interface_points(bikes)  # convert to m
     int_points_df = pd.DataFrame(int_points, columns=["hx", "hy", "sx", "sy", "cl"])
@@ -168,13 +168,7 @@ def bike_body_calculation(bikes, body):
     valid_mask = validity_mask(int_points, br_angles_body, br_arm_angles).flatten()
     aug_nan_mask = np.isnan(out_aug.values).any(axis=1)
     angle_nan_mask = np.isnan(out_angles.values).any(axis=1)
-    combined_nan_mask = valid_mask
-    # combined_nan_mask = np.logical_or(aug_nan_mask, angle_nan_mask)
-    # combined_nan_mask = np.logical_or(combined_nan_mask, valid_mask)[:, np.newaxis]
-    # print("valid_mask", valid_mask)
-    # print("angle_nan_mask", angle_nan_mask)
-    # print("aug_nan_mask", aug_nan_mask)
-    # print("combined_nan_mask", combined_nan_mask)
+    combined_nan_mask = aug_nan_mask | valid_mask
 
     # Remove NaN rows from interface points, augmented parameters, and angles
     no_nan_int_points = int_points_df[~combined_nan_mask] / 1000  # convert to m
@@ -183,7 +177,8 @@ def bike_body_calculation(bikes, body):
     print("no_nan_int_points\n", no_nan_int_points)
 
     # Calculate aero drag
-    pred_aero = aerodynamic_drag(no_nan_int_points, body, no_nan_aug)[:, np.newaxis]
+    # pred_aero = aerodynamic_drag(no_nan_int_points, body, no_nan_aug)[:, np.newaxis]
+    pred_aero = np.zeros((len(no_nan_angles), 1))
 
     # Concatenate angle outputs and aerodynamic drag
     out = np.hstack((no_nan_angles.values, pred_aero))
@@ -191,25 +186,25 @@ def bike_body_calculation(bikes, body):
     return out_df
 
 
-# bikes_df = pd.read_csv(
-#     "/Users/noahwiley/Documents/Bike UROP/MeasureML-main/Frame Datasets/bike_vector_df_with_id.csv").iloc[:, 2:]
-# # print("bikes df\n",bikes_df)
-# int_points_global = interface_points(bikes_df.values)
-# # print("int_points_global\n", int_points_global)
-# LL = 19 * 25.4
-# UL = 18 * 25.4
-# TL = 21 * 25.4
-# AL = 24 * 25.4
-# FL = 5.5 * 25.4
-# AA = 105
-# SW = 12 * 25.4
-# HT = 71 * 25.4
-# body = np.array([[LL, UL, TL, AL, FL, AA, SW, HT]])
-# # body = np.broadcast_to(body, (len(bikes_df), 8))
-# # print("body\n",body)
-#
-# # #Test bike_body_calculation
-# start = time.time()
-# res = bike_body_calculation(bikes_df.values, body)
-# tot_time = time.time() - start
-# print(f"Result in {tot_time} time:\n", res)
+if __name__ == "__main__":
+    bikes_df = pd.read_csv("bike_vector_df.csv").iloc[:, 1:]
+    # print("bikes df\n",bikes_df)
+    int_points_global = interface_points(bikes_df.values)
+    # print("int_points_global\n", int_points_global)
+    LL = 22 * 25.4
+    UL = 22 * 25.4
+    TL = 21 * 25.4
+    AL = 24 * 25.4
+    FL = 5.5 * 25.4
+    AA = 105
+    SW = 12 * 25.4
+    HT = 71 * 25.4
+    body = np.array([[LL, UL, TL, AL, FL, AA, SW, HT]])
+    # body = np.broadcast_to(body, (len(bikes_df), 8))
+    # print("body\n",body)
+
+    # #Test bike_body_calculation
+    start = time.time()
+    res = bike_body_calculation(bikes_df.values, body)
+    tot_time = time.time() - start
+    print(f"Result in {tot_time} time:\n", res)
