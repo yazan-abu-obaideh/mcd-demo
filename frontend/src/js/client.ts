@@ -212,7 +212,7 @@ function bikeToHtml(bikeId: string, bike: object) {
 }
 
 function generateBikeDescription(bike: object): string {
-  return ` Generated Bike`;
+  return `Generated Bike`;
 }
 
 function generateRenderedImgElement(bikeId: string): string {

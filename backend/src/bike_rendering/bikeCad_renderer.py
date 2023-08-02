@@ -145,7 +145,7 @@ class BikeCad:
             while True:
                 self._log_info("Loop...")
                 signal = await self._wait_or_pass(get_latest_signal())
-                if signal == b"Done!\n":
+                if signal == self._get_expected_success():
                     return
                 signal = await self._wait_or_pass(get_error_signal())
                 if signal:
