@@ -56,7 +56,7 @@ function readFile(
 }
 
 function getFileById(inputElementId: string): File {
-  return (document.getElementById(inputElementId) as HTMLInputElement).files[0];
+  return ((getElementById(inputElementId) as HTMLInputElement).files)![0];
 }
 
 function postRenderBikeRequest(bike: object): Promise<Response> {
@@ -79,7 +79,7 @@ function renderBikeById(bikeId: string) {
 }
 
 function handleRenderedBikeImage(bikeId: string, responseBlob: Blob) {
-  const outputImg = document.getElementById(
+  const outputImg = getElementById(
     getBikeImgId(bikeId)
   ) as HTMLImageElement;
   outputImg.src = urlCreator.createObjectURL(responseBlob);
@@ -89,14 +89,14 @@ function handleRenderedBikeImage(bikeId: string, responseBlob: Blob) {
 function renderBike() {
   postRenderBikeRequest({}).then((response) => {
     response.blob().then((responseBlob) => {
-      let outputImg = document.getElementById("bike-img") as HTMLImageElement;
+      let outputImg = getElementById("bike-img") as HTMLImageElement;
       outputImg.src = urlCreator.createObjectURL(responseBlob);
     });
   });
 }
 
 function submitProblemForm() {
-  const form: HTMLFormElement = document.getElementById(
+  const form: HTMLFormElement = getElementById(
     problemFormId
   ) as HTMLFormElement;
   if (form.checkValidity()) {
@@ -108,7 +108,7 @@ function submitProblemForm() {
 }
 
 function showResponseDiv() {
-  const responseDiv = document.getElementById(responseDivId);
+  const responseDiv = getElementById(responseDivId);
   setLoading(true);
   responseDiv.setAttribute("style", "display: block;");
   responseDiv.scrollIntoView();
@@ -136,7 +136,7 @@ function submitValidForm(form: HTMLFormElement) {
       })
       .catch((exception) => {
         setLoading(false);
-        document.getElementById("generated-designs-consumer").innerHTML = 
+        getElementById("generated-designs-consumer").innerHTML = 
         "<h2> Operation failed. Either you have no internet connection, or our servers are down 🥸 </h2>"
       });
   });
@@ -154,10 +154,10 @@ function handleSuccessfulOptimizationResponse(response: Response) {
   response.text().then((responseText) => {
     const responseJson: object = JSON.parse(responseText);
     setLoading(false);
-    document.getElementById("mcd-logs-consumer").innerHTML = logsToHtml(
+    getElementById("mcd-logs-consumer").innerHTML = logsToHtml(
       responseJson["logs"]
     );
-    document.getElementById("generated-designs-consumer").innerHTML =
+    getElementById("generated-designs-consumer").innerHTML =
       persistAndBuildHtml(responseJson["bikes"]);
   });
 }
@@ -202,6 +202,7 @@ function persistAndBuildHtml(bikes: Array<object>): string {
 
 function bikeToHtml(bikeId: string, bike: object) {
   return `
+  <div class="container text-center border rounded mb-1 p-3">
   ${generateBikeDescription(bike)}
   <br>
   ${generateRenderButton(bikeId)}
@@ -211,15 +212,7 @@ function bikeToHtml(bikeId: string, bike: object) {
 }
 
 function generateBikeDescription(bike: object): string {
-  return `<div class="container text-center border rounded mb-1 p-3"> Crank Length: ${formatNumber(
-    bike["crank_length"]
-  )} | 
-  Handle Bar X: ${formatNumber(
-    bike["handle_bar_x"]
-  )} Handle Bar Y: ${formatNumber(bike["handle_bar_y"])} 
-  Seat X: ${formatNumber(bike["seat_x"])} Seat Y: ${formatNumber(
-    bike["seat_y"]
-  )}`;
+  return ` Generated Bike`;
 }
 
 function generateRenderedImgElement(bikeId: string): string {
@@ -250,7 +243,7 @@ function logsToHtml(logs: Array<string>): string {
 }
 
 function onShowLogs() {
-  document.getElementById("collapse-logs-div")?.scrollIntoView();
+  getElementById("collapse-logs-div")?.scrollIntoView();
 }
 
 function generateUuid(): string {
@@ -290,7 +283,7 @@ function getBikeBtnId(bikeId: string) {
 }
 
 function hideRenderButton(bikeId: string) {
-  const buttonElement = document.getElementById(getBikeBtnId(bikeId));
+  const buttonElement = getElementById(getBikeBtnId(bikeId));
   buttonElement?.setAttribute("style", "display: none");
 }
 
@@ -298,8 +291,13 @@ function handleFailedResponse(response: Response) {
   response.text().then(responseText => {
     const errorResponse = JSON.parse(responseText);
     setLoading(false);
-    document.getElementById("generated-designs-consumer").innerHTML = 
+    getElementById("generated-designs-consumer").innerHTML = 
     `<h2> Operation failed. Server responded with: ${errorResponse["message"]} </h2>`
   });
 }
+
+function getElementById(elementId: string): HTMLElement {
+  return document.getElementById(elementId)!;
+}
+
 // export { getServerHealth, postOptimizationRequest, postSeedBikeOptimization };
