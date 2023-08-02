@@ -16,8 +16,12 @@ class PoserAnalyzer:
     def get_body_dimensions(self, camera_height, image_path):
         return _decompose_to_dictionary(_analyze(camera_height, image_path)[0])
 
-    def analyze_bytes(self, camera_height, image_bytes):
+    def analyze_bytes_inches(self, camera_height, image_bytes):
         return _decompose_to_dictionary(_analyze_with_bytes(camera_height, image_bytes)[0])
+
+    def analyze_bytes_mm(self, camera_height, image_bytes):
+        inches_dict = _decompose_to_dictionary(_analyze_with_bytes(camera_height, image_bytes)[0])
+        return {key: value * 25.4 for key, value in inches_dict.items()}
 
 
 def _analyze(height, imgroute):
@@ -50,10 +54,10 @@ def _decompose_to_dictionary(prediction_array):
     # GETTING OFFSETS
     # Ankle height from floor to lateral malleolus and grip center to wrist are the same ratio
     ankle_wrist_offset = 0.04 * base["height"]
-    base["arm_len"] = base["shoulder_to_wrist"] + ankle_wrist_offset
-    base["tor_len"] = base["sh_height"] - base["hip_to_ankle"] - ankle_wrist_offset
-    base["low_leg"] = base["hip_to_ankle"] - base["hip_to_knee"] + ankle_wrist_offset
-    base["up_leg"] = base["hip_to_knee"]
+    base["arm_length"] = base["shoulder_to_wrist"] + ankle_wrist_offset
+    base["torso_length"] = base["sh_height"] - base["hip_to_ankle"] - ankle_wrist_offset
+    base["lower_leg"] = base["hip_to_ankle"] - base["hip_to_knee"] + ankle_wrist_offset
+    base["upper_leg"] = base["hip_to_knee"]
 
     return base
 

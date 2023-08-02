@@ -1,4 +1,4 @@
-const apiUrl = "http://localhost:5000/api/v1";
+const apiUrl = "https://localhost:8000/api/v1";
 const bikeStore = {};
 const problemFormId = "problem-form-form";
 const responseDivId = "server-response-div";
@@ -59,7 +59,7 @@ function getFileById(inputElementId: string): File {
 }
 
 function postRenderBikeRequest(bike: object): Promise<Response> {
-  return fetch(apiUrl.concat("/render-bike-object"), {
+  return fetch(apiUrl.concat("/rendering/render-bike-object"), {
     headers: { "Content-Type": "application/json" },
     method: "POST",
     body: JSON.stringify({
@@ -155,7 +155,7 @@ function handleSuccessfulOptimizationResponse(response: Response) {
       responseJson["logs"]
     );
     document.getElementById("generated-designs-consumer").innerHTML =
-      bikesToHtml(responseJson["bikes"]);
+      persistAndBuildHtml(responseJson["bikes"]);
   });
 }
 
@@ -188,7 +188,7 @@ function arrayBufferToBase64(arrayBuffer: ArrayBuffer) {
   return btoa(binary);
 }
 
-function bikesToHtml(bikes: Array<object>): string {
+function persistAndBuildHtml(bikes: Array<object>): string {
   let bikesHtml = "";
   bikes.forEach((bike) => {
     const bikeId = persistBike(bike);

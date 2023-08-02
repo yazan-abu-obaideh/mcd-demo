@@ -25,7 +25,7 @@ FEATURES_DATATYPES.append(Choice(options=DESIGNS.iloc[:, 13].unique()))
 
 def build_seed_map():
     records_list = all_bikes.to_dict("records")
-    return {i: records_list[i] for i in range(len(records_list))}
+    return {str(i): records_list[i] for i in range(len(records_list))}
 
 
 SEED_BIKES_MAP = build_seed_map()

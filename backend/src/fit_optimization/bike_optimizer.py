@@ -32,8 +32,10 @@ class BikeOptimizer:
 
     def optimize_seed_bike(self, seed_bike_id: str, image: bytes, person_height: float, camera_height: float):
         seed_bike = self._get_bike_by_id(seed_bike_id)
-        body_dimensions = self.image_analysis_service.analyze_bytes(camera_height, image)
+        body_dimensions = self.image_analysis_service.analyze_bytes_mm(camera_height, image)
         print(f"{person_height=}")
+        body_dimensions["foot_length"] = 5.5 * 25.4
+        body_dimensions["ankle_angle"] = 24 * 25.4
         return self.optimize(seed_bike, body_dimensions)
 
     def optimize(self, seed_bike: dict, user_dimensions: dict):
@@ -68,6 +70,6 @@ class BikeOptimizer:
         return generator
 
     def _get_bike_by_id(self, seed_bike_id):
-        seed_bike = SEED_BIKES_MAP.get(seed_bike_id)
+        seed_bike = SEED_BIKES_MAP.get(str(seed_bike_id))
         validate(seed_bike is not None, "Invalid seed bike ID")
         return seed_bike

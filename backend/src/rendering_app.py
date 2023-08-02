@@ -18,10 +18,8 @@ def render_bike():
 
 @rendering_app.route(endpoint("render-bike-object"), methods=["POST"])
 def render_bike_object():
-    with open("../test/resources/bike.bcad", "r") as file:
-        response = make_response(rendering_service.render(file.read()))
-        response.headers["Content-Type"] = "image/svg+xml"
-        return response
+    print(f"{request.json=}")
+    return rendering_service.render_object(request.json)
 
 
 @rendering_app.route(endpoint("health"))

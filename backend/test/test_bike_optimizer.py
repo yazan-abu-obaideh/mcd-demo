@@ -1,4 +1,5 @@
 import time
+import unittest
 
 from fit_optimization.bike_optimizer import BikeOptimizer
 from pose_analysis.pose_image_processing import PoserAnalyzer
@@ -13,6 +14,15 @@ class BikeOptimizerTest(McdDemoTestCase):
         # noinspection PyTypeChecker
         self.assertRaisesWithMessage(lambda: self.optimizer.optimize_seed_bike(
             "DOES_NOT_EXIST", b"", None, None), "Invalid seed bike ID")
+
+    @unittest.skip
+    def test_no_hard_coded_dimensions(self):
+        pass
+
+    def test_optimize_by_seed_id(self):
+        with open(self.resource_path("dude.jpeg"), "rb") as file:
+            response = self.optimizer.optimize_seed_bike("15", file.read(), 75, 75)
+            self.assertEqual(5, len(response["bikes"]))
 
     def _test_reliability(self):
         for i in range(25):

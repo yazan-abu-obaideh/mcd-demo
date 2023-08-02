@@ -8,7 +8,7 @@ class ImageAnalyzerTest(McdDemoTestCase):
 
     def test_analyze_invalid_image(self):
         self.assertRaisesWithMessage(
-            lambda: self.analyzer.analyze_bytes(75, b"RANDOM_GARBAGE_NOT_AN_IMAGE"),
+            lambda: self.analyzer.analyze_bytes_inches(75, b"RANDOM_GARBAGE_NOT_AN_IMAGE"),
             "Unknown image file format. One of JPEG, PNG, GIF, BMP required."
         )
 
@@ -17,9 +17,9 @@ class ImageAnalyzerTest(McdDemoTestCase):
             self.assertDictAlmostEqual(
                 {'height': 75, 'sh_height': 61.098, 'hip_to_ankle': 31.167,
                  'hip_to_knee': 15.196, 'shoulder_to_wrist': 13.538,
-                 'arm_len': 16.538, 'tor_len': 26.931,
-                 'low_leg': 18.971, 'up_leg': 15.196},
-                self.analyzer.analyze_bytes(75, file.read())
+                 'arm_length': 16.538, 'torso_length': 26.931,
+                 'lower_leg': 18.971, 'upper_leg': 15.196},
+                self.analyzer.analyze_bytes_inches(75, file.read())
             )
 
     def test_get_body_dimensions_from_invalid_image(self):
@@ -31,7 +31,7 @@ class ImageAnalyzerTest(McdDemoTestCase):
         self.assertDictAlmostEqual(
             {'height': 75, 'sh_height': 61.098, 'hip_to_ankle': 31.167,
              'hip_to_knee': 15.196, 'shoulder_to_wrist': 13.538,
-             'arm_len': 16.538, 'tor_len': 26.931,
-             'low_leg': 18.971, 'up_leg': 15.196},
+             'arm_length': 16.538, 'torso_length': 26.931,
+             'lower_leg': 18.971, 'upper_leg': 15.196},
             analysis
         )
