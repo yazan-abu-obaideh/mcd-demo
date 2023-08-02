@@ -58,5 +58,3 @@ class BikeOptimizerTest(McdDemoTestCase):
                 "height": HT,
             })
         self.assertGreaterEqual(len(optimized_bikes["bikes"]), 5)
-        with open("resources/optimization_response.txt", "w") as file:
-            json.dump(optimized_bikes, file)
