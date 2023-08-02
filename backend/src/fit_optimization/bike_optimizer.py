@@ -50,7 +50,7 @@ class BikeOptimizer:
         generator.generate(OPTIMIZER_GENERATIONS)
 
         sampling_start = time.time()
-        bikes = generator.sample_with_weights(num_samples=10, cfc_weight=1, diversity_weight=1, gower_weight=1,
+        bikes = generator.sample_with_weights(num_samples=5, cfc_weight=1, diversity_weight=1, gower_weight=1,
                                               avg_gower_weight=1, include_dataset=False)
         print(f"sampling took {time.time() - sampling_start}")
         return {"bikes": bikes.to_dict("records"), "logs": generator.logs_list}

@@ -1,14 +1,14 @@
 import asyncio
+import logging
 import os
 import platform
 import queue
 import threading
 import uuid
 from asyncio import subprocess
-import logging
+
 from app_config.rendering_parameters import RENDERER_TIMEOUT, RENDERER_TIMEOUT_GRANULARITY
 from bike_rendering.bike_xml_handler import BikeXmlHandler
-
 from exceptions import InternalError
 
 LOGGER_NAME = "BikeCadLogger"

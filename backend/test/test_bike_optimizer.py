@@ -1,4 +1,4 @@
-import json
+import time
 
 from fit_optimization.bike_optimizer import BikeOptimizer
 from pose_analysis.pose_image_processing import PoserAnalyzer
@@ -30,6 +30,7 @@ class BikeOptimizerTest(McdDemoTestCase):
         SW = 12 * 25.4
         HT = 71 * 25.4
 
+        start = time.time()
         optimized_bikes = self.optimizer.optimize(
             seed_bike={
                 "DT Length": 664.021,
@@ -57,4 +58,5 @@ class BikeOptimizerTest(McdDemoTestCase):
                 "shoulder_to_wrist": SW,
                 "height": HT,
             })
-        self.assertGreaterEqual(len(optimized_bikes["bikes"]), 5)
+        self.assertEqual(len(optimized_bikes["bikes"]), 5)
+        self.assertLess(time.time() - start, 5)

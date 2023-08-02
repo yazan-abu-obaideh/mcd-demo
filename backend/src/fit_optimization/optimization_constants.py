@@ -18,7 +18,8 @@ PERFORMANCES = pd.DataFrame.from_records(build_performances())
 all_bikes = get_bikes()
 DESIGNS = pd.DataFrame.from_records(all_bikes)
 FEATURES_DATATYPES: List[Variable]
-FEATURES_DATATYPES = [Real(bounds=(DESIGNS.iloc[:, _].quantile(0.01), DESIGNS.iloc[:, _].quantile(0.99))) for _ in range(13)]
+FEATURES_DATATYPES = [Real(bounds=(DESIGNS.iloc[:, _].quantile(0.05),
+                                   DESIGNS.iloc[:, _].quantile(0.99))) for _ in range(13)]
 FEATURES_DATATYPES.append(Choice(options=DESIGNS.iloc[:, 13].unique()))
 
 
