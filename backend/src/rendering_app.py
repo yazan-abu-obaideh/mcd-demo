@@ -1,7 +1,8 @@
 from flask import request, make_response
-from optimization_app import build_app
+
 from app_config.rendering_parameters import RENDERER_POOL_SIZE
 from bike_rendering.bikeCad_renderer import RenderingService
+from optimization_app import build_app
 
 rendering_app = build_app()
 rendering_service = RenderingService(RENDERER_POOL_SIZE)
@@ -18,8 +19,9 @@ def render_bike():
 
 @rendering_app.route(endpoint("render-bike-object"), methods=["POST"])
 def render_bike_object():
-    print(f"{request.json=}")
-    return rendering_service.render_object(request.json)
+    response = make_response(rendering_service.render_object(request.json["bike"]))
+    response.headers["Content-Type"] = "image/svg+xml"
+    return response
 
 
 @rendering_app.route(endpoint("health"))

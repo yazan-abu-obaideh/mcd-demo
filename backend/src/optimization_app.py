@@ -1,8 +1,8 @@
 from flask import Flask, make_response, request
 from flask_cors import CORS
 
-from app_config.app_parameters import LOGGING_LEVEL
 from app_config.app_constants import APP_LOGGER
+from app_config.app_parameters import LOGGING_LEVEL
 from controller_advice import register_error_handlers
 from fit_optimization.bike_optimizer import BikeOptimizer
 from models.model_scheme_validations import map_base64_image_to_bytes

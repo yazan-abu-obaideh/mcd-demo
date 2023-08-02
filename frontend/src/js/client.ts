@@ -1,11 +1,12 @@
-const apiUrl = "https://localhost:8000/api/v1";
+const optimizationApiUrl = "http://localhost:5000/api/v1";
+const renderingApiUrl = "http://localhost:8000/api/v1/rendering";
 const bikeStore = {};
 const problemFormId = "problem-form-form";
 const responseDivId = "server-response-div";
 const urlCreator = window.URL || window.webkitURL;
 
 async function getServerHealth(): Promise<Response> {
-  return await fetch(apiUrl.concat("/health"), {
+  return await fetch(optimizationApiUrl.concat("/health"), {
     headers: { "Content-Type": "application/json" },
     method: "GET",
   });
@@ -17,7 +18,7 @@ async function postSeedBikeOptimization(
   personHeight: number,
   cameraHeight: number
 ) {
-  return await fetch(apiUrl.concat("/optimize-seed"), {
+  return await fetch(optimizationApiUrl.concat("/optimize-seed"), {
     headers: { "Content-Type": "application/json" },
     method: "POST",
     body: JSON.stringify({
@@ -33,7 +34,7 @@ async function postOptimizationRequest(
   seedBike: object,
   bodyDimensions: object
 ): Promise<Response> {
-  return await fetch(apiUrl.concat("/optimize"), {
+  return await fetch(optimizationApiUrl.concat("/optimize"), {
     headers: { "Content-Type": "application/json" },
     method: "POST",
     body: JSON.stringify({
@@ -59,7 +60,7 @@ function getFileById(inputElementId: string): File {
 }
 
 function postRenderBikeRequest(bike: object): Promise<Response> {
-  return fetch(apiUrl.concat("/rendering/render-bike-object"), {
+  return fetch(renderingApiUrl.concat("/render-bike-object"), {
     headers: { "Content-Type": "application/json" },
     method: "POST",
     body: JSON.stringify({
@@ -134,7 +135,9 @@ function submitValidForm(form: HTMLFormElement) {
         handleOptimizationResponse(response);
       })
       .catch((exception) => {
-        console.log("Exception occurred " + exception);
+        setLoading(false);
+        document.getElementById("generated-designs-consumer").innerHTML = 
+        "<h2> Operation failed. Either you have no internet connection, or our servers are down 🥸 </h2>"
       });
   });
 }
@@ -143,7 +146,7 @@ function handleOptimizationResponse(response: Response) {
   if (response.status == 200) {
     handleSuccessfulOptimizationResponse(response);
   } else {
-    console.log("Failed!");
+    handleFailedResponse(response);
   }
 }
 
@@ -289,5 +292,14 @@ function getBikeBtnId(bikeId: string) {
 function hideRenderButton(bikeId: string) {
   const buttonElement = document.getElementById(getBikeBtnId(bikeId));
   buttonElement?.setAttribute("style", "display: none");
+}
+
+function handleFailedResponse(response: Response) {
+  response.text().then(responseText => {
+    const errorResponse = JSON.parse(responseText);
+    setLoading(false);
+    document.getElementById("generated-designs-consumer").innerHTML = 
+    `<h2> Operation failed. Server responded with: ${errorResponse["message"]} </h2>`
+  });
 }
 // export { getServerHealth, postOptimizationRequest, postSeedBikeOptimization };
