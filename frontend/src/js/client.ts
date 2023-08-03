@@ -65,6 +65,7 @@ function postRenderBikeRequest(bike: object): Promise<Response> {
     method: "POST",
     body: JSON.stringify({
       bike: bike,
+      seedImageId: 1
     }),
   });
 }

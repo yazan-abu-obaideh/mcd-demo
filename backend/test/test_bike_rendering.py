@@ -1,6 +1,3 @@
-import json
-import uuid
-
 from bike_rendering.bikeCad_renderer import BikeCad, RenderingService
 from test_utils import McdDemoTestCase
 
@@ -21,4 +18,4 @@ class BikeRendererTest(McdDemoTestCase):
                 "Stem angle": -11.162277491363763, "Headset spacers": 0.47,
                 "Crank length": 0.75,
                 "Handlebar style": 2}
-        RenderingService(renderer_pool_size=1).render_object(bike)
+        RenderingService(renderer_pool_size=1).render_object(bike, "1")

@@ -19,7 +19,8 @@ def render_bike():
 
 @rendering_app.route(endpoint("render-bike-object"), methods=["POST"])
 def render_bike_object():
-    response = make_response(rendering_service.render_object(request.json["bike"]))
+    response = make_response(rendering_service.render_object(request.json["bike"],
+                                                             request.json["seedImageId"]))
     response.headers["Content-Type"] = "image/svg+xml"
     return response
 

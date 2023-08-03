@@ -9,7 +9,7 @@ from asyncio import subprocess
 
 from app_config.rendering_parameters import RENDERER_TIMEOUT, RENDERER_TIMEOUT_GRANULARITY
 from bike_rendering.bike_xml_handler import BikeXmlHandler
-from exceptions import InternalError
+from exceptions import InternalError, UserInputException
 
 LOGGER_NAME = "BikeCadLogger"
 
@@ -33,6 +33,24 @@ OPTIMIZED_TO_CAD = {
     "Handlebar style": "Handlebar style",
 }
 
+SEED_IMAGES = {
+    "1": "PlainRoadbikestandardized.txt",
+    "2": "bike1.bcad",
+    "3": "bike4.bcad"
+}
+
+
+def _build_bike_path(seed_image_id):
+    seed_image = _get_valid_seed_image(seed_image_id)
+    return os.path.join(os.path.dirname(__file__), "../resources", seed_image)
+
+
+def _get_valid_seed_image(seed_image_id):
+    bike = SEED_IMAGES.get(str(seed_image_id))
+    if bike is None:
+        raise UserInputException("Invalid seed image ID")
+    return bike
+
 
 class RenderingService:
     def __init__(self, renderer_pool_size):
@@ -40,9 +58,9 @@ class RenderingService:
         for i in range(renderer_pool_size):
             self._renderer_pool.put(BikeCad())
 
-    def render_object(self, bike_object):
+    def render_object(self, bike_object, seed_image_id):
         xml_handler = BikeXmlHandler()
-        with open(DEFAULT_BIKE_PATH, "r") as file:
+        with open(_build_bike_path(seed_image_id), "r") as file:
             xml_handler.set_xml(file.read())
         for response_key, cad_key in OPTIMIZED_TO_CAD.items():
             xml_handler.update_entry_value(xml_handler.find_entry_by_key(cad_key),
