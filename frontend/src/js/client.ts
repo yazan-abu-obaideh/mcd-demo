@@ -5,11 +5,10 @@ const problemFormId = "problem-form-form";
 const responseDivId = "server-response-div";
 const urlCreator = window.URL || window.webkitURL;
 
-async function getServerHealth(): Promise<Response> {
-  return await fetch(optimizationApiUrl.concat("/health"), {
-    headers: { "Content-Type": "application/json" },
-    method: "GET",
-  });
+
+class OptimizedBike {
+  seedImageId: string;
+  bikeObject: object;
 }
 
 async function postSeedBikeOptimization(
@@ -59,13 +58,13 @@ function getFileById(inputElementId: string): File {
   return ((getElementById(inputElementId) as HTMLInputElement).files)![0];
 }
 
-function postRenderBikeRequest(bike: object): Promise<Response> {
+function postRenderBikeRequest(bike: OptimizedBike): Promise<Response> {
   return fetch(renderingApiUrl.concat("/render-bike-object"), {
     headers: { "Content-Type": "application/json" },
     method: "POST",
     body: JSON.stringify({
-      bike: bike,
-      seedImageId: 1
+      bike: bike.bikeObject,
+      seedImageId: bike.seedImageId
     }),
   });
 }
@@ -85,15 +84,6 @@ function handleRenderedBikeImage(bikeId: string, responseBlob: Blob) {
   ) as HTMLImageElement;
   outputImg.src = urlCreator.createObjectURL(responseBlob);
   outputImg.setAttribute("style", "display: inline");
-}
-
-function renderBike() {
-  postRenderBikeRequest({}).then((response) => {
-    response.blob().then((responseBlob) => {
-      let outputImg = getElementById("bike-img") as HTMLImageElement;
-      outputImg.src = urlCreator.createObjectURL(responseBlob);
-    });
-  });
 }
 
 function submitProblemForm() {
@@ -126,32 +116,36 @@ function submitValidForm(form: HTMLFormElement) {
       reader.result as ArrayBuffer
     );
     const formData: FormData = new FormData(form);
-    postSeedBikeOptimization(
-      formData.get("seedBike") as string,
-      base64File,
-      Number(formData.get("user-height") as string),
-      Number(formData.get("camera-height") as string)
-    )
-      .then((response) => {
-        handleOptimizationResponse(response);
-      })
-      .catch((exception) => {
-        setLoading(false);
-        getElementById("generated-designs-consumer").innerHTML = 
-        "<h2> Operation failed. Either you have no internet connection, or our servers are down 🥸 </h2>"
-      });
+    postSeedBikeOptimizationForm(formData, base64File);
   });
 }
 
-function handleOptimizationResponse(response: Response) {
+function postSeedBikeOptimizationForm(formData: FormData, base64File: string) {
+  postSeedBikeOptimization(
+    formData.get("seedBike") as string,
+    base64File,
+    Number(formData.get("user-height") as string),
+    Number(formData.get("camera-height") as string)
+  )
+    .then((response) => {
+      handleOptimizationResponse(response, formData);
+    })
+    .catch((exception) => {
+      setLoading(false);
+      getElementById("generated-designs-consumer").innerHTML =
+        "<h2> Operation failed. Either you have no internet connection, or our servers are down 🥸 </h2>";
+    });
+}
+
+function handleOptimizationResponse(response: Response, formData: FormData) {
   if (response.status == 200) {
-    handleSuccessfulOptimizationResponse(response);
+    handleSuccessfulOptimizationResponse(response, formData);
   } else {
     handleFailedResponse(response);
   }
 }
 
-function handleSuccessfulOptimizationResponse(response: Response) {
+function handleSuccessfulOptimizationResponse(response: Response, formData: FormData) {
   response.text().then((responseText) => {
     const responseJson: object = JSON.parse(responseText);
     setLoading(false);
@@ -159,7 +153,7 @@ function handleSuccessfulOptimizationResponse(response: Response) {
       responseJson["logs"]
     );
     getElementById("generated-designs-consumer").innerHTML =
-      persistAndBuildHtml(responseJson["bikes"]);
+      persistAndBuildHtml(responseJson["bikes"], formData);
   });
 }
 
@@ -192,10 +186,10 @@ function arrayBufferToBase64(arrayBuffer: ArrayBuffer) {
   return btoa(binary);
 }
 
-function persistAndBuildHtml(bikes: Array<object>): string {
+function persistAndBuildHtml(bikes: Array<object>, formData: FormData): string {
   let bikesHtml = "";
   bikes.forEach((bike) => {
-    const bikeId = persistBike(bike);
+    const bikeId = persistBike(bike, formData);
     bikesHtml += bikeToHtml(bikeId, bike);
   });
   return bikesHtml;
@@ -267,9 +261,12 @@ function generateUuid(): string {
   );
 }
 
-function persistBike(bike: object): string {
+function persistBike(bike: object, formData: FormData): string {
   const bikeId = generateUuid();
-  bikeStore[bikeId] = bike;
+  const optimizedBike = new OptimizedBike();
+  optimizedBike.bikeObject = bike;
+  optimizedBike.seedImageId = formData.get("seedBike") as string;
+  bikeStore[bikeId] = optimizedBike;
   return bikeId;
 }
 
