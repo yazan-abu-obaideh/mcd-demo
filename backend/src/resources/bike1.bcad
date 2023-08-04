@@ -1141,7 +1141,6 @@
 <entry key="HUBS color TILED">true</entry>
 <entry key="DIM_ARROW_LEN">13</entry>
 <entry key="M2MTOPDOWNTUBEnotch offsetX">119.0</entry>
-<entry key="BACKGROUND color BLUE">103</entry>
 <entry key="TEXTFORK2 color IMAGENAME">none</entry>
 <entry key="LOWEROUTLINEFRONTWHEEL1 color IMAGEFitHeight">false</entry>
 <entry key="BRAKE_TRIM color GREEN">64</entry>
@@ -1471,7 +1470,7 @@
 <entry key="BBEXTENSIONfromCHAINSTAY offset">-26.0</entry>
 <entry key="LOWERTEXTREARWHEEL1 color GREEN">0</entry>
 <entry key="CSSIDED offsetX">90.0</entry>
-<entry key="BACKGROUND color IMAGEaspectR">false</entry>
+<entry key="BACKGROUND color IMAGEaspectR">true</entry>
 <entry key="nCSOFFSET offset">0.0</entry>
 <entry key="LOWERTEXTFORK2 color BLUE">51</entry>
 <entry key="HANDLEBAR color IMAGEFitWidth">true</entry>
@@ -1963,7 +1962,6 @@
 <entry key="CSAUXCY1">20.0</entry>
 <entry key="SEATSTAYENDZ offset">52.0</entry>
 <entry key="CSAUXANGLE_ONE offset">0.0</entry>
-<entry key="BACKGROUND color GREEN">143</entry>
 <entry key="BOTTLE_TOPS color TILED">true</entry>
 <entry key="HEADTUBE_DOWNTUBE_JUNCTION_TO_BOTTOM_OF_HEADTUBE show">false</entry>
 <entry key="OUTLINETOPTUBE2 color ALPHA">255</entry>
@@ -3056,7 +3054,7 @@
 <entry key="BOTTLE_CAGE color IMAGEYES">false</entry>
 <entry key="SADDLETIPtoMIDDLE offsetX">0.0</entry>
 <entry key="LOWERSTACK offset">0.0</entry>
-<entry key="BACKGROUND color IMAGEYES">true</entry>
+<entry key="BACKGROUND color IMAGEYES">false</entry>
 <entry key="SBLADEW front">80.0</entry>
 <entry key="TILTANGLE offset">95.0</entry>
 <entry key="HEADTUBEUPEXTENSION offset">43.0</entry>
@@ -3327,7 +3325,6 @@
 <entry key="BOTTLE_BOSS3B offset">-86.0</entry>
 <entry key="DECAL_SIZESEATPOST2">16.0</entry>
 <entry key="DECAL_SIZESEATPOST1">16.0</entry>
-<entry key="BACKGROUND color ALPHA">90</entry>
 <entry key="HEADTUBELENGTH show">false</entry>
 <entry key="nSSAUXBENDS">1</entry>
 <entry key="BOTTLE_BOSS1Bc offsetX">0.0</entry>
@@ -3448,7 +3445,6 @@
 <entry key="GAPBETWEENTOPTUBEandDOWNTUBE offsetX">0.0</entry>
 <entry key="WATERBOTTLES color RED">200</entry>
 <entry key="HEADTUBEB offset">0.0</entry>
-<entry key="BACKGROUND color RED">131</entry>
 <entry key="BRAKE_TRIM color IMAGEFitHeight">true</entry>
 <entry key="SPOKE_OFFSET rear">0.0</entry>
 <entry key="TEXTSEATTUBE2 color GREEN">0</entry>
@@ -3471,6 +3467,7 @@
 <entry key="Strut thickness">3.0</entry>
 <entry key="SADDLEANGLE offsetX">0.0</entry>
 <entry key="BACKGROUND color IMAGEFitHeight">false</entry>
+<entry key="BACKGROUND color sRGB">-1</entry>
 <entry key="TEXTTOPTUBE1 color IMAGEFitHeight">false</entry>
 <entry key="OUTGRADIENT_SEATTUBE2">false</entry>
 <entry key="SEATPOSTA">30.0</entry>

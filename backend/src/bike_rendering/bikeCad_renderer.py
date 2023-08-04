@@ -60,12 +60,14 @@ class RenderingService:
 
     def render_object(self, bike_object, seed_image_id):
         xml_handler = BikeXmlHandler()
+        self._load_seed_xml(xml_handler, seed_image_id)
+        for response_key, cad_key in OPTIMIZED_TO_CAD.items():
+            self._update_xml(xml_handler, bike_object, cad_key, response_key)
+        return self.render(xml_handler.get_content_string())
+
+    def _load_seed_xml(self, xml_handler, seed_image_id):
         with open(_build_bike_path(seed_image_id), "r") as file:
             xml_handler.set_xml(file.read())
-        for response_key, cad_key in OPTIMIZED_TO_CAD.items():
-            xml_handler.update_entry_value(xml_handler.find_entry_by_key(cad_key),
-                                           str(bike_object[response_key]))
-        return self.render(xml_handler.get_content_string())
 
     def render(self, bike_xml):
         renderer = self._get_renderer()
@@ -73,6 +75,13 @@ class RenderingService:
         self._renderer_pool.put(renderer)  # This will never block as is - no new elements
         # are ever added, so the pool will always have room for borrowed renderers.
         return result
+
+    def _update_xml(self, xml_handler, bike_object, cad_key, response_key):
+        entry = xml_handler.find_entry_by_key(cad_key)
+        if entry:
+            xml_handler.update_entry_value(entry, str(bike_object[response_key]))
+        else:
+            xml_handler.add_new_entry(cad_key, str(bike_object[response_key]))
 
     def _get_renderer(self):
         return self._renderer_pool.get(timeout=RENDERER_TIMEOUT / 2)
