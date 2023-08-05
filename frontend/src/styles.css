@@ -41,8 +41,12 @@ input[type="number"] {
 }
 
 .rendered-bike-img {
-  width: 35vw;
-  height: auto;
+  height: 35vh;
+  width: auto;
+}
+
+.optimized-bike-div {
+  height: 55vh;
 }
 
 
