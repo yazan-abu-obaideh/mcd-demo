@@ -46,7 +46,7 @@ input[type="number"] {
 }
 
 .optimized-bike-div {
-  height: 55vh;
+  height: 60vh;
 }
 
 .loading-element {
@@ -55,7 +55,7 @@ input[type="number"] {
 }
 
 .bike-render-inner-element-div {
-  height: 85%;
+  height: 66%;
   display: flex;
   justify-content: center;
   align-items: center;

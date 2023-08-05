@@ -229,8 +229,10 @@ function bikeToCarouselItem(index: number, bikeId: string, bike: object) {
   return optimizedBikeDiv;
 }
 
-function generateBikeDescription(index: number, bike: object): Text {
-  return new Text(`Generated Bike ${index + 1}`);
+function generateBikeDescription(index: number, bike: object): HTMLElement {
+  const element = document.createElement("h4");
+  element.textContent = `Generated Bike ${index + 1}`
+  return element;
 }
 
 function generateRenderedImgElement(bikeId: string): HTMLDivElement {
