@@ -111,7 +111,6 @@ function showFormErrors(form: HTMLFormElement) {
 
 function submitValidForm(form: HTMLFormElement) {
   readFile("user-img-upload", (reader) => {
-    console.log("read file!");
     const base64File: string = arrayBufferToBase64(
       reader.result as ArrayBuffer
     );
@@ -152,8 +151,7 @@ function handleSuccessfulOptimizationResponse(response: Response, formData: Form
     getElementById("mcd-logs-consumer").innerHTML = logsToHtml(
       responseJson["logs"]
     );
-    getElementById("generated-designs-consumer").innerHTML =
-      persistAndBuildHtml(responseJson["bikes"], formData);
+    getElementById("generated-designs-consumer").innerHTML = persistAndBuildHtml(responseJson["bikes"], formData).innerHTML;
   });
 }
 
@@ -186,43 +184,49 @@ function arrayBufferToBase64(arrayBuffer: ArrayBuffer) {
   return btoa(binary);
 }
 
-function persistAndBuildHtml(bikes: Array<object>, formData: FormData): string {
-  let bikesHtml = "";
+function persistAndBuildHtml(bikes: Array<object>, formData: FormData): HTMLDivElement {
+  const bikesHtml = document.createElement("div");
   bikes.forEach((bike) => {
     const bikeId = persistBike(bike, formData);
-    bikesHtml += bikeToHtml(bikeId, bike);
+    bikesHtml.appendChild(bikeToHtml(bikeId, bike));
   });
   return bikesHtml;
 }
 
 function bikeToHtml(bikeId: string, bike: object) {
-  return `
-  <div class="container text-center border rounded mb-1 p-3">
-  ${generateBikeDescription(bike)}
-  <br>
-  ${generateRenderButton(bikeId)}
-    <br>
-     ${generateRenderedImgElement(bikeId)}
-  </div>`;
+  const optimizedBikeDiv = document.createElement("div");
+  optimizedBikeDiv.setAttribute("class", "container text-center border rounded mb-1 p-3")
+  optimizedBikeDiv.appendChild(generateBikeDescription(bike));
+  optimizedBikeDiv.appendChild(document.createElement("br"));
+  optimizedBikeDiv.appendChild(generateRenderButton(bikeId));
+  optimizedBikeDiv.appendChild(document.createElement("br"));
+  optimizedBikeDiv.appendChild(generateRenderedImgElement(bikeId))
+  return optimizedBikeDiv;
 }
 
-function generateBikeDescription(bike: object): string {
-  return `Generated Bike`;
+function generateBikeDescription(bike: object): Text {
+  return new Text("Generated Bike");
 }
 
-function generateRenderedImgElement(bikeId: string): string {
-  return `<div class="m-3 text-center"> <img class="rendered-bike-img" id='${getBikeImgId(
-    bikeId
-  )}' alt="rendered bike image" style="display: none"> </div>`;
+function generateRenderedImgElement(bikeId: string): HTMLDivElement {
+  const imageDiv = document.createElement("div");
+  imageDiv.setAttribute("class", "m-3 text-center");
+  const image = document.createElement("img");
+  image.setAttribute("class", "rendered-bike-img");
+  image.setAttribute("id", getBikeImgId(bikeId));
+  image.setAttribute("alt", "rendered bike image");
+  image.setAttribute("style", "display: none");
+  imageDiv.appendChild(image);
+  return imageDiv;
 }
 
-function generateRenderButton(bikeId: string): string {
-  return `<button type="button" id='${getBikeBtnId(
-    bikeId
-  )}' class="btn btn-danger btn-sm m-2"
-  onclick='${renderBikeById.name}("${bikeId}")'> 
-    Render Bike </button>
-`;
+function generateRenderButton(bikeId: string): HTMLButtonElement {
+  const button = document.createElement("button");
+  button.setAttribute("id", getBikeBtnId(bikeId));
+  button.setAttribute("class", "btn btn-danger btn-sm m-2");
+  button.setAttribute("onClick", `${renderBikeById.name}("${bikeId}")`)
+  button.textContent = "Render Bike";
+  return button;
 }
 
 function formatNumber(numberAsString: string): string {

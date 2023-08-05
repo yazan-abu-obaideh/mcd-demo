@@ -3,7 +3,9 @@ body {
 }
 
 .seed-bike-img {
-  height: 100px;
+  height: 200px;
+  padding: 10px;
+  border-radius: 75px;
   width: auto;
 }
 .flex-cont {
@@ -39,7 +41,7 @@ input[type="number"] {
 }
 
 .rendered-bike-img {
-  width: 25vw;
+  width: 35vw;
   height: auto;
 }
 
