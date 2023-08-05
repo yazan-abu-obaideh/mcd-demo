@@ -5,7 +5,6 @@ const problemFormId = "problem-form-form";
 const responseDivId = "server-response-div";
 const urlCreator = window.URL || window.webkitURL;
 
-
 class OptimizedBike {
   seedImageId: string;
   bikeObject: object;
@@ -64,7 +63,7 @@ function postRenderBikeRequest(bike: OptimizedBike): Promise<Response> {
     method: "POST",
     body: JSON.stringify({
       bike: bike.bikeObject,
-      seedImageId: bike.seedImageId
+      seedImageId: bike.seedImageId,
     }),
   });
 }
@@ -79,9 +78,7 @@ function renderBikeById(bikeId: string) {
 }
 
 function handleRenderedBikeImage(bikeId: string, responseBlob: Blob) {
-  const outputImg = getElementById(
-    getBikeImgId(bikeId)
-  ) as HTMLImageElement;
+  const outputImg = getElementById(getBikeImgId(bikeId)) as HTMLImageElement;
   outputImg.src = urlCreator.createObjectURL(responseBlob);
   outputImg.setAttribute("style", "display: inline");
 }
@@ -144,14 +141,18 @@ function handleOptimizationResponse(response: Response, formData: FormData) {
   }
 }
 
-function handleSuccessfulOptimizationResponse(response: Response, formData: FormData) {
+function handleSuccessfulOptimizationResponse(
+  response: Response,
+  formData: FormData
+) {
   response.text().then((responseText) => {
     const responseJson: object = JSON.parse(responseText);
     setLoading(false);
     getElementById("mcd-logs-consumer").innerHTML = logsToHtml(
       responseJson["logs"]
     );
-    getElementById("generated-designs-consumer").innerHTML = persistAndBuildHtml(responseJson["bikes"], formData).innerHTML;
+    getElementById("generated-designs-consumer-carousel").innerHTML =
+      persistAndBuildCarouselItems(responseJson["bikes"], formData).innerHTML;
   });
 }
 
@@ -184,23 +185,40 @@ function arrayBufferToBase64(arrayBuffer: ArrayBuffer) {
   return btoa(binary);
 }
 
-function persistAndBuildHtml(bikes: Array<object>, formData: FormData): HTMLDivElement {
+function persistAndBuildCarouselItems(
+  bikes: Array<object>,
+  formData: FormData
+): HTMLDivElement {
   const bikesHtml = document.createElement("div");
-  bikes.forEach((bike) => {
-    const bikeId = persistBike(bike, formData);
-    bikesHtml.appendChild(bikeToHtml(bikeId, bike));
-  });
+  for (let index = 0; index < bikes.length; index++) {
+    const bikeId = persistBike(bikes[index], formData);
+    const bikeItem = bikeToCarouselItem(bikeId, bikes[index]);
+    activateFirst(index, bikeItem);
+    bikesHtml.appendChild(bikeItem);
+  }
   return bikesHtml;
 }
 
-function bikeToHtml(bikeId: string, bike: object) {
+function activateFirst(index: number, bikeItem: HTMLDivElement) {
+  if (index == 0) {
+    bikeItem.setAttribute(
+      "class",
+      bikeItem.getAttribute("class") + " active"
+    );
+  }
+}
+
+function bikeToCarouselItem(bikeId: string, bike: object) {
   const optimizedBikeDiv = document.createElement("div");
-  optimizedBikeDiv.setAttribute("class", "container text-center border rounded mb-1 p-3")
+  optimizedBikeDiv.setAttribute(
+    "class",
+    "container text-center border rounded carousel-item mb-1 p-3"
+  );
   optimizedBikeDiv.appendChild(generateBikeDescription(bike));
   optimizedBikeDiv.appendChild(document.createElement("br"));
   optimizedBikeDiv.appendChild(generateRenderButton(bikeId));
   optimizedBikeDiv.appendChild(document.createElement("br"));
-  optimizedBikeDiv.appendChild(generateRenderedImgElement(bikeId))
+  optimizedBikeDiv.appendChild(generateRenderedImgElement(bikeId));
   return optimizedBikeDiv;
 }
 
@@ -224,7 +242,7 @@ function generateRenderButton(bikeId: string): HTMLButtonElement {
   const button = document.createElement("button");
   button.setAttribute("id", getBikeBtnId(bikeId));
   button.setAttribute("class", "btn btn-danger btn-sm m-2");
-  button.setAttribute("onClick", `${renderBikeById.name}("${bikeId}")`)
+  button.setAttribute("onClick", `${renderBikeById.name}("${bikeId}")`);
   button.textContent = "Render Bike";
   return button;
 }
@@ -290,11 +308,12 @@ function hideRenderButton(bikeId: string) {
 }
 
 function handleFailedResponse(response: Response) {
-  response.text().then(responseText => {
+  response.text().then((responseText) => {
     const errorResponse = JSON.parse(responseText);
     setLoading(false);
-    getElementById("generated-designs-consumer").innerHTML = 
-    `<h2> Operation failed. Server responded with: ${errorResponse["message"]} </h2>`
+    getElementById(
+      "generated-designs-consumer"
+    ).innerHTML = `<h2> Operation failed. Server responded with: ${errorResponse["message"]} </h2>`;
   });
 }
 
