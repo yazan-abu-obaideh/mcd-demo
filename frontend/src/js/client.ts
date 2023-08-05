@@ -69,12 +69,18 @@ function postRenderBikeRequest(bike: OptimizedBike): Promise<Response> {
 }
 
 function renderBikeById(bikeId: string) {
+  hideRenderButton(bikeId);
+  setBikeLoading(bikeId, "flex");
   postRenderBikeRequest(bikeStore[bikeId]).then((response) => {
     response.blob().then((responseBlob) => {
       handleRenderedBikeImage(bikeId, responseBlob);
-      hideRenderButton(bikeId);
+      setBikeLoading(bikeId, "none");
     });
   });
+}
+
+function setBikeLoading(bikeId: string, display: string) : void {
+  document.getElementById(bikeLoadingId(bikeId))!.setAttribute("style", `display: ${display}`);
 }
 
 function handleRenderedBikeImage(bikeId: string, responseBlob: Blob) {
@@ -216,6 +222,7 @@ function bikeToCarouselItem(index: number, bikeId: string, bike: object) {
   );
   optimizedBikeDiv.appendChild(generateBikeDescription(index, bike));
   optimizedBikeDiv.appendChild(document.createElement("br"));
+  optimizedBikeDiv.appendChild(createBikeLoadingElement(bikeId));
   optimizedBikeDiv.appendChild(generateRenderButton(bikeId));
   optimizedBikeDiv.appendChild(document.createElement("br"));
   optimizedBikeDiv.appendChild(generateRenderedImgElement(bikeId));
@@ -238,13 +245,16 @@ function generateRenderedImgElement(bikeId: string): HTMLDivElement {
   return imageDiv;
 }
 
-function generateRenderButton(bikeId: string): HTMLButtonElement {
+function generateRenderButton(bikeId: string): HTMLDivElement {
+  const div = document.createElement("div");
+  div.setAttribute("class", "bike-render-inner-element-div");
+  div.setAttribute("id", getBikeBtnId(bikeId));
   const button = document.createElement("button");
-  button.setAttribute("id", getBikeBtnId(bikeId));
-  button.setAttribute("class", "btn btn-danger btn-sm m-2");
+  button.setAttribute("class", "btn btn-danger btn-lg");
   button.setAttribute("onClick", `${renderBikeById.name}("${bikeId}")`);
   button.textContent = "Render Bike";
-  return button;
+  div.appendChild(button);
+  return div;
 }
 
 function formatNumber(numberAsString: string): string {
@@ -319,6 +329,24 @@ function handleFailedResponse(response: Response) {
 
 function getElementById(elementId: string): HTMLElement {
   return document.getElementById(elementId)!;
+}
+
+
+function createBikeLoadingElement(bikeId: string): HTMLDivElement {
+  const bikeLoadingDiv = document.createElement("div");
+  bikeLoadingDiv.setAttribute("id", bikeLoadingId(bikeId));
+  bikeLoadingDiv.setAttribute("class", "text-center bike-render-inner-element-div");
+  bikeLoadingDiv.setAttribute("style", "display: none;");
+
+  const innerDiv = document.createElement("div");
+  innerDiv.setAttribute("class", "spinner-border loading-element");
+
+  bikeLoadingDiv.appendChild(innerDiv);
+  return bikeLoadingDiv;
+}
+
+function bikeLoadingId(bikeId: string): string {
+  return `bike-loading-element-${bikeId}`;
 }
 
 // export { getServerHealth, postOptimizationRequest, postSeedBikeOptimization };
