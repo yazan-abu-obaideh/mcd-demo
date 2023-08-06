@@ -2,13 +2,11 @@ version: "3.8"
 services:
   nginx:
     container_name: "proxy"
-    build:
-      context: .
-      dockerfile: nginx.dockerfile
     deploy:
       restart_policy:
         condition: any
         delay: 5s
+    image: mcd-demo_nginx
     ports:
       - "8000:443"
       - "8080:80"
@@ -26,9 +24,7 @@ services:
     healthcheck:
       test: curl --fail optimization-app:8080/api/v1/health || exit 1
       interval: 10s
-    build:
-      context: .
-      dockerfile: app.dockerfile
+    image: mcd-demo_optimization
   rendering:
     container_name: "rendering_service"
     hostname: rendering-app
@@ -45,6 +41,4 @@ services:
     healthcheck:
       test: curl --fail rendering-app:8080/api/v1/rendering/health || exit 1
       interval: 10s
-    build:
-      context: .
-      dockerfile: app.dockerfile
+    image: mcd-demo_rendering
