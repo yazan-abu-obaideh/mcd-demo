@@ -1,17 +1,15 @@
 version: "3.8"
 services:
   nginx:
-    container_name: "proxy"
     deploy:
       restart_policy:
         condition: any
-        delay: 5s
+        delay: 10s
     image: mcd-demo_nginx
     ports:
       - "8000:443"
       - "8080:80"
   optimization:
-    container_name: "optimization_service"
     hostname: optimization-app
     entrypoint: sh ./run_optimization_service.sh
     environment:
@@ -20,13 +18,15 @@ services:
       - APP_ROOT_DIR=backend/src/
       - APP_PORT=8080
       - RENDERER_POOL_SIZE=0
-    restart: always
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
     healthcheck:
       test: curl --fail optimization-app:8080/api/v1/health || exit 1
       interval: 10s
     image: mcd-demo_optimization
   rendering:
-    container_name: "rendering_service"
     hostname: rendering-app
     entrypoint: sh ./run_rendering_service.sh
     environment:
@@ -37,7 +37,10 @@ services:
       - RENDERER_POOL_SIZE=3
       - RENDERER_TIMEOUT_GRANULARITY=1
       - RENDERER_TIMEOUT=15
-    restart: always
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
     healthcheck:
       test: curl --fail rendering-app:8080/api/v1/rendering/health || exit 1
       interval: 10s
