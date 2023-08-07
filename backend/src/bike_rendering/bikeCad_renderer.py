@@ -11,6 +11,8 @@ from app_config.rendering_parameters import RENDERER_TIMEOUT, RENDERER_TIMEOUT_G
 from bike_rendering.bike_xml_handler import BikeXmlHandler
 from exceptions import InternalError, UserInputException
 
+TEMP_DIR = "bikes"
+
 LOGGER_NAME = "BikeCadLogger"
 
 WINDOWS = "Windows"
@@ -54,6 +56,7 @@ def _get_valid_seed_image(seed_image_id):
 
 class RenderingService:
     def __init__(self, renderer_pool_size):
+        os.makedirs(os.path.join(os.path.dirname(__file__), TEMP_DIR), exist_ok=True)
         self._renderer_pool = queue.Queue(maxsize=renderer_pool_size)
         for i in range(renderer_pool_size):
             self._renderer_pool.put(BikeCad())
@@ -122,7 +125,7 @@ class BikeCad:
             file.write(bike_xml)
 
     def _generate_bike_path(self):
-        return f"{os.path.dirname(__file__)}/bikes/{str(uuid.uuid4())}.bcad"
+        return os.path.join(os.path.dirname(__file__), TEMP_DIR, f"{str(uuid.uuid4())}.bcad")
 
     def _export_svgs(self, folder):
         self._run("svg<>" + folder + "\n")
