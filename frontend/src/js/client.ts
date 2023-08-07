@@ -10,7 +10,8 @@ class OptimizedBike {
   bikeObject: object;
 }
 
-class ExclusiveVisibleElements {
+class ExclusivelyVisibleElements {
+  // a class that encapsulates the logic of a bunch of elements where only one can be visible at a time
   constructor(elementIds: Array<string>) {
     this.elementIds = elementIds;
   }
@@ -27,8 +28,9 @@ class ExclusiveVisibleElements {
   }
 }
 
-const resultDivElements = new ExclusiveVisibleElements([
+const resultDivElements = new ExclusivelyVisibleElements([
   "response-received-div",
+  "no-bikes-found-div",
   "response-loading-div",
   "error-response-div",
 ]);
@@ -178,13 +180,21 @@ function handleSuccessfulOptimizationResponse(
 ) {
   response.text().then((responseText) => {
     const responseJson: object = JSON.parse(responseText);
-    resultDivElements.showElement("response-received-div");
-    getElementById("mcd-logs-consumer").innerHTML = logsToHtml(
-      responseJson["logs"]
-    );
-    getElementById("generated-designs-consumer-carousel").innerHTML =
-      persistAndBuildCarouselItems(responseJson["bikes"], formData).innerHTML;
+    if (responseJson["bikes"].length == 0) {
+      resultDivElements.showElement("no-bikes-found-div");
+    } else {
+      showGeneratedBikes(responseJson, formData);
+    }
   });
+}
+
+function showGeneratedBikes(responseJson: object, formData: FormData) {
+  resultDivElements.showElement("response-received-div");
+  getElementById("mcd-logs-consumer").innerHTML = logsToHtml(
+    responseJson["logs"]
+  );
+  getElementById("generated-designs-consumer-carousel").innerHTML =
+    persistAndBuildCarouselItems(responseJson["bikes"], formData).innerHTML;
 }
 
 function setLoading() {
