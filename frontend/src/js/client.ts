@@ -10,6 +10,29 @@ class OptimizedBike {
   bikeObject: object;
 }
 
+class ExclusiveVisibleElements {
+  constructor(elementIds: Array<string>) {
+    this.elementIds = elementIds;
+  }
+
+  elementIds: Array<string>;
+  showElement(id: string, elementDisplay = "block") {
+    if (!this.elementIds.includes(id)) {
+      throw Error("Element not found");
+    }
+    this.elementIds.forEach((elementId) => {
+      getElementById(elementId).setAttribute("style", "display: none");
+    });
+    getElementById(id).setAttribute("style", `display: ${elementDisplay}`);
+  }
+}
+
+const resultDivElements = new ExclusiveVisibleElements([
+  "response-received-div",
+  "response-loading-div",
+  "error-response-div",
+]);
+
 async function postSeedBikeOptimization(
   seedBikeId: string,
   imageBase64: string,
@@ -54,7 +77,7 @@ function readFile(
 }
 
 function getFileById(inputElementId: string): File {
-  return ((getElementById(inputElementId) as HTMLInputElement).files)![0];
+  return (getElementById(inputElementId) as HTMLInputElement).files![0];
 }
 
 function postRenderBikeRequest(bike: OptimizedBike): Promise<Response> {
@@ -79,8 +102,10 @@ function renderBikeById(bikeId: string) {
   });
 }
 
-function setBikeLoading(bikeId: string, display: string) : void {
-  document.getElementById(bikeLoadingId(bikeId))!.setAttribute("style", `display: ${display}`);
+function setBikeLoading(bikeId: string, display: string): void {
+  document
+    .getElementById(bikeLoadingId(bikeId))!
+    .setAttribute("style", `display: ${display}`);
 }
 
 function handleRenderedBikeImage(bikeId: string, responseBlob: Blob) {
@@ -103,7 +128,7 @@ function submitProblemForm() {
 
 function showResponseDiv() {
   const responseDiv = getElementById(responseDivId);
-  setLoading(true);
+  setLoading();
   responseDiv.setAttribute("style", "display: block;");
   responseDiv.scrollIntoView();
 }
@@ -133,8 +158,8 @@ function postSeedBikeOptimizationForm(formData: FormData, base64File: string) {
       handleOptimizationResponse(response, formData);
     })
     .catch((exception) => {
-      setLoading(false);
-      getElementById("generated-designs-consumer").innerHTML =
+      resultDivElements.showElement("error-response-div");
+      getElementById("error-response-div").innerHTML =
         "<h2> Operation failed. Either you have no internet connection, or our servers are down 🥸 </h2>";
     });
 }
@@ -153,7 +178,7 @@ function handleSuccessfulOptimizationResponse(
 ) {
   response.text().then((responseText) => {
     const responseJson: object = JSON.parse(responseText);
-    setLoading(false);
+    resultDivElements.showElement("response-received-div");
     getElementById("mcd-logs-consumer").innerHTML = logsToHtml(
       responseJson["logs"]
     );
@@ -162,24 +187,14 @@ function handleSuccessfulOptimizationResponse(
   });
 }
 
-function setLoading(loading: boolean) {
-  if (loading) {
-    setResponseDivChildrenVisibility("block", "none");
-  } else {
-    setResponseDivChildrenVisibility("none", "block");
-  }
+function setLoading() {
+    resultDivElements.showElement("response-loading-div");
 }
 
-function setResponseDivChildrenVisibility(
-  loadingDisplay: string,
-  responseDisplay: string
-) {
+function setResponseDivChildrenVisibility(loadingDisplay: string) {
   document
     .getElementById("response-loading-div")
     ?.setAttribute("style", `display: ${loadingDisplay}`);
-  document
-    .getElementById("response-received-div")
-    ?.setAttribute("style", `display: ${responseDisplay}`);
 }
 
 function arrayBufferToBase64(arrayBuffer: ArrayBuffer) {
@@ -207,10 +222,7 @@ function persistAndBuildCarouselItems(
 
 function activateFirst(index: number, bikeItem: HTMLDivElement) {
   if (index == 0) {
-    bikeItem.setAttribute(
-      "class",
-      bikeItem.getAttribute("class") + " active"
-    );
+    bikeItem.setAttribute("class", bikeItem.getAttribute("class") + " active");
   }
 }
 
@@ -231,7 +243,7 @@ function bikeToCarouselItem(index: number, bikeId: string, bike: object) {
 
 function generateBikeDescription(index: number, bike: object): HTMLElement {
   const element = document.createElement("h4");
-  element.textContent = `Generated Bike ${index + 1}`
+  element.textContent = `Generated Bike ${index + 1}`;
   return element;
 }
 
@@ -322,9 +334,9 @@ function hideRenderButton(bikeId: string) {
 function handleFailedResponse(response: Response) {
   response.text().then((responseText) => {
     const errorResponse = JSON.parse(responseText);
-    setLoading(false);
+    resultDivElements.showElement("error-response-div");
     getElementById(
-      "generated-designs-consumer"
+      "error-response-div"
     ).innerHTML = `<h2> Operation failed. Server responded with: ${errorResponse["message"]} </h2>`;
   });
 }
@@ -333,11 +345,13 @@ function getElementById(elementId: string): HTMLElement {
   return document.getElementById(elementId)!;
 }
 
-
 function createBikeLoadingElement(bikeId: string): HTMLDivElement {
   const bikeLoadingDiv = document.createElement("div");
   bikeLoadingDiv.setAttribute("id", bikeLoadingId(bikeId));
-  bikeLoadingDiv.setAttribute("class", "text-center bike-render-inner-element-div");
+  bikeLoadingDiv.setAttribute(
+    "class",
+    "text-center bike-render-inner-element-div"
+  );
   bikeLoadingDiv.setAttribute("style", "display: none;");
 
   const innerDiv = document.createElement("div");
