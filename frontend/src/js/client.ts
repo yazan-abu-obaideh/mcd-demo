@@ -162,7 +162,7 @@ function postSeedBikeOptimizationForm(formData: FormData, base64File: string) {
     .catch((exception) => {
       resultDivElements.showElement("error-response-div");
       getElementById("error-response-div").innerHTML =
-        "<h2> Operation failed. Either you have no internet connection, or our servers are down 🥸 </h2>";
+        "<h3> Operation failed. Either you have no internet connection, or our servers are down 🥸 </h3>";
     });
 }
 
@@ -347,7 +347,7 @@ function handleFailedResponse(response: Response) {
     resultDivElements.showElement("error-response-div");
     getElementById(
       "error-response-div"
-    ).innerHTML = `<h2> Operation failed. Server responded with: ${errorResponse["message"]} </h2>`;
+    ).innerHTML = `<h3> Operation failed. Server responded with: ${errorResponse["message"]} </h3>`;
   });
 }
 
