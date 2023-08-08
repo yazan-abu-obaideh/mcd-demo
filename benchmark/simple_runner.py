@@ -20,7 +20,6 @@ class TimedServerResponse:
 class RunMetadata:
     node_description: str
     timestamp_start_epoch: float
-    total_runtime_seconds: float
     rendering_workers: int
     optimization_workers: int
     _max_concurrent_requests: int
@@ -32,6 +31,8 @@ class RunResults:
     rendering_run_results: List[TimedServerResponse]
     interleaved_run_results: List[TimedServerResponse]
     interleaving_mode_description: str
+    total_requests_processed: int
+    total_runtime_seconds: float
 
 
 def get_resource_path(file_name):
@@ -113,17 +114,18 @@ if __name__ == "__main__":
     print(f"Total runtime: {total_runtime}")
     metadata = RunMetadata(node_description="Digital Ocean CPU-optimized node "
                                             "regular intel 8vCPUs 16GB $168/month",
-                           optimization_workers=3,
+                           optimization_workers=7,
                            rendering_workers=3,
                            max_concurrent_requests=_max_concurrent_requests,
                            timestamp_start_epoch=benchmark_start,
-                           total_runtime_seconds=total_runtime
                            )
     run_results = RunResults(
         optimization_run_results=optimization_run_results,
         rendering_run_results=[],
         interleaved_run_results=[],
-        interleaving_mode_description="NA"
+        interleaving_mode_description="NA",
+        total_runtime_seconds=total_runtime,
+        total_requests_processed=_total_requests
     )
     with open(f"benchmark-results-{str(uuid.uuid4())}.txt", "w") as result_file:
         # noinspection PyTypeChecker
