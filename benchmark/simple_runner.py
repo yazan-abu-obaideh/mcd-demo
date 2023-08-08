@@ -19,6 +19,7 @@ def _benchmark_post_request(url: str, data: dict):
     result = requests.post(url,
                            headers=headers,
                            data=json_data)
+    print("Done!")
     return result.status_code, time.time() - start
 
 
@@ -55,10 +56,13 @@ def post_optimization_request(base_url: str):
     return _benchmark_post_request(url, data)
 
 
-def run_optimization_benchmark(base_url: str, runnable_request: callable, concurrent_requests: int):
-    executor = concurrent.futures.ThreadPoolExecutor(max_workers=concurrent_requests)
+def run_optimization_benchmark(base_url: str,
+                               runnable_request: callable,
+                               total_requests: int,
+                               max_concurrent_requests: int):
+    executor = concurrent.futures.ThreadPoolExecutor(max_workers=max_concurrent_requests)
     future_results = []
-    for _ in range(concurrent_requests):
+    for _ in range(total_requests):
         future_results.append(executor.submit(runnable_request, base_url))
     for result in future_results:
         print(result.result())
@@ -67,6 +71,7 @@ def run_optimization_benchmark(base_url: str, runnable_request: callable, concur
 if __name__ == "__main__":
     bench_start = time.time()
     run_optimization_benchmark("http://161.35.112.82",
-                               post_render_request,
-                               concurrent_requests=10)
+                               post_optimization_request,
+                               total_requests=20,
+                               max_concurrent_requests=10)
     print(f"Total runtime: {time.time() - bench_start}")
