@@ -48,7 +48,9 @@ def _benchmark_post_request(url: str, data: dict) -> TimedServerResponse:
                            data=json_data)
     finished = time.time() - start
     print(f"Finished in {finished} seconds")
-    return TimedServerResponse(result.status_code, finished)
+    response = TimedServerResponse(result.status_code, finished)
+    print(response)
+    return response
 
 
 def post_render_request(base_url: str) -> TimedServerResponse:
@@ -100,8 +102,8 @@ def run_request_benchmark(base_url: str,
 
 
 if __name__ == "__main__":
-    _max_concurrent_requests = 5
-    _total_requests = 10
+    _max_concurrent_requests = 10
+    _total_requests = 50
     benchmark_start = time.time()
     optimization_run_results = run_request_benchmark("http://161.35.112.82",
                                                      post_optimization_request,
