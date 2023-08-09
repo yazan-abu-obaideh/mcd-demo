@@ -31,13 +31,15 @@ services:
     entrypoint: sh ./run_rendering_service.sh
     environment:
       - APP_HOSTNAME=rendering-app
-      - APP_WORKERS=3
+      - APP_WORKERS=1
+      - APP_THREADS=3
       - APP_ROOT_DIR=backend/src/
       - APP_PORT=8080
-      - RENDERER_POOL_SIZE=3
+      - RENDERER_POOL_SIZE=1
       - RENDERER_TIMEOUT_GRANULARITY=1
       - RENDERER_TIMEOUT=15
     deploy:
+      replicas: 6
       restart_policy:
         condition: on-failure
         delay: 5s
