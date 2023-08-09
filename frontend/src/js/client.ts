@@ -96,11 +96,31 @@ function postRenderBikeRequest(bike: OptimizedBike): Promise<Response> {
 function renderBikeById(bikeId: string) {
   hideRenderButton(bikeId);
   setBikeLoading(bikeId, "flex");
-  postRenderBikeRequest(bikeStore[bikeId]).then((response) => {
-    response.blob().then((responseBlob) => {
-      handleRenderedBikeImage(bikeId, responseBlob);
-      setBikeLoading(bikeId, "none");
-    });
+  postRenderBikeRequest(bikeStore[bikeId])
+    .then((response) => {
+      if (response.status == 200) {
+        handleSuccessfulRenderResponse(response, bikeId);
+      } else {
+        showRenderError(bikeId);
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+      showRenderError(bikeId);
+    })
+    .finally(() => setBikeLoading(bikeId, "none"));
+}
+
+function showRenderError(bikeId: string) {
+  getElementById(renderingFailedElementId(bikeId)).setAttribute(
+    "style",
+    "display: flex"
+  );
+}
+
+function handleSuccessfulRenderResponse(response: Response, bikeId: string) {
+  response.blob().then((responseBlob) => {
+    handleRenderedBikeImage(bikeId, responseBlob);
   });
 }
 
@@ -160,9 +180,7 @@ function postSeedBikeOptimizationForm(formData: FormData, base64File: string) {
       handleOptimizationResponse(response, formData);
     })
     .catch((exception) => {
-      resultDivElements.showElement("error-response-div");
-      getElementById("error-response-div").innerHTML =
-        "<h3> Operation failed. Either you have no internet connection, or our servers are down 🥸 </h3>";
+      showGenericError();
     });
 }
 
@@ -198,7 +216,7 @@ function showGeneratedBikes(responseJson: object, formData: FormData) {
 }
 
 function setLoading() {
-    resultDivElements.showElement("response-loading-div");
+  resultDivElements.showElement("response-loading-div");
 }
 
 function setResponseDivChildrenVisibility(loadingDisplay: string) {
@@ -245,6 +263,7 @@ function bikeToCarouselItem(index: number, bikeId: string, bike: object) {
   optimizedBikeDiv.appendChild(generateBikeDescription(index, bike));
   optimizedBikeDiv.appendChild(document.createElement("br"));
   optimizedBikeDiv.appendChild(createBikeLoadingElement(bikeId));
+  optimizedBikeDiv.appendChild(createRenderingFailedElement(bikeId));
   optimizedBikeDiv.appendChild(generateRenderButton(bikeId));
   optimizedBikeDiv.appendChild(document.createElement("br"));
   optimizedBikeDiv.appendChild(generateRenderedImgElement(bikeId));
@@ -343,12 +362,26 @@ function hideRenderButton(bikeId: string) {
 
 function handleFailedResponse(response: Response) {
   response.text().then((responseText) => {
-    const errorResponse = JSON.parse(responseText);
-    resultDivElements.showElement("error-response-div");
-    getElementById(
-      "error-response-div"
-    ).innerHTML = `<h3> Operation failed. Server responded with: ${errorResponse["message"]} </h3>`;
+    try {
+      handleJsonFailedResponse(responseText);
+    } catch {
+      showGenericError();
+    }
   });
+}
+
+function showGenericError() {
+  resultDivElements.showElement("error-response-div");
+  getElementById("error-response-div").innerHTML =
+    "<h3> Something went wrong. </h3>";
+}
+
+function handleJsonFailedResponse(responseText: string) {
+  const errorResponse = JSON.parse(responseText);
+  resultDivElements.showElement("error-response-div");
+  getElementById(
+    "error-response-div"
+  ).innerHTML = `<h3> Operation failed. Server responded with: ${errorResponse["message"]} </h3>`;
 }
 
 function getElementById(elementId: string): HTMLElement {
@@ -373,6 +406,19 @@ function createBikeLoadingElement(bikeId: string): HTMLDivElement {
 
 function bikeLoadingId(bikeId: string): string {
   return `bike-loading-element-${bikeId}`;
+}
+
+function createRenderingFailedElement(bikeId: string): HTMLElement {
+  const div = document.createElement("div");
+  div.setAttribute("class", "bike-render-inner-element-div");
+  div.setAttribute("id", renderingFailedElementId(bikeId));
+  div.setAttribute("style", "display: none");
+  div.innerHTML = "<h4> Rendering failed... </h4>";
+  return div;
+}
+
+function renderingFailedElementId(bikeId: string): string {
+  return `bike-rendering-failed-${bikeId}`;
 }
 
 // export { getServerHealth, postOptimizationRequest, postSeedBikeOptimization };
