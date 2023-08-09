@@ -1,5 +1,5 @@
-const optimizationApiUrl = "http://localhost:5000/api/v1";
-const renderingApiUrl = "http://localhost:8000/api/v1/rendering";
+const optimizationApiUrl = "https://161.35.112.82/api/v1";
+const renderingApiUrl = "https://161.35.112.82/api/v1/rendering";
 const bikeStore = {};
 const problemFormId = "problem-form-form";
 const responseDivId = "server-response-div";
