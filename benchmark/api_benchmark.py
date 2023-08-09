@@ -23,7 +23,7 @@ class RunMetadata:
     timestamp_start_epoch: float
     rendering_workers: int
     optimization_workers: int
-    _max_concurrent_requests: int
+    max_concurrent_requests: int
 
 
 @attrs.define(frozen=True)
