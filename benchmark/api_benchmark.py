@@ -133,7 +133,7 @@ def run_full_benchmark(base_rul,
         total_runtime_seconds=total_runtime,
         total_requests_processed=(total_optimization_requests + total_rendering_requests + total_interleaved_requests)
     )
-    with open(f"results/benchmark-results-{str(uuid.uuid4())}.txt", "w") as result_file:
+    with open(f"results/benchmark-results-{time.time()}-{str(uuid.uuid4())}.txt", "w") as result_file:
         # noinspection PyTypeChecker
         json.dump({
             "run_results": attrs.asdict(run_results),
