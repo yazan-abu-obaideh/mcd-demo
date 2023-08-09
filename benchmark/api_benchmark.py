@@ -2,6 +2,7 @@ import base64
 import concurrent.futures
 import json
 import os.path
+import random
 import time
 import uuid
 from typing import List, Callable
@@ -102,34 +103,58 @@ def run_request_benchmark(base_url: str,
     return timed_responses
 
 
-if __name__ == "__main__":
-    _max_concurrent_requests = 10
-    _total_requests = 50
+def run_full_benchmark(base_rul,
+                       max_concurrent_requests,
+                       total_optimization_requests,
+                       total_rendering_requests,
+                       total_interleaved_requests,
+                       node_description,
+                       optimization_workers,
+                       rendering_workers,
+                       ):
+    _total_requests = 100
     benchmark_start = time.time()
-    optimization_run_results = run_request_benchmark("http://161.35.112.82",
-                                                     post_optimization_request,
-                                                     total_requests=_total_requests,
-                                                     max_concurrent_requests=_max_concurrent_requests)
+    (optimization_run_results, rendering_run_results,
+     interleaved_run_results) = _run_all_benchmarks(base_rul, max_concurrent_requests, total_optimization_requests,
+                                                    total_rendering_requests, total_interleaved_requests)
     total_runtime = time.time() - benchmark_start
     print(f"Total runtime: {total_runtime}")
-    metadata = RunMetadata(node_description="Digital Ocean CPU-optimized node "
-                                            "regular intel 8vCPUs 16GB $168/month",
-                           optimization_workers=7,
-                           rendering_workers=3,
-                           max_concurrent_requests=_max_concurrent_requests,
+    metadata = RunMetadata(node_description=node_description,
+                           optimization_workers=optimization_workers,
+                           rendering_workers=rendering_workers,
+                           max_concurrent_requests=max_concurrent_requests,
                            timestamp_start_epoch=benchmark_start,
                            )
     run_results = RunResults(
         optimization_run_results=optimization_run_results,
-        rendering_run_results=[],
-        interleaved_run_results=[],
-        interleaving_mode_description="NA",
+        rendering_run_results=rendering_run_results,
+        interleaved_run_results=interleaved_run_results,
+        interleaving_mode_description="Random",
         total_runtime_seconds=total_runtime,
-        total_requests_processed=_total_requests
+        total_requests_processed=(total_optimization_requests + total_rendering_requests + total_interleaved_requests)
     )
-    with open(f"benchmark-results-{str(uuid.uuid4())}.txt", "w") as result_file:
+    with open(f"results/benchmark-results-{str(uuid.uuid4())}.txt", "w") as result_file:
         # noinspection PyTypeChecker
         json.dump({
             "run_results": attrs.asdict(run_results),
             "run_metadata": attrs.asdict(metadata)
         }, result_file)
+
+
+def _run_all_benchmarks(base_rul, max_concurrent_requests, total_optimization_requests, total_rendering_requests,
+                        total_interleaved_requests):
+    optimization_run_results = run_request_benchmark(base_rul,
+                                                     post_optimization_request,
+                                                     total_requests=total_optimization_requests,
+                                                     max_concurrent_requests=max_concurrent_requests)
+    rendering_run_results = run_request_benchmark(base_rul,
+                                                  post_render_request,
+                                                  total_requests=total_rendering_requests,
+                                                  max_concurrent_requests=max_concurrent_requests)
+    interleaved_run_results = run_request_benchmark(base_rul,
+                                                    lambda url: random.choice(
+                                                        [post_optimization_request, post_render_request])(url),
+                                                    total_requests=total_interleaved_requests,
+                                                    max_concurrent_requests=max_concurrent_requests
+                                                    )
+    return optimization_run_results, rendering_run_results, interleaved_run_results
