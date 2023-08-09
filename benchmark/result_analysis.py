@@ -1,8 +1,10 @@
-from api_benchmark import TimedServerResponse, RunResults, RunMetadata
 import json
+
 import pandas as pd
 
-with open("results/benchmark-results-3f54185b-a268-4fc3-b45e-af5fb5737984.txt", "r") as file:
+from api_benchmark import RunResults, RunMetadata
+
+with open("results/benchmark-results-1691613787.1849766-5c32796f-c1ae-44bf-b9ab-2e9b1fc26ce1.txt", "r") as file:
     report = json.load(file)
 
 results = RunResults(**report["run_results"])

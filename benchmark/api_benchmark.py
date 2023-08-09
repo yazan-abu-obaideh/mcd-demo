@@ -40,6 +40,10 @@ def get_resource_path(file_name):
     return os.path.join(os.path.dirname(__file__), "resources", file_name)
 
 
+with open(get_resource_path("dude.jpeg"), "rb") as file:
+    IMAGE_FILE_DATA = str(base64.b64encode(file.read()), "utf-8")
+
+
 def _benchmark_post_request(url: str, data: dict) -> TimedServerResponse:
     headers = {"Content-Type": "application/json"}
     json_data = json.dumps(data)
@@ -80,11 +84,9 @@ def post_render_request(base_url: str) -> TimedServerResponse:
 
 
 def post_optimization_request(base_url: str) -> TimedServerResponse:
-    with open(get_resource_path("dude.jpeg"), "rb") as file:
-        file_data = str(base64.b64encode(file.read()), "utf-8")
     url = f"{base_url}/api/v1/optimize-seed"
     data = {"cameraHeight": 75, "personHeight": 75,
-            "seedBikeId": 3, "imageBase64": file_data}
+            "seedBikeId": 3, "imageBase64": IMAGE_FILE_DATA}
     return _benchmark_post_request(url, data)
 
 
