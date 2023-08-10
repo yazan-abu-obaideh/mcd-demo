@@ -65,7 +65,7 @@ class BikeOptimizer:
             design_targets=TARGETS,
             datatypes=FEATURES_DATATYPES
         )
-        problem = MultiObjectiveProblem(data_package, predict, [])
+        problem = MultiObjectiveProblem(data_package, predict, CONSTRAINT_FUNCTIONS)
         generator = LoggingGenerator(problem, OPTIMIZER_POPULATION)
         return generator
 
