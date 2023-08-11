@@ -102,65 +102,61 @@
           </div>
         </div>
         <div id="person-image-container" class="m-3">
-          <h3>Upload Rider Image</h3>
-          <div class="p-3">
-            <div class="row flex-cont">
-              <div class="col-6">
-                <input
-                  class="form-control"
-                  type="file"
-                  accept=".jpg, .jpeg, .png, .svg"
-                  id="user-img-upload"
-                  name="user-img"
-                  required
-                />
-              </div>
+          <h3>Select Rider Image</h3>
+          <div class="row p-5">
+            <div class="col seed-bike-div">
+              <img
+                class="seed-bike-img"
+                src="assets/dude.jpeg"
+                alt="rider-image-1"
+              />
+              <br />
+              <input
+                id="rider-image-1"
+                value="1"
+                name="riderImage"
+                type="radio"
+                class="form-check-input"
+                checked
+                required
+              />
+              <label class="form-check-label" for="rider-image-1">Minimalistic</label>
             </div>
-            <div class="row flex-cont">
-              <div class="col-3">
-                <label class="form-label" for="user-height-input">
-                  User Height (Inches)
-                </label>
-
-                <input
-                  type="number"
-                  class="form-control"
-                  name="user-height"
-                  id="user-height-input"
-                  step="0.01"
-                  required
-                />
-              </div>
-              <div class="col-3">
-                <label class="form-label" for="camera-height-input">
-                  Camera Height (Inches)
-                </label>
-                <input
-                  form="problem-form-form"
-                  type="number"
-                  class="form-control"
-                  name="camera-height"
-                  id="camera-height-input"
-                  step="0.01"
-                  required
-                />
-              </div>
+            <div class="col seed-bike-div">
+              <img
+                class="seed-bike-img"
+                src="assets/one-more-dude.jpeg"
+                alt="rider-image-2"
+              />
+              <br />
+              <input
+                id="rider-image-2"
+                value="2"
+                name="riderImage"
+                type="radio"
+                class="form-check-input"
+                required
+              />
+              <label class="form-check-label" for="rider-image-2">Sleek</label>
             </div>
-            <div class="row flex-cont">
-              <div class="col-6">
-                <label class="form-label" for="camera-distance-input">
-                  Camera Distance (Inches)
-                </label>
-                <input
-                  form="problem-form-form"
-                  type="number"
-                  class="form-control"
-                  name="camera-distance"
-                  id="camera-distance-input"
-                  step="0.01"
-                  required
-                />
-              </div>
+            <div class="col seed-bike-div">
+              <img
+                class="seed-bike-img"
+                src="assets/other_dude.jpg"
+                alt="rider-image-3"
+              />
+              <br />
+              <input
+                id="rider-image-3"
+                value="3"
+                name="riderImage"
+                type="radio"
+                class="form-check-input"
+                required
+              />
+              <label class="form-check-label" for="rider-image-3"
+                >5'9"</label
+              >
             </div>
           </div>
           <div class="p-3">
