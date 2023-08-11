@@ -3,6 +3,7 @@ from flask_cors import CORS
 
 from app_config.app_constants import APP_LOGGER
 from app_config.app_parameters import LOGGING_LEVEL
+from cad_services.cad_builder import BikeCadFileBuilder
 from controller_advice import register_error_handlers
 from fit_optimization.bike_optimizer import BikeOptimizer
 from models.model_scheme_validations import map_base64_image_to_bytes
@@ -25,12 +26,16 @@ def endpoint(url):
 
 image_analyzer = PoserAnalyzer()
 optimizer = BikeOptimizer(image_analyzer)
+cad_builder = BikeCadFileBuilder()
 app = build_app()
 
 
 @app.route(endpoint("/download-cad"), methods=[POST])
 def download_cad_file():
     _request = request.json
+    response = make_response(cad_builder.build_cad_from_object(_request["bike"], _request["seedBikeId"]))
+    response.headers["Content-Type"] = "application/xml"
+    return response
 
 
 @app.route(endpoint("/optimize-custom-rider"), methods=[POST])

@@ -8,8 +8,8 @@ import uuid
 from asyncio import subprocess
 
 from app_config.rendering_parameters import RENDERER_TIMEOUT, RENDERER_TIMEOUT_GRANULARITY
-from cad_services.bike_xml_handler import BikeXmlHandler
-from exceptions import InternalError, UserInputException
+from cad_services.cad_builder import BikeCadFileBuilder
+from exceptions import InternalError
 
 TEMP_DIR = "bikes"
 
@@ -17,58 +17,18 @@ LOGGER_NAME = "BikeCadLogger"
 
 WINDOWS = "Windows"
 
-OPTIMIZED_TO_CAD = {
-    "ST Angle": "Seat angle",
-    "HT Length": "Head tube length textfield",
-    "HT Angle": "Head angle",
-    "HT LX": "Head tube lower extension2",
-    'Stack': 'Stack',
-    "ST Length": "Seat tube length",
-    "Seatpost LENGTH": "Seatpost LENGTH",
-    "Saddle height": "Saddle height",
-    "Stem length": "Stem length",
-    "Crank length": "Crank length",
-    "Headset spacers": "Headset spacers",
-    "Stem angle": "Stem angle",
-    "Handlebar style": "Handlebar style",
-}
-
-SEED_IMAGES = {
-    "1": "bike1.bcad",
-    "2": "bike2.bcad",
-    "3": "bike3.bcad"
-}
-
-
-def _get_valid_seed_image(seed_image_id):
-    bike = SEED_IMAGES.get(str(seed_image_id))
-    if bike is None:
-        raise UserInputException("Invalid seed image ID")
-    return bike
-
-
-def _build_bike_path(seed_image_id):
-    seed_image = _get_valid_seed_image(seed_image_id)
-    return os.path.join(os.path.dirname(__file__), "../resources", "seed-bikes", seed_image)
-
 
 class RenderingService:
-    def __init__(self, renderer_pool_size):
+    def __init__(self, renderer_pool_size, cad_builder=BikeCadFileBuilder()):
         os.makedirs(os.path.join(os.path.dirname(__file__), TEMP_DIR), exist_ok=True)
         self._renderer_pool = queue.Queue(maxsize=renderer_pool_size)
+        self.cad_builder = cad_builder
         for i in range(renderer_pool_size):
             self._renderer_pool.put(BikeCad())
 
-    def render_object(self, bike_object, seed_image_id):
-        xml_handler = BikeXmlHandler()
-        self._load_seed_xml(xml_handler, seed_image_id)
-        for response_key, cad_key in OPTIMIZED_TO_CAD.items():
-            self._update_xml(xml_handler, bike_object, cad_key, response_key)
-        return self.render(xml_handler.get_content_string())
-
-    def _load_seed_xml(self, xml_handler, seed_image_id):
-        with open(_build_bike_path(seed_image_id), "r") as file:
-            xml_handler.set_xml(file.read())
+    def render_object(self, bike_object, seed_bike_id):
+        return self.render(self.cad_builder.build_cad_from_object(bike_object,
+                                                                  seed_bike_id))
 
     def render(self, bike_xml):
         renderer = self._get_renderer()
@@ -76,13 +36,6 @@ class RenderingService:
         self._renderer_pool.put(renderer)  # This will never block as is - no new elements
         # are ever added, so the pool will always have room for borrowed renderers.
         return result
-
-    def _update_xml(self, xml_handler, bike_object, cad_key, response_key):
-        entry = xml_handler.find_entry_by_key(cad_key)
-        if entry:
-            xml_handler.update_entry_value(entry, str(bike_object[response_key]))
-        else:
-            xml_handler.add_new_entry(cad_key, str(bike_object[response_key]))
 
     def _get_renderer(self):
         return self._renderer_pool.get(timeout=RENDERER_TIMEOUT / 2)
