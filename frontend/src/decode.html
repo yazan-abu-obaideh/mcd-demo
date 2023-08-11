@@ -95,19 +95,17 @@
                 class="form-check-input"
                 required
               />
-              <label class="form-check-label" for="seed3"
-                >Colorful</label
-              >
+              <label class="form-check-label" for="seed3">Colorful</label>
             </div>
           </div>
         </div>
         <div id="person-image-container" class="m-3">
-          <h3>Select Rider Image</h3>
+          <h3>Select Rider</h3>
           <div class="row p-5">
             <div class="col seed-bike-div">
               <img
                 class="seed-bike-img"
-                src="assets/dude.jpeg"
+                src="assets/person1.png"
                 alt="rider-image-1"
               />
               <br />
@@ -120,12 +118,14 @@
                 checked
                 required
               />
-              <label class="form-check-label" for="rider-image-1">Minimalistic</label>
+              <label class="form-check-label" for="rider-image-1"
+                >5'9"</label
+              >
             </div>
             <div class="col seed-bike-div">
               <img
                 class="seed-bike-img"
-                src="assets/one-more-dude.jpeg"
+                src="assets/person2.png"
                 alt="rider-image-2"
               />
               <br />
@@ -137,12 +137,12 @@
                 class="form-check-input"
                 required
               />
-              <label class="form-check-label" for="rider-image-2">Sleek</label>
+              <label class="form-check-label" for="rider-image-2">5'11"</label>
             </div>
             <div class="col seed-bike-div">
               <img
                 class="seed-bike-img"
-                src="assets/other_dude.jpg"
+                src="assets/person3.png"
                 alt="rider-image-3"
               />
               <br />
@@ -154,9 +154,7 @@
                 class="form-check-input"
                 required
               />
-              <label class="form-check-label" for="rider-image-3"
-                >5'9"</label
-              >
+              <label class="form-check-label" for="rider-image-3">4'2"</label>
             </div>
           </div>
           <div class="p-3">
@@ -164,7 +162,7 @@
               <button
                 type="button"
                 class="btn btn-danger"
-                onclick="submitProblemForm()"
+                onclick="submitSeedsForm()"
               >
                 Optimize!
               </button>
@@ -185,10 +183,7 @@
           class="text-center"
           style="display: block"
         >
-          <div
-            class="spinner-border loading-element"
-            role="status"
-          >
+          <div class="spinner-border loading-element" role="status">
             <span class="visually-hidden">Loading...</span>
           </div>
           <div class="text-xl-center">
@@ -198,18 +193,36 @@
         </div>
         <div id="response-received-div" class="p-3" style="display: none">
           <div id="carouselExampleDark" class="carousel carousel-dark slide">
-            <div id="generated-designs-consumer-carousel" class="carousel-inner">
-      
-            </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="prev">
-              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <div
+              id="generated-designs-consumer-carousel"
+              class="carousel-inner"
+            ></div>
+            <button
+              class="carousel-control-prev"
+              type="button"
+              data-bs-target="#carouselExampleDark"
+              data-bs-slide="prev"
+            >
+              <span
+                class="carousel-control-prev-icon"
+                aria-hidden="true"
+              ></span>
               <span class="visually-hidden">Previous</span>
             </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="next">
-              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <button
+              class="carousel-control-next"
+              type="button"
+              data-bs-target="#carouselExampleDark"
+              data-bs-slide="next"
+            >
+              <span
+                class="carousel-control-next-icon"
+                aria-hidden="true"
+              ></span>
               <span class="visually-hidden">Next</span>
             </button>
-          </div>             <a
+          </div>
+          <a
             class="btn btn-danger btn-sm"
             data-bs-toggle="collapse"
             data-bs-target="#collapse-logs-div"
@@ -222,11 +235,20 @@
             <div class="card card-body" id="mcd-logs-consumer"></div>
           </div>
         </div>
-        <div id="no-bikes-found-div" class="p-3 text-center" style="display: none;">
-          <h3> MCD could not generate any designs for the uploaded rider image </h3>
+        <div
+          id="no-bikes-found-div"
+          class="p-3 text-center"
+          style="display: none"
+        >
+          <h3>
+            MCD could not generate any valid designs...
+          </h3>
         </div>
-        <div id="error-response-div" class="p-3 text-center" style="display: none">
-        </div>
+        <div
+          id="error-response-div"
+          class="p-3 text-center"
+          style="display: none"
+        ></div>
       </div>
     </div>
     <script

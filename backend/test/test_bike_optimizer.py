@@ -10,6 +10,16 @@ class BikeOptimizerTest(McdDemoTestCase):
     def setUp(self) -> None:
         self.optimizer = BikeOptimizer(PoserAnalyzer())
 
+    def test_optimize_seeds(self):
+        for j in range(1, 4):
+            results = self.optimizer.optimize_for_seeds("1", j)
+            self.assertEqual(5, len(results["bikes"]))
+
+    def test_invalid_rider_id(self):
+        self.assertRaisesWithMessage(lambda: self.optimizer.optimize_for_seeds(
+            "1", "DOES_NOT_EXIST"
+        ), "Invalid rider ID [DOES_NOT_EXIST]")
+
     def test_invalid_seed_id(self):
         # noinspection PyTypeChecker
         self.assertRaisesWithMessage(lambda: self.optimizer.optimize_for_custom_rider(
@@ -31,17 +41,8 @@ class BikeOptimizerTest(McdDemoTestCase):
 
     def test_optimize(self):
         """We need to reliably generate n bikes..."""
-        LL = 22 * 25.4
-        UL = 22 * 25.4
-        TL = 21 * 25.4
-        AL = 24 * 25.4
-        FL = 5.5 * 25.4
-        AA = 105
-        SW = 12 * 25.4
-        HT = 71 * 25.4
-
         start = time.time()
-        optimized_bikes = self.optimizer.optimize(
+        optimization_response = self.optimizer.optimize(
             seed_bike={
                 "DT Length": 664.021,
                 "HT Length": 135.6,
@@ -59,14 +60,15 @@ class BikeOptimizerTest(McdDemoTestCase):
                 "Handlebar style": 0,
             },
             user_dimensions={
-                "lower_leg": LL,
-                "upper_leg": UL,
-                "torso_length": TL,
-                "ankle_angle": AA,
-                "foot_length": FL,
-                "arm_length": AL,
-                "shoulder_to_wrist": SW,
-                "height": HT,
+                "lower_leg": (22 * 25.4),
+                "upper_leg": (22 * 25.4),
+                "torso_length": (21 * 25.4),
+                "ankle_angle": 105,
+                "foot_length": (5.5 * 25.4),
+                "arm_length": (24 * 25.4),
+                "shoulder_to_wrist": (12 * 25.4),
+                "height": (71 * 25.4),
             })
-        self.assertEqual(len(optimized_bikes["bikes"]), 5)
+        self.assertEqual(len(optimization_response["bikes"]), 5)
+        self.assertEqual(set(optimization_response["bikes"][0].keys()), {"bike", "bikePerformance"})
         self.assertLess(time.time() - start, 5)

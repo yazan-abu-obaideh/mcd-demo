@@ -4,6 +4,7 @@ from decode_mcd import DataPackage, MultiObjectiveProblem, CounterfactualsGenera
 
 from _validation_utils import validate
 from app_config.optimization_parameters import OPTIMIZER_GENERATIONS, OPTIMIZER_POPULATION
+from exceptions import UserInputException
 from fit_analysis.demoanalysis_wrapped import calculate_angles, to_body_vector
 from fit_optimization.optimization_constants import *
 from pose_analysis.pose_image_processing import PoserAnalyzer
@@ -31,9 +32,12 @@ class BikeOptimizer:
         self.image_analysis_service = image_analysis_service
 
     def optimize_for_seeds(self, seed_bike_id, rider_id):
+        body_dimensions = self._get_body_dimensions_by_id(rider_id)
+        body_dimensions["foot_length"] = 5.5 * 25.4
+        body_dimensions["ankle_angle"] = 24 * 25.4
         return self.optimize(
             self._get_bike_by_id(seed_bike_id),
-            self._get_body_dimensions_by_id(rider_id)
+            body_dimensions
         )
 
     def optimize_for_custom_rider(self,
@@ -48,14 +52,17 @@ class BikeOptimizer:
         body_dimensions["ankle_angle"] = 24 * 25.4
         return self.optimize(seed_bike, body_dimensions)
 
+    def _predict(self, bikes, user_dimensions):
+        start = time.time()
+        response = calculate_angles(bikes.values, to_body_vector(user_dimensions))
+        print(f"Took {time.time() - start}")
+        return response
+
     def optimize(self, seed_bike: dict, user_dimensions: dict):
         # noinspection PyTypeChecker
 
         def predict(_bikes: pd.DataFrame):
-            start = time.time()
-            response = calculate_angles(_bikes.values, to_body_vector(user_dimensions))
-            print(f"Took {time.time() - start}")
-            return response
+            return self._predict(_bikes, user_dimensions)
 
         # noinspection PyTypeChecker
         generator = self._build_generator(predict, seed_bike)
@@ -65,7 +72,11 @@ class BikeOptimizer:
         bikes = generator.sample_with_weights(num_samples=5, cfc_weight=1, diversity_weight=1, gower_weight=1,
                                               avg_gower_weight=1, include_dataset=False)
         print(f"sampling took {time.time() - sampling_start}")
-        return {"bikes": bikes.to_dict("records"), "logs": generator.logs_list}
+        optimized_records = bikes.to_dict("records")
+        performances = predict(bikes).to_dict("records")
+        return {"bikes": [{"bike": record, "bikePerformance": performance}
+                          for (record, performance) in zip(optimized_records, performances)],
+                "logs": generator.logs_list}
 
     def _build_generator(self, predict, seed_bike):
         data_package = DataPackage(
@@ -85,7 +96,7 @@ class BikeOptimizer:
         return seed_bike
 
     def _get_body_dimensions_by_id(self, rider_id):
-        return {'lower_leg': 558.8, 'upper_leg': 558.8,
-                'torso_length': 533.4, 'ankle_angle': 105,
-                'foot_length': 139.7, 'arm_length': 609.5999999999999,
-                'shoulder_to_wrist': 304.79999999999995, 'height': 1803.3999999999999}
+        rider = RIDERS_MAP.get(str(rider_id))
+        if rider is None:
+            raise UserInputException(f"Invalid rider ID [{rider_id}]")
+        return rider

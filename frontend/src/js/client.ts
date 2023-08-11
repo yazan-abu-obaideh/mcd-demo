@@ -8,6 +8,7 @@ const urlCreator = window.URL || window.webkitURL;
 class OptimizedBike {
   seedImageId: string;
   bikeObject: object;
+  bikePerformance: object;
 }
 
 class ExclusivelyVisibleElements {
@@ -35,13 +36,29 @@ const resultDivElements = new ExclusivelyVisibleElements([
   "error-response-div",
 ]);
 
-async function postSeedBikeOptimization(
+
+
+async function postSeedsOptimization(
+  seedBikeId: string,
+  riderImageId: string
+) {
+  return await fetch(optimizationApiUrl.concat("/optimize-seeds"), {
+    headers: { "Content-Type": "application/json" },
+    method: "POST",
+    body: JSON.stringify({
+      seedBikeId: seedBikeId,
+      riderId: riderImageId
+    }),
+  });
+}
+
+async function postCustomRiderOptimization(
   seedBikeId: string,
   imageBase64: string,
   personHeight: number,
   cameraHeight: number
 ) {
-  return await fetch(optimizationApiUrl.concat("/optimize-seed"), {
+  return await fetch(optimizationApiUrl.concat("/optimize-custom-rider"), {
     headers: { "Content-Type": "application/json" },
     method: "POST",
     body: JSON.stringify({
@@ -136,13 +153,22 @@ function handleRenderedBikeImage(bikeId: string, responseBlob: Blob) {
   outputImg.setAttribute("style", "display: inline");
 }
 
-function submitProblemForm() {
+function submitCustomRiderForm(): void {
+  submitProblemForm(problemFormId, submitValidCustomRiderForm);
+}
+
+function submitSeedsForm(): void {
+  submitProblemForm(problemFormId, submitValidSeedsForm)
+}
+
+
+function submitProblemForm(formId: string, validSubmissionFunction: CallableFunction): void {
   const form: HTMLFormElement = getElementById(
-    problemFormId
+    formId
   ) as HTMLFormElement;
   if (form.checkValidity()) {
     showResponseDiv();
-    submitValidForm(form);
+    validSubmissionFunction(form);
   } else {
     showFormErrors(form);
   }
@@ -159,30 +185,45 @@ function showFormErrors(form: HTMLFormElement) {
   form.reportValidity();
 }
 
-function submitValidForm(form: HTMLFormElement) {
+function submitValidCustomRiderForm(form: HTMLFormElement) {
   readFile("user-img-upload", (reader) => {
     const base64File: string = arrayBufferToBase64(
       reader.result as ArrayBuffer
     );
     const formData: FormData = new FormData(form);
-    postSeedBikeOptimizationForm(formData, base64File);
+    postCustomRiderOptimizationForm(formData, base64File);
   });
 }
 
-function postSeedBikeOptimizationForm(formData: FormData, base64File: string) {
-  postSeedBikeOptimization(
+function submitValidSeedsForm(form: HTMLFormElement) {
+  const formData = new FormData(form);
+  postOptimizationForm(
+    formData, postSeedsOptimization(
+      formData.get("seedBike") as string,
+      formData.get("riderImage") as string
+    )
+  )
+}
+
+
+function postCustomRiderOptimizationForm(formData: FormData, base64File: string) {
+  postOptimizationForm(formData, postCustomRiderOptimization(
     formData.get("seedBike") as string,
     base64File,
     Number(formData.get("user-height") as string),
     Number(formData.get("camera-height") as string)
-  )
-    .then((response) => {
-      handleOptimizationResponse(response, formData);
-    })
-    .catch((exception) => {
-      showGenericError();
-    });
+  ));
 }
+
+function postOptimizationForm(formData: FormData, responsePromise: Promise<Response>) {
+  responsePromise.then((response) => {
+    handleOptimizationResponse(response, formData);
+  })
+  .catch((exception) => {
+    showGenericError();
+  })
+}
+
 
 function handleOptimizationResponse(response: Response, formData: FormData) {
   if (response.status == 200) {
@@ -339,7 +380,8 @@ function generateUuid(): string {
 function persistBike(bike: object, formData: FormData): string {
   const bikeId = generateUuid();
   const optimizedBike = new OptimizedBike();
-  optimizedBike.bikeObject = bike;
+  optimizedBike.bikeObject = bike["bike"];
+  optimizedBike.bikePerformance = bike["bikePerformance"];
   optimizedBike.seedImageId = formData.get("seedBike") as string;
   bikeStore[bikeId] = optimizedBike;
   return bikeId;

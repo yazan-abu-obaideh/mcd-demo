@@ -60,4 +60,4 @@ class OptimizeAndRenderEndTOEndTest(McdDemoTestCase):
                 "shoulder_to_wrist": (12 * 25.4),
                 "height": (71 * 25.4),
             })
-        self.renderer.render_object(random.choice(optimized_bikes["bikes"]), "1")
+        self.renderer.render_object(random.choice(optimized_bikes["bikes"])["bike"], "1")
