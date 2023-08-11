@@ -17,8 +17,6 @@ LOGGER_NAME = "BikeCadLogger"
 
 WINDOWS = "Windows"
 
-DEFAULT_BIKE_PATH = os.path.join(os.path.dirname(__file__), "../resources/PlainRoadbikestandardized.txt")
-
 OPTIMIZED_TO_CAD = {
     "ST Angle": "Seat angle",
     "HT Length": "Head tube length textfield",
@@ -36,15 +34,10 @@ OPTIMIZED_TO_CAD = {
 }
 
 SEED_IMAGES = {
-    "1": "PlainRoadbikestandardized.txt",
-    "2": "bike1.bcad",
-    "3": "bike4.bcad"
+    "1": "bike1.bcad",
+    "2": "bike2.bcad",
+    "3": "bike3.bcad"
 }
-
-
-def _build_bike_path(seed_image_id):
-    seed_image = _get_valid_seed_image(seed_image_id)
-    return os.path.join(os.path.dirname(__file__), "../resources", seed_image)
 
 
 def _get_valid_seed_image(seed_image_id):
@@ -52,6 +45,11 @@ def _get_valid_seed_image(seed_image_id):
     if bike is None:
         raise UserInputException("Invalid seed image ID")
     return bike
+
+
+def _build_bike_path(seed_image_id):
+    seed_image = _get_valid_seed_image(seed_image_id)
+    return os.path.join(os.path.dirname(__file__), "../resources", "seed-bikes", seed_image)
 
 
 class RenderingService:
