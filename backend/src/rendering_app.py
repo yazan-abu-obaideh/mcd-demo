@@ -12,11 +12,6 @@ def endpoint(suffix):
     return f"/api/v1/rendering/{suffix}"
 
 
-@rendering_app.route(endpoint("render-bike"), methods=["POST"])
-def render_bike():
-    return rendering_service.render(request.data.decode("utf-8"))
-
-
 @rendering_app.route(endpoint("render-bike-object"), methods=["POST"])
 def render_bike_object():
     response = make_response(rendering_service.render_object(request.json["bike"],

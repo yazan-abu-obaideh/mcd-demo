@@ -30,7 +30,14 @@ class BikeOptimizer:
     def __init__(self, image_analysis_service: PoserAnalyzer):
         self.image_analysis_service = image_analysis_service
 
-    def optimize_seed_bike(self, seed_bike_id: str, image: bytes, person_height: float, camera_height: float):
+    def optimize_for_seeds(self, seed_bike_id, rider_id):
+        pass
+
+    def optimize_for_custom_rider(self,
+                                  seed_bike_id: str,
+                                  image: bytes,
+                                  person_height: float,
+                                  camera_height: float):
         seed_bike = self._get_bike_by_id(seed_bike_id)
         body_dimensions = self.image_analysis_service.analyze_bytes_mm(camera_height, image)
         print(f"{person_height=}")

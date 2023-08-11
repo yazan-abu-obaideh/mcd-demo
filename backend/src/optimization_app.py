@@ -8,6 +8,8 @@ from fit_optimization.bike_optimizer import BikeOptimizer
 from models.model_scheme_validations import map_base64_image_to_bytes
 from pose_analysis.pose_image_processing import PoserAnalyzer
 
+POST = "POST"
+
 
 def build_app() -> Flask:
     _app = Flask(__name__)
@@ -26,21 +28,24 @@ optimizer = BikeOptimizer(image_analyzer)
 app = build_app()
 
 
-@app.route(endpoint("/optimize-seed"), methods=["POST"])
-def optimize_seed_bike():
+@app.route(endpoint("/optimize-custom-rider"), methods=[POST])
+def optimize_custom_rider():
     _request = request.json
     return make_response(
-        optimizer.optimize_seed_bike(_request["seedBikeId"],
-                                     map_base64_image_to_bytes(_request["imageBase64"]),
-                                     _request["personHeight"],
-                                     _request["cameraHeight"])
+        optimizer.optimize_for_custom_rider(_request["seedBikeId"],
+                                            map_base64_image_to_bytes(_request["imageBase64"]),
+                                            _request["personHeight"],
+                                            _request["cameraHeight"])
     )
 
 
-@app.route(endpoint("/optimize"), methods=["POST"])
-def optimize():
-    res = optimizer.optimize(request.json["seed-bike"], request.json["body-dimensions"]).to_dict("records")
-    return make_response(res)
+@app.route(endpoint("/optimize-seeds"), methods=[POST])
+def optimize_seeds():
+    _request = request.json
+    return make_response(
+        optimizer.optimize_for_seeds(_request["seedBikeId"],
+                                     _request["riderId"])
+    )
 
 
 @app.route(endpoint("/health"))

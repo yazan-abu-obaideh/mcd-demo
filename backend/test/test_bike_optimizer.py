@@ -12,7 +12,7 @@ class BikeOptimizerTest(McdDemoTestCase):
 
     def test_invalid_seed_id(self):
         # noinspection PyTypeChecker
-        self.assertRaisesWithMessage(lambda: self.optimizer.optimize_seed_bike(
+        self.assertRaisesWithMessage(lambda: self.optimizer.optimize_for_custom_rider(
             "DOES_NOT_EXIST", b"", None, None), "Invalid seed bike ID")
 
     @unittest.skip
@@ -21,7 +21,7 @@ class BikeOptimizerTest(McdDemoTestCase):
 
     def test_optimize_by_seed_id(self):
         with open(self.resource_path("dude.jpeg"), "rb") as file:
-            response = self.optimizer.optimize_seed_bike("15", file.read(), 75, 75)
+            response = self.optimizer.optimize_for_custom_rider("15", file.read(), 75, 75)
             self.assertEqual(5, len(response["bikes"]))
 
     def _test_reliability(self):
