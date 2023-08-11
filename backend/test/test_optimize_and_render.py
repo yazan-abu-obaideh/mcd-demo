@@ -1,6 +1,6 @@
 import random
 
-from bike_rendering.bikeCad_renderer import RenderingService
+from cad_services.bikeCad_renderer import RenderingService
 from fit_optimization.bike_optimizer import BikeOptimizer
 from pose_analysis.pose_image_processing import PoserAnalyzer
 from test_utils import McdDemoTestCase

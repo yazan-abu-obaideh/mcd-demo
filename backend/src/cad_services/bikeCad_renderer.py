@@ -8,7 +8,7 @@ import uuid
 from asyncio import subprocess
 
 from app_config.rendering_parameters import RENDERER_TIMEOUT, RENDERER_TIMEOUT_GRANULARITY
-from bike_rendering.bike_xml_handler import BikeXmlHandler
+from cad_services.bike_xml_handler import BikeXmlHandler
 from exceptions import InternalError, UserInputException
 
 TEMP_DIR = "bikes"

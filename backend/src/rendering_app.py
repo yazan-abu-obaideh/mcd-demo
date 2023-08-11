@@ -1,7 +1,7 @@
 from flask import request, make_response
 
 from app_config.rendering_parameters import RENDERER_POOL_SIZE
-from bike_rendering.bikeCad_renderer import RenderingService
+from cad_services.bikeCad_renderer import RenderingService
 from optimization_app import build_app
 
 rendering_app = build_app()

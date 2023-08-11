@@ -1,4 +1,4 @@
-from bike_rendering.bikeCad_renderer import BikeCad, RenderingService
+from cad_services.bikeCad_renderer import BikeCad, RenderingService
 from test_utils import McdDemoTestCase
 
 

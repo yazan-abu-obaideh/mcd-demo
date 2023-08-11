@@ -28,6 +28,11 @@ optimizer = BikeOptimizer(image_analyzer)
 app = build_app()
 
 
+@app.route(endpoint("/download-cad"), methods=[POST])
+def download_cad_file():
+    _request = request.json
+
+
 @app.route(endpoint("/optimize-custom-rider"), methods=[POST])
 def optimize_custom_rider():
     _request = request.json
