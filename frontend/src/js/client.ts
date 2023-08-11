@@ -110,6 +110,40 @@ function postRenderBikeRequest(bike: OptimizedBike): Promise<Response> {
   });
 }
 
+function postDownloadBikeCadRequest(bike: OptimizedBike): Promise<Response> {
+  return fetch(optimizationApiUrl.concat("/download-cad"), {
+    headers: { "Content-Type": "application/json" },
+    method: "POST",
+    body: JSON.stringify({
+      bike: bike.bikeObject,
+      seedBikeId: bike.seedImageId,
+    }),
+  });
+}
+
+function downloadBikeById(bikeId: string) {
+  getElementById(getDownloadBikeCadBtnId(bikeId)).innerHTML = "Downloading bike...";
+
+  postDownloadBikeCadRequest(bikeStore[bikeId])
+  .then((response) => {
+    if (response.status == 200) {
+      getElementById(getDownloadBikeCadBtnId(bikeId)).innerHTML = "Downloaded!";
+      response.text().then((responseText) => {
+      const anchor = document.createElement("a");
+      anchor.setAttribute("download", "bike.bcad");
+      anchor.setAttribute("href", "data:applcation/xml;charset=utf-8," + encodeURIComponent(responseText))
+      anchor.click();
+      })
+    } else {
+      getElementById(getDownloadBikeCadBtnId(bikeId)).innerHTML = "Something went wrong...";
+    }
+  })
+  .catch((error) => {
+    getElementById(getDownloadBikeCadBtnId(bikeId)).innerHTML = "Something went wrong...";
+  });
+}
+
+
 function renderBikeById(bikeId: string) {
   hideRenderButton(bikeId);
   setBikeLoading(bikeId, "flex");
@@ -306,8 +340,9 @@ function bikeToCarouselItem(index: number, bikeId: string, bike: object) {
   optimizedBikeDiv.appendChild(createBikeLoadingElement(bikeId));
   optimizedBikeDiv.appendChild(createRenderingFailedElement(bikeId));
   optimizedBikeDiv.appendChild(generateRenderButton(bikeId));
-  optimizedBikeDiv.appendChild(document.createElement("br"));
   optimizedBikeDiv.appendChild(generateRenderedImgElement(bikeId));
+  optimizedBikeDiv.appendChild(generateDownloadCadButton(bikeId));
+  optimizedBikeDiv.appendChild(document.createElement("br"));
   return optimizedBikeDiv;
 }
 
@@ -329,17 +364,38 @@ function generateRenderedImgElement(bikeId: string): HTMLDivElement {
   return imageDiv;
 }
 
-function generateRenderButton(bikeId: string): HTMLDivElement {
-  const div = document.createElement("div");
-  div.setAttribute("class", "bike-render-inner-element-div");
-  div.setAttribute("id", getBikeBtnId(bikeId));
-  const button = document.createElement("button");
-  button.setAttribute("class", "btn btn-danger btn-lg");
-  button.setAttribute("onClick", `${renderBikeById.name}("${bikeId}")`);
-  button.textContent = "Render Bike";
-  div.appendChild(button);
-  return div;
+function generateRenderButton(bikeId: string): HTMLElement {
+  return generateBikeActionButton(
+    bikeId,
+    getRenderBikeBtnId,
+    "Render bike",
+    renderBikeById.name
+  )
 }
+
+function generateDownloadCadButton(bikeId: string): HTMLElement {
+  return generateBikeActionButton(
+    bikeId,
+    getDownloadBikeCadBtnId,
+    "Download CAD",
+    downloadBikeById.name
+  )
+}
+
+
+function generateBikeActionButton(bikeId: string, 
+  idGenerator: CallableFunction, 
+  textContent: string, 
+  onClickFunctionName: string): HTMLElement {
+  const buttonCssClasses = "btn btn-danger btn-lg";
+  const button = document.createElement("button");
+  button.setAttribute("class", buttonCssClasses);
+  button.setAttribute("id", idGenerator(bikeId));
+  button.setAttribute("onClick", `${onClickFunctionName}("${bikeId}")`);
+  button.textContent = textContent;
+  return button;
+}
+
 
 function formatNumber(numberAsString: string): string {
   return Number(numberAsString).toFixed(3);
@@ -392,13 +448,18 @@ function getBikeImgId(bikeId: string) {
   return `bike-img-${bikeId}`;
 }
 
-function getBikeBtnId(bikeId: string) {
+function getRenderBikeBtnId(bikeId: string) {
   // deterministic
   return `render-bike-btn-${bikeId}`;
 }
 
+function getDownloadBikeCadBtnId(bikeId: string) {
+  // deterministic
+  return `download-cad-bike-btn-${bikeId}`;
+}
+
 function hideRenderButton(bikeId: string) {
-  const buttonElement = getElementById(getBikeBtnId(bikeId));
+  const buttonElement = getElementById(getRenderBikeBtnId(bikeId));
   buttonElement?.setAttribute("style", "display: none");
 }
 
