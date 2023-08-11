@@ -33,14 +33,6 @@ class OptimizeAndRenderEndTOEndTest(McdDemoTestCase):
         )
 
     def test_e2e(self):
-        LL = 22 * 25.4
-        UL = 22 * 25.4
-        TL = 21 * 25.4
-        AL = 24 * 25.4
-        FL = 5.5 * 25.4
-        AA = 105
-        SW = 12 * 25.4
-        HT = 71 * 25.4
         optimized_bikes = self.optimizer.optimize(
             seed_bike={
                 "DT Length": 664.021,
@@ -59,13 +51,13 @@ class OptimizeAndRenderEndTOEndTest(McdDemoTestCase):
                 "Handlebar style": 0,
             },
             user_dimensions={
-                "lower_leg": LL,
-                "upper_leg": UL,
-                "torso_length": TL,
-                "ankle_angle": AA,
-                "foot_length": FL,
-                "arm_length": AL,
-                "shoulder_to_wrist": SW,
-                "height": HT,
+                "lower_leg": (22 * 25.4),
+                "upper_leg": (22 * 25.4),
+                "torso_length": (21 * 25.4),
+                "ankle_angle": 105,
+                "foot_length": (5.5 * 25.4),
+                "arm_length": (24 * 25.4),
+                "shoulder_to_wrist": (12 * 25.4),
+                "height": (71 * 25.4),
             })
         self.renderer.render_object(random.choice(optimized_bikes["bikes"]), "1")

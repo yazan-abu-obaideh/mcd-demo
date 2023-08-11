@@ -31,7 +31,10 @@ class BikeOptimizer:
         self.image_analysis_service = image_analysis_service
 
     def optimize_for_seeds(self, seed_bike_id, rider_id):
-        pass
+        return self.optimize(
+            self._get_bike_by_id(seed_bike_id),
+            self._get_body_dimensions_by_id(rider_id)
+        )
 
     def optimize_for_custom_rider(self,
                                   seed_bike_id: str,
@@ -80,3 +83,9 @@ class BikeOptimizer:
         seed_bike = SEED_BIKES_MAP.get(str(seed_bike_id))
         validate(seed_bike is not None, "Invalid seed bike ID")
         return seed_bike
+
+    def _get_body_dimensions_by_id(self, rider_id):
+        return {'lower_leg': 558.8, 'upper_leg': 558.8,
+                'torso_length': 533.4, 'ankle_angle': 105,
+                'foot_length': 139.7, 'arm_length': 609.5999999999999,
+                'shoulder_to_wrist': 304.79999999999995, 'height': 1803.3999999999999}
