@@ -74,9 +74,14 @@ class BikeOptimizer:
         print(f"sampling took {time.time() - sampling_start}")
         optimized_records = bikes.to_dict("records")
         performances = predict(bikes).to_dict("records")
-        return {"bikes": [{"bike": record, "bikePerformance": performance}
-                          for (record, performance) in zip(optimized_records, performances)],
+        return {"bikes": self._to_list_of_pairs(optimized_records,
+                                                performances),
                 "logs": generator.logs_list}
+
+    def _to_list_of_pairs(self, optimized_records, performances):
+        _to_list_of_pairs = [{"bike": record, "bikePerformance": performance} for (record, performance) in
+                             zip(optimized_records, performances)]
+        return _to_list_of_pairs
 
     def _build_generator(self, predict, seed_bike):
         data_package = DataPackage(

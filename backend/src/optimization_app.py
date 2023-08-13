@@ -33,7 +33,8 @@ app = build_app()
 @app.route(endpoint("/download-cad"), methods=[POST])
 def download_cad_file():
     _request = request.json
-    response = make_response(cad_builder.build_cad_from_object(_request["bike"], _request["seedBikeId"]))
+    response = make_response(cad_builder.build_cad_from_object(_request["bike"],
+                                                               _request["seedBikeId"]))
     response.headers["Content-Type"] = "application/xml"
     return response
 

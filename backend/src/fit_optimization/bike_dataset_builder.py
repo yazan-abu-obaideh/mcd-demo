@@ -13,9 +13,8 @@ BODY_DIMENSIONS = {'height': 75, 'sh_height': 61.09855828510818, 'hip_to_ankle':
 
 
 def get_bikes():
-    return pd.read_csv(os.path.join(os.path.dirname(__file__),
-                                    "../resources/bike_vector_df_with_id.csv")).drop(columns=["Bike ID"]).set_index(
-        "Unnamed: 0")
+    csv_path = os.path.join(os.path.dirname(__file__), "../resources/bike_vector_df_with_id.csv")
+    return pd.read_csv(csv_path).drop(columns=["Bike ID"]).set_index("Unnamed: 0")
 
 
 def build_performances():

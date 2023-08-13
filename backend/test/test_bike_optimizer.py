@@ -70,5 +70,6 @@ class BikeOptimizerTest(McdDemoTestCase):
                 "height": (71 * 25.4),
             })
         self.assertEqual(len(optimization_response["bikes"]), 5)
-        self.assertEqual(set(optimization_response["bikes"][0].keys()), {"bike", "bikePerformance"})
+        self.assertEqual(set(optimization_response["bikes"][0].keys()),
+                         {"bike", "bikePerformance"})
         self.assertLess(time.time() - start, 5)

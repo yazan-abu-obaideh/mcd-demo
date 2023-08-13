@@ -122,27 +122,40 @@ function postDownloadBikeCadRequest(bike: OptimizedBike): Promise<Response> {
 }
 
 function downloadBikeById(bikeId: string) {
-  getElementById(getDownloadBikeCadBtnId(bikeId)).innerHTML = "Downloading bike...";
+  const downloadButton = getElementById(getDownloadBikeCadBtnId(bikeId));
+  
+  downloadButton.innerHTML = "Downloading bike...";
 
   postDownloadBikeCadRequest(bikeStore[bikeId])
   .then((response) => {
     if (response.status == 200) {
-      getElementById(getDownloadBikeCadBtnId(bikeId)).innerHTML = "Downloaded!";
       response.text().then((responseText) => {
-      const anchor = document.createElement("a");
-      anchor.setAttribute("download", "bike.bcad");
-      anchor.setAttribute("href", "data:applcation/xml;charset=utf-8," + encodeURIComponent(responseText))
-      anchor.click();
+      download(responseText);
+      toPressedDownloadButton(downloadButton, "Downloaded successfully");
       })
     } else {
-      getElementById(getDownloadBikeCadBtnId(bikeId)).innerHTML = "Something went wrong...";
+      toPressedDownloadButton(downloadButton, "Something went wrong...");
     }
   })
   .catch((error) => {
-    getElementById(getDownloadBikeCadBtnId(bikeId)).innerHTML = "Something went wrong...";
+    toPressedDownloadButton(downloadButton, "Something went wrong...");
   });
 }
 
+
+function toPressedDownloadButton(downloadButton: HTMLElement, textContent: string) {
+  downloadButton.innerHTML = textContent;
+  downloadButton.setAttribute("class",
+    downloadButton.getAttribute("class")!.replace("btn-danger", "btn-dark"));
+  downloadButton.setAttribute("onClick", "");
+}
+
+function download(text: string) {
+  const anchor = document.createElement("a");
+  anchor.setAttribute("download", "bike.bcad");
+  anchor.setAttribute("href", "data:applcation/xml;charset=utf-8," + encodeURIComponent(text));
+  anchor.click();
+}
 
 function renderBikeById(bikeId: string) {
   hideRenderButton(bikeId);
