@@ -36,18 +36,13 @@ const resultDivElements = new ExclusivelyVisibleElements([
   "error-response-div",
 ]);
 
-
-
-async function postSeedsOptimization(
-  seedBikeId: string,
-  riderImageId: string
-) {
+async function postSeedsOptimization(seedBikeId: string, riderImageId: string) {
   return await fetch(optimizationApiUrl.concat("/optimize-seeds"), {
     headers: { "Content-Type": "application/json" },
     method: "POST",
     body: JSON.stringify({
       seedBikeId: seedBikeId,
-      riderId: riderImageId
+      riderId: riderImageId,
     }),
   });
 }
@@ -122,38 +117,47 @@ function postDownloadBikeCadRequest(bike: OptimizedBike): Promise<Response> {
 }
 
 function downloadBikeById(bikeId: string) {
-  const downloadButton = getElementById(getDownloadBikeCadBtnId(bikeId));
-  
+  const downloadButton = getElementById(
+    getDownloadBikeCadBtnId(bikeId)
+  ) as HTMLButtonElement;
+
   downloadButton.innerHTML = "Downloading bike...";
 
   postDownloadBikeCadRequest(bikeStore[bikeId])
-  .then((response) => {
-    if (response.status == 200) {
-      response.text().then((responseText) => {
-      download(responseText);
-      toPressedDownloadButton(downloadButton, "Downloaded successfully");
-      })
-    } else {
-      toPressedDownloadButton(downloadButton, "Something went wrong...");
-    }
-  })
-  .catch((error) => {
-    toPressedDownloadButton(downloadButton, "Something went wrong...");
-  });
+    .then((response) => {
+      if (response.status == 200) {
+        response.text().then((responseText) => {
+          download(responseText);
+          toPressedDownloadButton(downloadButton, "Downloaded successfully");
+        });
+      } else {
+        toPressedDownloadButton(downloadButton, "Download failed");
+      }
+    })
+    .catch((error) => {
+      toPressedDownloadButton(downloadButton, "Download failed");
+    });
 }
 
-
-function toPressedDownloadButton(downloadButton: HTMLElement, textContent: string) {
+function toPressedDownloadButton(
+  downloadButton: HTMLButtonElement,
+  textContent: string
+) {
   downloadButton.innerHTML = textContent;
-  downloadButton.setAttribute("class",
-    downloadButton.getAttribute("class")!.replace("btn-danger", "btn-dark"));
-  downloadButton.setAttribute("onClick", "");
+  downloadButton.setAttribute(
+    "class",
+    downloadButton.getAttribute("class")!.replace("btn-danger", "btn-dark")
+  );
+  downloadButton.disabled = true;
 }
 
 function download(text: string) {
   const anchor = document.createElement("a");
   anchor.setAttribute("download", "bike.bcad");
-  anchor.setAttribute("href", "data:applcation/xml;charset=utf-8," + encodeURIComponent(text));
+  anchor.setAttribute(
+    "href",
+    "data:applcation/xml;charset=utf-8," + encodeURIComponent(text)
+  );
   anchor.click();
 }
 
@@ -205,14 +209,14 @@ function submitCustomRiderForm(): void {
 }
 
 function submitSeedsForm(): void {
-  submitProblemForm(problemFormId, submitValidSeedsForm)
+  submitProblemForm(problemFormId, submitValidSeedsForm);
 }
 
-
-function submitProblemForm(formId: string, validSubmissionFunction: CallableFunction): void {
-  const form: HTMLFormElement = getElementById(
-    formId
-  ) as HTMLFormElement;
+function submitProblemForm(
+  formId: string,
+  validSubmissionFunction: CallableFunction
+): void {
+  const form: HTMLFormElement = getElementById(formId) as HTMLFormElement;
   if (form.checkValidity()) {
     showResponseDiv();
     validSubmissionFunction(form);
@@ -245,32 +249,41 @@ function submitValidCustomRiderForm(form: HTMLFormElement) {
 function submitValidSeedsForm(form: HTMLFormElement) {
   const formData = new FormData(form);
   postOptimizationForm(
-    formData, postSeedsOptimization(
+    formData,
+    postSeedsOptimization(
       formData.get("seedBike") as string,
       formData.get("riderImage") as string
     )
-  )
+  );
 }
 
-
-function postCustomRiderOptimizationForm(formData: FormData, base64File: string) {
-  postOptimizationForm(formData, postCustomRiderOptimization(
-    formData.get("seedBike") as string,
-    base64File,
-    Number(formData.get("user-height") as string),
-    Number(formData.get("camera-height") as string)
-  ));
+function postCustomRiderOptimizationForm(
+  formData: FormData,
+  base64File: string
+) {
+  postOptimizationForm(
+    formData,
+    postCustomRiderOptimization(
+      formData.get("seedBike") as string,
+      base64File,
+      Number(formData.get("user-height") as string),
+      Number(formData.get("camera-height") as string)
+    )
+  );
 }
 
-function postOptimizationForm(formData: FormData, responsePromise: Promise<Response>) {
-  responsePromise.then((response) => {
-    handleOptimizationResponse(response, formData);
-  })
-  .catch((exception) => {
-    showGenericError();
-  })
+function postOptimizationForm(
+  formData: FormData,
+  responsePromise: Promise<Response>
+) {
+  responsePromise
+    .then((response) => {
+      handleOptimizationResponse(response, formData);
+    })
+    .catch((exception) => {
+      showGenericError();
+    });
 }
-
 
 function handleOptimizationResponse(response: Response, formData: FormData) {
   if (response.status == 200) {
@@ -383,7 +396,7 @@ function generateRenderButton(bikeId: string): HTMLElement {
     getRenderBikeBtnId,
     "Render bike",
     renderBikeById.name
-  )
+  );
 }
 
 function generateDownloadCadButton(bikeId: string): HTMLElement {
@@ -392,14 +405,15 @@ function generateDownloadCadButton(bikeId: string): HTMLElement {
     getDownloadBikeCadBtnId,
     "Download CAD",
     downloadBikeById.name
-  )
+  );
 }
 
-
-function generateBikeActionButton(bikeId: string, 
-  idGenerator: CallableFunction, 
-  textContent: string, 
-  onClickFunctionName: string): HTMLElement {
+function generateBikeActionButton(
+  bikeId: string,
+  idGenerator: CallableFunction,
+  textContent: string,
+  onClickFunctionName: string
+): HTMLElement {
   const buttonCssClasses = "btn btn-danger btn-lg";
   const button = document.createElement("button");
   button.setAttribute("class", buttonCssClasses);
@@ -408,7 +422,6 @@ function generateBikeActionButton(bikeId: string,
   button.textContent = textContent;
   return button;
 }
-
 
 function formatNumber(numberAsString: string): string {
   return Number(numberAsString).toFixed(3);
