@@ -39,23 +39,23 @@ def download_cad_file():
     return response
 
 
-@app.route(endpoint("/optimize-custom-rider"), methods=[POST])
+@app.route(endpoint("/ergonomics/optimize-custom-rider"), methods=[POST])
 def optimize_custom_rider():
     _request = request.json
     return make_response(
-        optimizer.optimize_for_custom_rider(_request["seedBikeId"],
-                                            map_base64_image_to_bytes(_request["imageBase64"]),
-                                            _request["personHeight"],
-                                            _request["cameraHeight"])
+        optimizer.optimize_ergonomics_for_custom_rider(_request["seedBikeId"],
+                                                       map_base64_image_to_bytes(_request["imageBase64"]),
+                                                       _request["personHeight"],
+                                                       _request["cameraHeight"])
     )
 
 
-@app.route(endpoint("/optimize-seeds"), methods=[POST])
+@app.route(endpoint("/ergonomics/optimize-seeds"), methods=[POST])
 def optimize_seeds():
     _request = request.json
     return make_response(
-        optimizer.optimize_for_seeds(_request["seedBikeId"],
-                                     _request["riderId"])
+        optimizer.optimize_ergonomics_for_seeds(_request["seedBikeId"],
+                                                _request["riderId"])
     )
 
 

@@ -1,4 +1,5 @@
 import time
+from typing import Callable
 
 from decode_mcd import DataPackage, MultiObjectiveProblem, CounterfactualsGenerator
 
@@ -31,38 +32,59 @@ class BikeOptimizer:
     def __init__(self, image_analysis_service: PoserAnalyzer):
         self.image_analysis_service = image_analysis_service
 
-    def optimize_for_seeds(self, seed_bike_id, rider_id):
+    def optimize_aerodynamics_for_seeds(self, seed_bike_id, rider_id):
+        return self._optimize_for_seeds(seed_bike_id, rider_id, self._predict_aerodynamics)
+
+    def optimize_aerodynamics_for_custom_rider(self,
+                                               seed_bike_id: str,
+                                               image: bytes,
+                                               person_height: float,
+                                               camera_height: float):
+        pass
+
+    def optimize_ergonomics_for_seeds(self, seed_bike_id, rider_id):
+        return self._optimize_for_seeds(seed_bike_id, rider_id, self._predict_ergonomics)
+
+    def _optimize_for_seeds(self, seed_bike_id, rider_id, prediction_function):
         body_dimensions = self._get_body_dimensions_by_id(rider_id)
         body_dimensions["foot_length"] = 5.5 * 25.4
         body_dimensions["ankle_angle"] = 24 * 25.4
-        return self.optimize(
+        return self._optimize(
             self._get_bike_by_id(seed_bike_id),
-            body_dimensions
+            body_dimensions,
+            prediction_function
         )
 
-    def optimize_for_custom_rider(self,
-                                  seed_bike_id: str,
-                                  image: bytes,
-                                  person_height: float,
-                                  camera_height: float):
+    def optimize_ergonomics_for_custom_rider(self,
+                                             seed_bike_id: str,
+                                             image: bytes,
+                                             person_height: float,
+                                             camera_height: float):
         seed_bike = self._get_bike_by_id(seed_bike_id)
         body_dimensions = self.image_analysis_service.analyze_bytes_mm(camera_height, image)
         print(f"{person_height=}")
         body_dimensions["foot_length"] = 5.5 * 25.4
         body_dimensions["ankle_angle"] = 24 * 25.4
-        return self.optimize(seed_bike, body_dimensions)
+        return self._optimize(seed_bike, body_dimensions, self._predict_ergonomics)
 
-    def _predict(self, bikes, user_dimensions):
+    def _predict_ergonomics(self, bikes, user_dimensions):
         start = time.time()
         response = calculate_angles(bikes.values, to_body_vector(user_dimensions))
         print(f"Took {time.time() - start}")
         return response
 
-    def optimize(self, seed_bike: dict, user_dimensions: dict):
+    def _predict_aerodynamics(self, bikes, user_dimensions):
+        start = time.time()
+        response = calculate_angles(bikes.values, to_body_vector(user_dimensions))
+        print(f"Took {time.time() - start}")
+        return response
+
+    def _optimize(self, seed_bike: dict, user_dimensions: dict,
+                  prediction_function: Callable[[pd.DataFrame, dict], pd.DataFrame]):
         # noinspection PyTypeChecker
 
         def predict(_bikes: pd.DataFrame):
-            return self._predict(_bikes, user_dimensions)
+            return prediction_function(_bikes, user_dimensions)
 
         # noinspection PyTypeChecker
         generator = self._build_generator(predict, seed_bike)

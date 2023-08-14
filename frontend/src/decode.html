@@ -14,6 +14,26 @@
     <link href="styles.css" rel="stylesheet" />
   </head>
   <body>
+    <nav class="navbar navbar-expand-lg bg-light navbar-nav-scroll sticky-top bg-opacity-75">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#main-header">
+          <img src="/assets/decode_logo.png" alt="" width="75" height="25" class="d-inline-block align-text-bottom">
+          Counterfactuals for Design</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#problem-form-div">Interactive</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Link</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
     <div class="text-center m-5">
       <img
         class="d-block mx-auto mb-4"
@@ -22,21 +42,31 @@
         width="225"
         height="82"
       />
-      <h1 class="display-5 fw-bold text-body-emphasis">
+      <h1 id="main-header" class="display-5 fw-bold text-body-emphasis">
         Multiobjective Counterfactuals for Design
       </h1>
-      <div class="col-lg-6 mx-auto">
+      <div class="col-lg-6 mx-auto intro-paragraph">
         <p class="lead mb-4">
           MCD is an automated design recommendation framework that can help you
-          generate performant and realistic designs. While this demo uses bike
+          generate performant and realistic designs. While this demo focuses on bike
           designs, MCD is a generic framework that can be configured to handle
           almost any design problem - regardless of the number or nature of
           constraints or objectives.
         </p>
         <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-          <a href="#problem-form-div" class="btn btn-danger btn-lg px-4 gap-3">
-            Try it yourself!
-          </a>
+          <div class="col">
+            <div class="row justify-content-center m-1">
+              <a href="#problem-form-div" class="btn btn-outline-danger btn-lg px-4 gap-3 header-button">
+                Try it yourself!
+              </a>    
+            </div>
+            <div class="row justify-content-center m-1">
+              <a href="#problem-form-div" class="btn btn-outline-danger btn-lg px-4 gap-3 header-button">
+                Read more
+              </a>    
+            </div>
+          </div>
+          <br>
         </div>
       </div>
     </div>
@@ -158,14 +188,16 @@
             </div>
           </div>
           <div class="p-3">
-            <div class="row flex-cont">
-              <button
-                type="button"
-                class="btn btn-danger"
-                onclick="submitSeedsForm()"
-              >
-                Optimize!
-              </button>
+            <div class="row flex-cont text-center justify-content-center">
+              <div class="dropdown">
+                <button class="btn btn-outline-danger btn-lg dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                  Optimize!
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                  <li><button type="button" class="dropdown-item" onclick="submitSeedsForm()"> Ergonomics! </button> </li>
+                  <li><button type="button" class="dropdown-item" onclick="submitSeedsForm()"> Aerodynamics! </button> </li>
+                </ul>
+              </div>  
             </div>
           </div>
         </div>
