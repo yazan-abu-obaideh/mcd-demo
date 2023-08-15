@@ -37,7 +37,7 @@ const resultDivElements = new ExclusivelyVisibleElements([
 ]);
 
 async function postSeedsOptimization(seedBikeId: string, riderImageId: string) {
-  return await fetch(optimizationApiUrl.concat("/optimize-seeds"), {
+  return await fetch(optimizationApiUrl.concat("/ergonomics/optimize-seeds"), {
     headers: { "Content-Type": "application/json" },
     method: "POST",
     body: JSON.stringify({
@@ -53,7 +53,7 @@ async function postCustomRiderOptimization(
   personHeight: number,
   cameraHeight: number
 ) {
-  return await fetch(optimizationApiUrl.concat("/optimize-custom-rider"), {
+  return await fetch(optimizationApiUrl.concat("/ergonomics/optimize-custom-rider"), {
     headers: { "Content-Type": "application/json" },
     method: "POST",
     body: JSON.stringify({
@@ -61,20 +61,6 @@ async function postCustomRiderOptimization(
       imageBase64: imageBase64,
       personHeight: personHeight,
       cameraHeight: cameraHeight,
-    }),
-  });
-}
-
-async function postOptimizationRequest(
-  seedBike: object,
-  bodyDimensions: object
-): Promise<Response> {
-  return await fetch(optimizationApiUrl.concat("/optimize"), {
-    headers: { "Content-Type": "application/json" },
-    method: "POST",
-    body: JSON.stringify({
-      "seed-bike": seedBike,
-      "body-dimensions": bodyDimensions,
     }),
   });
 }
@@ -362,6 +348,7 @@ function bikeToCarouselItem(index: number, bikeId: string, bike: object) {
     "container text-center border rounded carousel-item mb-1 p-5 optimized-bike-div"
   );
   optimizedBikeDiv.appendChild(generateBikeDescription(index, bike));
+  optimizedBikeDiv.appendChild(generatePerformanceElement(bike["bikePerformance"]))
   optimizedBikeDiv.appendChild(document.createElement("br"));
   optimizedBikeDiv.appendChild(createBikeLoadingElement(bikeId));
   optimizedBikeDiv.appendChild(createRenderingFailedElement(bikeId));
@@ -414,7 +401,7 @@ function generateBikeActionButton(
   textContent: string,
   onClickFunctionName: string
 ): HTMLElement {
-  const buttonCssClasses = "btn btn-danger btn-lg";
+  const buttonCssClasses = "btn btn-outline-danger btn-lg";
   const button = document.createElement("button");
   button.setAttribute("class", buttonCssClasses);
   button.setAttribute("id", idGenerator(bikeId));
@@ -530,6 +517,10 @@ function createBikeLoadingElement(bikeId: string): HTMLDivElement {
   innerDiv.setAttribute("class", "spinner-border loading-element");
 
   bikeLoadingDiv.appendChild(innerDiv);
+  const labelDiv = document.createElement("div");
+  labelDiv.textContent = "Rendering bike...";
+  bikeLoadingDiv.appendChild(document.createElement("br"));
+  bikeLoadingDiv.appendChild(labelDiv);
   return bikeLoadingDiv;
 }
 
@@ -550,4 +541,11 @@ function renderingFailedElementId(bikeId: string): string {
   return `bike-rendering-failed-${bikeId}`;
 }
 
+
+function generatePerformanceElement(bikePerformance: object): HTMLElement {
+  const div = document.createElement("div");
+  div.setAttribute("class", "text-center");
+  div.innerHTML = '<ul class="list-group-horizontal"><li class="list-inline-item">ONE</li><li class="list-inline-item">TWO</li><li class="list-inline-item">THREE</li></ul>'
+  return div;
+}
 // export { getServerHealth, postOptimizationRequest, postSeedBikeOptimization };

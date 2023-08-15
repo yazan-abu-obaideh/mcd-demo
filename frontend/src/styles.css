@@ -23,6 +23,10 @@ input::-webkit-inner-spin-button {
   margin: 0;
 }
 
+.non-nav-body {
+  padding: 15px;
+}
+
 /* Firefox */
 input[type="number"] {
   -moz-appearance: textfield;
@@ -46,7 +50,7 @@ input[type="number"] {
 }
 
 .optimized-bike-div {
-  height: 60vh;
+  height: 70vh;
 }
 
 .loading-element {
@@ -62,7 +66,7 @@ input[type="number"] {
 }
 
 .header-button {
-  width: 50%;
+  width: 40%;
 }
 
 /* ^ disable arrows in numeric input ^ */
