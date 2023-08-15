@@ -1,8 +1,10 @@
 import numpy as np
 
 from fit_analysis.demoanalysis import bike_body_calculation
+from fit_analysis.vectorizedangles import prob_dists
 
 INFINITY = float("inf")
+DEFAULT_ARM_ANGLE = 150
 
 
 def to_body_vector(body: dict):
@@ -23,4 +25,6 @@ def calculate_angles(bikes, body):
 
 
 def calculate_angles_loss(bikes, body):
-    pass
+    br_arm_angles = np.ones((len(bikes), 1)) * DEFAULT_ARM_ANGLE
+    br_angles_body = np.broadcast_to(body, (len(bikes), 8))
+    return prob_dists(bikes, br_angles_body, br_arm_angles)

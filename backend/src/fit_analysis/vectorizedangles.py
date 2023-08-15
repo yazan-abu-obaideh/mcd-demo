@@ -269,7 +269,8 @@ def prob_dists(bike_vectors, body_vectors, arm_angles, use="road"):
     Output: Computes probability of deviation from reccomended angle for each body angle
     """
     # back angle, armpit to elbow angle, armpit to wrist angle
-    knee_angles, back_angles, awrist_angles = all_angles(bike_vectors, body_vectors, arm_angles)
+    angles = all_angles(bike_vectors, body_vectors, arm_angles)
+    knee_angles, back_angles, awrist_angles = angles[:, 0], angles[:, 1], angles[:, 2]
 
     k_ang_prob = prob(
         USE_DICT[use]["opt_knee_angle"][0],
