@@ -19,7 +19,7 @@ class AppTest(unittest.TestCase):
         cls.handle_timeout()
 
     def test_bad_request(self):
-        response = requests.post(self.build_end_point("/optimize-custom-rider"), data=json.dumps({
+        response = requests.post(self.build_end_point("/ergonomics/optimize-custom-rider"), data=json.dumps({
             "seedBikeId": "DOES_NOT_EXIST",
             "imageBase64": "",
             "cameraHeight": 45,
