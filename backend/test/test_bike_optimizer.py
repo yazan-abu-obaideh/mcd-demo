@@ -10,6 +10,9 @@ class BikeOptimizerTest(McdDemoTestCase):
     def setUp(self) -> None:
         self.optimizer = BikeOptimizer(PoserAnalyzer())
 
+    def test_get_performances(self):
+        pass
+
     def test_optimize_seeds(self):
         for j in range(1, 4):
             results = self.optimizer.optimize_ergonomics_for_seeds("1", j)

@@ -509,17 +509,16 @@ function createBikeLoadingElement(bikeId: string): HTMLDivElement {
   bikeLoadingDiv.setAttribute("id", bikeLoadingId(bikeId));
   bikeLoadingDiv.setAttribute(
     "class",
-    "text-center bike-render-inner-element-div"
+    "text-center bike-render-inner-element-div flex-column"
   );
   bikeLoadingDiv.setAttribute("style", "display: none;");
 
   const innerDiv = document.createElement("div");
   innerDiv.setAttribute("class", "spinner-border loading-element");
+  const labelDiv = document.createElement("div");
+  labelDiv.textContent = "Rendering bike..."
 
   bikeLoadingDiv.appendChild(innerDiv);
-  const labelDiv = document.createElement("div");
-  labelDiv.textContent = "Rendering bike...";
-  bikeLoadingDiv.appendChild(document.createElement("br"));
   bikeLoadingDiv.appendChild(labelDiv);
   return bikeLoadingDiv;
 }
