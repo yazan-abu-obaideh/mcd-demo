@@ -4,7 +4,7 @@ import pandas as pd
 from decode_mcd import ContinuousTarget, DesignTargets
 from pymoo.core.variable import Real, Choice, Variable
 
-from fit_optimization.bike_dataset_builder import build_performances, get_bikes
+from fit_optimization.bike_dataset_builder import build_ergo_performances, get_bikes, build_aero_performances
 
 
 def build_seed_map():
@@ -23,9 +23,13 @@ BACK_TARGET = ContinuousTarget(label='Back Angle', lower_bound=5, upper_bound=45
 AMPIT_WRIST_TARGET = ContinuousTarget(label='Armpit Angle', lower_bound=5, upper_bound=90)
 
 KNEE_TARGET = ContinuousTarget(label='Knee Extension', lower_bound=10, upper_bound=37.5)
-TARGETS = DesignTargets([KNEE_TARGET, BACK_TARGET, AMPIT_WRIST_TARGET, ])
+ERGO_TARGETS = DesignTargets([KNEE_TARGET, BACK_TARGET, AMPIT_WRIST_TARGET, ])
+AERO_TARGETS = DesignTargets(continuous_targets=[ContinuousTarget(label="Aerodynamic Drag",
+                                                                  lower_bound=0,
+                                                                  upper_bound=15)])
 
-PERFORMANCES = pd.DataFrame.from_records(build_performances())
+ERGO_PERFORMANCES = pd.DataFrame.from_records(build_ergo_performances())
+AERO_PERFORMANCES = pd.DataFrame.from_records(build_aero_performances())
 
 all_bikes = get_bikes()
 DESIGNS = pd.DataFrame.from_records(all_bikes)

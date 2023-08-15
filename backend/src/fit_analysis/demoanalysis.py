@@ -113,6 +113,8 @@ def augmented_parameters(int_points, body):
 
 
 def aerodynamic_drag(int_points, body, augmented_params):
+    if len(int_points) == 0:
+        return np.array([[]])
     """
     Input: bike vector array (nx14), body vector array (1x8)
         int_points = [hx, hy, sx, sy, cl]
@@ -162,6 +164,41 @@ def aerodynamic_drag(int_points, body, augmented_params):
     )
     pred_aero = global_model.predict(input_df)
     return pred_aero
+
+
+def ergonomics_bike_body_calculation(bikes, body):
+    """
+    Input: bike vector array (nx14), body vector(1x8)
+        BV = [HTx, HTy, STx, STy, CL, LL, UL, TL, AL, FL, AA, SW, HT, HB]
+        Body = [LL, UL, TL, AL, FL, AA, SW, HT]
+    Output: knee extension, back angle, armpit angle, aerodynamic drag (nx4)
+    !!! UNITS: mm and degrees !!!
+    !!! Positive SX is behind BB !!! (Different from vectorizedangles.py)
+    !!! LOAD MODEL IN GLOBAL FRAME TO SAVE TIME !!!
+    """
+    # **** LOAD THIS IN WRAPPER FUNCTION ****
+    # Initializing model from pkl file
+    # model = pickle.load(open("model.pkl", "rb"))[2]
+    # model = GLOBAL_AERO_MODEL
+    # **** LOAD THIS IN WRAPPER FUNCTION ****
+
+    # Constants
+    DEFAULT_ARM_ANGLE = 150
+
+    # Calculate interface points
+    #   NOTE: standard offsets are in mm
+    #   input and output should be treated as mm
+    int_points = interface_points(bikes)
+    int_points_df = pd.DataFrame(int_points, columns=["hx", "hy", "sx", "sy", "cl"])
+
+    # Calculate ergonomic angles (nx3)
+    # Broadcast body array and arm_angles for ergonomic angles calculation
+    br_arm_angles = np.ones((len(bikes), 1)) * DEFAULT_ARM_ANGLE
+    br_angles_body = np.broadcast_to(body, (len(bikes), 8))
+    return pd.DataFrame(
+        all_angles(int_points, br_angles_body, br_arm_angles),
+        columns=["Knee Extension", "Back Angle", "Armpit Angle"],
+    )
 
 
 def bike_body_calculation(bikes, body):
@@ -219,15 +256,11 @@ def bike_body_calculation(bikes, body):
     no_nan_int_points = int_points_df[~combined_nan_mask] / 1000  # convert to m
     no_nan_aug = out_aug[~combined_nan_mask]
     no_nan_angles = out_angles[~combined_nan_mask]
-
-    # Calculate aero drag
-    results[~combined_nan_mask][:, :4] = aerodynamic_drag(no_nan_int_points,
-                                                          body, no_nan_aug)[:, np.newaxis]
-
-    # Concatenate angle outputs and aerodynamic drag
-    results[~combined_nan_mask][:, :3] = no_nan_angles.values
     out_df = pd.DataFrame(
         results,
         columns=["Knee Extension", "Back Angle", "Armpit Angle", "Aerodynamic Drag"],
     )
+    # Calculate aero drag
+    out_df.iloc[~combined_nan_mask, 3] = aerodynamic_drag(no_nan_int_points, body, no_nan_aug)
+    out_df.iloc[~combined_nan_mask, :3] = no_nan_angles.values
     return out_df

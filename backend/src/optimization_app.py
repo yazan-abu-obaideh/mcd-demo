@@ -50,12 +50,32 @@ def optimize_custom_rider():
     )
 
 
+@app.route(endpoint("/aerodynamics/optimize-custom-rider"), methods=[POST])
+def optimize_aerodynamics_custom_rider():
+    _request = request.json
+    return make_response(
+        optimizer.optimize_aerodynamics_for_custom_rider(_request["seedBikeId"],
+                                                         map_base64_image_to_bytes(_request["imageBase64"]),
+                                                         _request["personHeight"],
+                                                         _request["cameraHeight"])
+    )
+
+
 @app.route(endpoint("/ergonomics/optimize-seeds"), methods=[POST])
 def optimize_seeds():
     _request = request.json
     return make_response(
         optimizer.optimize_ergonomics_for_seeds(_request["seedBikeId"],
                                                 _request["riderId"])
+    )
+
+
+@app.route(endpoint("/aerodynamics/optimize-seeds"), methods=[POST])
+def optimize_aerodynamics_seeds():
+    _request = request.json
+    return make_response(
+        optimizer.optimize_aerodynamics_for_seeds(_request["seedBikeId"],
+                                                  _request["riderId"])
     )
 
 
