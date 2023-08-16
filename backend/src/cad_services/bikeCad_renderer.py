@@ -61,7 +61,7 @@ class BikeCad:
         self._write_to_file(bike_path, bike_xml)
         self._export_svg_from_list([bike_path])
         os.remove(bike_path)
-        image_path = bike_path.replace("bcad", "svg")
+        image_path = bike_path.replace(".bcad", ".svg")
         image_bytes = self._read_image(image_path)
         os.remove(image_path)
         return image_bytes
