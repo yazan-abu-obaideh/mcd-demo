@@ -5,6 +5,8 @@ from cad_services.bikeCad_renderer import RenderingService
 from cad_services.bike_xml_handler import BikeXmlHandler
 from pose_analysis.pose_image_processing import PoserAnalyzer
 
+"""This just exists so I can retrace my steps and if necessary redo some of the work fast"""
+
 background_colors = {
     "BACKGROUND color BLUE": "255",
     "BACKGROUND color RED": "255",
@@ -69,5 +71,33 @@ def analyze_images():
             print(analyzer.analyze_bytes_mm(person_height, file_bytes))
 
 
+def generate_seed_bikes_html():
+    def fill_template(i, label):
+        return f"""              <div class="col seed-bike-div">
+                <img
+                  class="seed-bike-img"
+                  src="assets/bike{i}.png"
+                  alt="seed-bike-{i}"
+                />
+                <br />
+                <input
+                  id="seed{i}"
+                  value="{i}"
+                  name="seedBike"
+                  type="radio"
+                  class="form-check-input"
+                  checked
+                  required
+                />
+                <label class="form-check-label" for="seed{i}">{label}</label>
+              </div>
+"""
+
+    result = ""
+    for bike_number, bike_label in zip(range(1, 10), ["BIKE" for _ in range(10)]):
+        result += fill_template(bike_number, bike_label)
+    return result
+
+
 if __name__ == "__main__":
-    analyze_images()
+    print(generate_seed_bikes_html())
