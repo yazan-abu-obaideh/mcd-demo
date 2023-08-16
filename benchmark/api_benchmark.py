@@ -1,4 +1,3 @@
-import base64
 import concurrent.futures
 import json
 import os.path
@@ -38,10 +37,6 @@ class RunResults:
 
 def get_resource_path(file_name):
     return os.path.join(os.path.dirname(__file__), "resources", file_name)
-
-
-with open(get_resource_path("dude.jpeg"), "rb") as file:
-    IMAGE_FILE_DATA = str(base64.b64encode(file.read()), "utf-8")
 
 
 def _benchmark_post_request(url: str, data: dict) -> TimedServerResponse:
@@ -84,9 +79,8 @@ def post_render_request(base_url: str) -> TimedServerResponse:
 
 
 def post_optimization_request(base_url: str) -> TimedServerResponse:
-    url = f"{base_url}/api/v1/optimize-seed"
-    data = {"cameraHeight": 75, "personHeight": 75,
-            "seedBikeId": 3, "imageBase64": IMAGE_FILE_DATA}
+    url = f"{base_url}/api/v1/ergonomics/optimize-seeds"
+    data = {"riderId": "1", "seedBikeId": "3"}
     return _benchmark_post_request(url, data)
 
 
