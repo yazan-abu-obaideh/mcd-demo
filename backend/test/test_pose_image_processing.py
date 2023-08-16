@@ -1,3 +1,5 @@
+import os.path
+
 from pose_analysis.pose_image_processing import PoserAnalyzer
 from test_utils import McdDemoTestCase
 
@@ -5,6 +7,15 @@ from test_utils import McdDemoTestCase
 class ImageAnalyzerTest(McdDemoTestCase):
     def setUp(self) -> None:
         self.analyzer = PoserAnalyzer()
+
+    def test_analyze_rider_images(self):
+        rider_images = ["person1.jpeg", "person2.jpeg", "person3.jpeg"]
+        heights_mm = [1750, 1800, 1500]
+        for rider_image, height_mm in zip(rider_images, heights_mm):
+            path = os.path.join(os.path.dirname(__file__), "../src/resources/rider-images", rider_image)
+            with open(path, "rb") as file:
+                print(self.analyzer.analyze_bytes_mm(image_bytes=file.read(),
+                                                     camera_height_inches=(height_mm/25.4)))
 
     def test_analyze_invalid_image(self):
         self.assertRaisesWithMessage(

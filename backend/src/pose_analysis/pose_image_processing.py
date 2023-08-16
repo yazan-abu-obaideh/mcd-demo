@@ -16,11 +16,11 @@ class PoserAnalyzer:
     def get_body_dimensions(self, camera_height, image_path):
         return _decompose_to_dictionary(_analyze(camera_height, image_path)[0])
 
-    def analyze_bytes_inches(self, camera_height, image_bytes):
-        return _decompose_to_dictionary(_analyze_with_bytes(camera_height, image_bytes)[0])
+    def analyze_bytes_inches(self, camera_height_inches, image_bytes):
+        return _decompose_to_dictionary(_analyze_with_bytes(camera_height_inches, image_bytes)[0])
 
-    def analyze_bytes_mm(self, camera_height, image_bytes):
-        inches_dict = _decompose_to_dictionary(_analyze_with_bytes(camera_height, image_bytes)[0])
+    def analyze_bytes_mm(self, camera_height_inches, image_bytes):
+        inches_dict = _decompose_to_dictionary(_analyze_with_bytes(camera_height_inches, image_bytes)[0])
         return {key: value * 25.4 for key, value in inches_dict.items()}
 
 

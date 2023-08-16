@@ -3,10 +3,13 @@ from flask_cors import CORS
 
 from app_config.app_constants import APP_LOGGER
 from app_config.app_parameters import LOGGING_LEVEL
+from cad_services.cad_builder import BikeCadFileBuilder
 from controller_advice import register_error_handlers
 from fit_optimization.bike_optimizer import BikeOptimizer
 from models.model_scheme_validations import map_base64_image_to_bytes
 from pose_analysis.pose_image_processing import PoserAnalyzer
+
+POST = "POST"
 
 
 def build_app() -> Flask:
@@ -23,24 +26,57 @@ def endpoint(url):
 
 image_analyzer = PoserAnalyzer()
 optimizer = BikeOptimizer(image_analyzer)
+cad_builder = BikeCadFileBuilder()
 app = build_app()
 
 
-@app.route(endpoint("/optimize-seed"), methods=["POST"])
-def optimize_seed_bike():
+@app.route(endpoint("/download-cad"), methods=[POST])
+def download_cad_file():
+    _request = request.json
+    response = make_response(cad_builder.build_cad_from_object(_request["bike"],
+                                                               _request["seedBikeId"]))
+    response.headers["Content-Type"] = "application/xml"
+    return response
+
+
+@app.route(endpoint("/ergonomics/optimize-custom-rider"), methods=[POST])
+def optimize_custom_rider():
     _request = request.json
     return make_response(
-        optimizer.optimize_seed_bike(_request["seedBikeId"],
-                                     map_base64_image_to_bytes(_request["imageBase64"]),
-                                     _request["personHeight"],
-                                     _request["cameraHeight"])
+        optimizer.optimize_ergonomics_for_custom_rider(_request["seedBikeId"],
+                                                       map_base64_image_to_bytes(_request["imageBase64"]),
+                                                       _request["personHeight"],
+                                                       _request["cameraHeight"])
     )
 
 
-@app.route(endpoint("/optimize"), methods=["POST"])
-def optimize():
-    res = optimizer.optimize(request.json["seed-bike"], request.json["body-dimensions"]).to_dict("records")
-    return make_response(res)
+@app.route(endpoint("/aerodynamics/optimize-custom-rider"), methods=[POST])
+def optimize_aerodynamics_custom_rider():
+    _request = request.json
+    return make_response(
+        optimizer.optimize_aerodynamics_for_custom_rider(_request["seedBikeId"],
+                                                         map_base64_image_to_bytes(_request["imageBase64"]),
+                                                         _request["personHeight"],
+                                                         _request["cameraHeight"])
+    )
+
+
+@app.route(endpoint("/ergonomics/optimize-seeds"), methods=[POST])
+def optimize_seeds():
+    _request = request.json
+    return make_response(
+        optimizer.optimize_ergonomics_for_seeds(_request["seedBikeId"],
+                                                _request["riderId"])
+    )
+
+
+@app.route(endpoint("/aerodynamics/optimize-seeds"), methods=[POST])
+def optimize_aerodynamics_seeds():
+    _request = request.json
+    return make_response(
+        optimizer.optimize_aerodynamics_for_seeds(_request["seedBikeId"],
+                                                  _request["riderId"])
+    )
 
 
 @app.route(endpoint("/health"))

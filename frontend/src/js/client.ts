@@ -8,6 +8,7 @@ const urlCreator = window.URL || window.webkitURL;
 class OptimizedBike {
   seedImageId: string;
   bikeObject: object;
+  bikePerformance: object;
 }
 
 class ExclusivelyVisibleElements {
@@ -35,36 +36,44 @@ const resultDivElements = new ExclusivelyVisibleElements([
   "error-response-div",
 ]);
 
-async function postSeedBikeOptimization(
+async function postSeedsOptimization(
+  optimizationType: string,
+  seedBikeId: string,
+  riderImageId: string
+) {
+  return await fetch(
+    optimizationApiUrl.concat(`/${optimizationType}/optimize-seeds`),
+    {
+      headers: { "Content-Type": "application/json" },
+      method: "POST",
+      body: JSON.stringify({
+        seedBikeId: seedBikeId,
+        riderId: riderImageId,
+      }),
+    }
+  );
+}
+
+async function postCustomRiderOptimization(
+  optimizationType: string,
   seedBikeId: string,
   imageBase64: string,
   personHeight: number,
   cameraHeight: number
 ) {
-  return await fetch(optimizationApiUrl.concat("/optimize-seed"), {
-    headers: { "Content-Type": "application/json" },
-    method: "POST",
-    body: JSON.stringify({
-      seedBikeId: seedBikeId,
-      imageBase64: imageBase64,
-      personHeight: personHeight,
-      cameraHeight: cameraHeight,
-    }),
-  });
-}
-
-async function postOptimizationRequest(
-  seedBike: object,
-  bodyDimensions: object
-): Promise<Response> {
-  return await fetch(optimizationApiUrl.concat("/optimize"), {
-    headers: { "Content-Type": "application/json" },
-    method: "POST",
-    body: JSON.stringify({
-      "seed-bike": seedBike,
-      "body-dimensions": bodyDimensions,
-    }),
-  });
+  return await fetch(
+    optimizationApiUrl.concat(`/${optimizationType}/optimize-custom-rider`),
+    {
+      headers: { "Content-Type": "application/json" },
+      method: "POST",
+      body: JSON.stringify({
+        seedBikeId: seedBikeId,
+        imageBase64: imageBase64,
+        personHeight: personHeight,
+        cameraHeight: cameraHeight,
+      }),
+    }
+  );
 }
 
 function readFile(
@@ -91,6 +100,62 @@ function postRenderBikeRequest(bike: OptimizedBike): Promise<Response> {
       seedImageId: bike.seedImageId,
     }),
   });
+}
+
+function postDownloadBikeCadRequest(bike: OptimizedBike): Promise<Response> {
+  return fetch(optimizationApiUrl.concat("/download-cad"), {
+    headers: { "Content-Type": "application/json" },
+    method: "POST",
+    body: JSON.stringify({
+      bike: bike.bikeObject,
+      seedBikeId: bike.seedImageId,
+    }),
+  });
+}
+
+function downloadBikeById(bikeId: string) {
+  const downloadButton = getElementById(
+    getDownloadBikeCadBtnId(bikeId)
+  ) as HTMLButtonElement;
+
+  downloadButton.innerHTML = "Downloading bike...";
+
+  postDownloadBikeCadRequest(bikeStore[bikeId])
+    .then((response) => {
+      if (response.status == 200) {
+        response.text().then((responseText) => {
+          download(responseText);
+          toPressedDownloadButton(downloadButton, "Downloaded successfully");
+        });
+      } else {
+        toPressedDownloadButton(downloadButton, "Download failed");
+      }
+    })
+    .catch((error) => {
+      toPressedDownloadButton(downloadButton, "Download failed");
+    });
+}
+
+function toPressedDownloadButton(
+  downloadButton: HTMLButtonElement,
+  textContent: string
+) {
+  downloadButton.innerHTML = textContent;
+  downloadButton.setAttribute(
+    "class",
+    downloadButton.getAttribute("class")!.replace("btn-danger", "btn-dark")
+  );
+  downloadButton.disabled = true;
+}
+
+function download(text: string) {
+  const anchor = document.createElement("a");
+  anchor.setAttribute("download", "bike.bcad");
+  anchor.setAttribute(
+    "href",
+    "data:applcation/xml;charset=utf-8," + encodeURIComponent(text)
+  );
+  anchor.click();
 }
 
 function renderBikeById(bikeId: string) {
@@ -136,13 +201,26 @@ function handleRenderedBikeImage(bikeId: string, responseBlob: Blob) {
   outputImg.setAttribute("style", "display: inline");
 }
 
-function submitProblemForm() {
-  const form: HTMLFormElement = getElementById(
-    problemFormId
-  ) as HTMLFormElement;
+function submitCustomRiderForm(optimizationType: string): void {
+  throwIfInvalidType(optimizationType);
+  submitProblemForm(problemFormId, 
+    (form: HTMLFormElement) => submitValidCustomRiderForm(optimizationType, form));
+}
+
+function submitSeedsForm(optimizationType: string): void {
+  throwIfInvalidType(optimizationType);
+  submitProblemForm(problemFormId, 
+    (form: HTMLFormElement) => submitValidSeedsForm(optimizationType, form));
+}
+
+function submitProblemForm(
+  formId: string,
+  validSubmissionFunction: CallableFunction
+): void {
+  const form: HTMLFormElement = getElementById(formId) as HTMLFormElement;
   if (form.checkValidity()) {
     showResponseDiv();
-    submitValidForm(form);
+    validSubmissionFunction(form);
   } else {
     showFormErrors(form);
   }
@@ -159,23 +237,50 @@ function showFormErrors(form: HTMLFormElement) {
   form.reportValidity();
 }
 
-function submitValidForm(form: HTMLFormElement) {
+function submitValidCustomRiderForm(optimizationType:string, form: HTMLFormElement) {
   readFile("user-img-upload", (reader) => {
     const base64File: string = arrayBufferToBase64(
       reader.result as ArrayBuffer
     );
     const formData: FormData = new FormData(form);
-    postSeedBikeOptimizationForm(formData, base64File);
+    postCustomRiderOptimizationForm(optimizationType, formData, base64File);
   });
 }
 
-function postSeedBikeOptimizationForm(formData: FormData, base64File: string) {
-  postSeedBikeOptimization(
-    formData.get("seedBike") as string,
-    base64File,
-    Number(formData.get("user-height") as string),
-    Number(formData.get("camera-height") as string)
-  )
+function submitValidSeedsForm(optimizationType: string, form: HTMLFormElement) {
+  const formData = new FormData(form);
+  postOptimizationForm(
+    formData,
+    postSeedsOptimization(
+      optimizationType,
+      formData.get("seedBike") as string,
+      formData.get("riderImage") as string
+    )
+  );
+}
+
+function postCustomRiderOptimizationForm(
+  optimizationType: string,
+  formData: FormData,
+  base64File: string
+) {
+  postOptimizationForm(
+    formData,
+    postCustomRiderOptimization(
+      optimizationType,
+      formData.get("seedBike") as string,
+      base64File,
+      Number(formData.get("user-height") as string),
+      Number(formData.get("camera-height") as string)
+    )
+  );
+}
+
+function postOptimizationForm(
+  formData: FormData,
+  responsePromise: Promise<Response>
+) {
+  responsePromise
     .then((response) => {
       handleOptimizationResponse(response, formData);
     })
@@ -261,12 +366,16 @@ function bikeToCarouselItem(index: number, bikeId: string, bike: object) {
     "container text-center border rounded carousel-item mb-1 p-5 optimized-bike-div"
   );
   optimizedBikeDiv.appendChild(generateBikeDescription(index, bike));
+  optimizedBikeDiv.appendChild(
+    generatePerformanceElement(bike["bikePerformance"])
+  );
   optimizedBikeDiv.appendChild(document.createElement("br"));
   optimizedBikeDiv.appendChild(createBikeLoadingElement(bikeId));
   optimizedBikeDiv.appendChild(createRenderingFailedElement(bikeId));
   optimizedBikeDiv.appendChild(generateRenderButton(bikeId));
-  optimizedBikeDiv.appendChild(document.createElement("br"));
   optimizedBikeDiv.appendChild(generateRenderedImgElement(bikeId));
+  optimizedBikeDiv.appendChild(generateDownloadCadButton(bikeId));
+  optimizedBikeDiv.appendChild(document.createElement("br"));
   return optimizedBikeDiv;
 }
 
@@ -288,16 +397,37 @@ function generateRenderedImgElement(bikeId: string): HTMLDivElement {
   return imageDiv;
 }
 
-function generateRenderButton(bikeId: string): HTMLDivElement {
-  const div = document.createElement("div");
-  div.setAttribute("class", "bike-render-inner-element-div");
-  div.setAttribute("id", getBikeBtnId(bikeId));
+function generateRenderButton(bikeId: string): HTMLElement {
+  return generateBikeActionButton(
+    bikeId,
+    getRenderBikeBtnId,
+    "Render bike",
+    renderBikeById.name
+  );
+}
+
+function generateDownloadCadButton(bikeId: string): HTMLElement {
+  return generateBikeActionButton(
+    bikeId,
+    getDownloadBikeCadBtnId,
+    "Download CAD",
+    downloadBikeById.name
+  );
+}
+
+function generateBikeActionButton(
+  bikeId: string,
+  idGenerator: CallableFunction,
+  textContent: string,
+  onClickFunctionName: string
+): HTMLElement {
+  const buttonCssClasses = "btn btn-outline-danger btn-lg";
   const button = document.createElement("button");
-  button.setAttribute("class", "btn btn-danger btn-lg");
-  button.setAttribute("onClick", `${renderBikeById.name}("${bikeId}")`);
-  button.textContent = "Render Bike";
-  div.appendChild(button);
-  return div;
+  button.setAttribute("class", buttonCssClasses);
+  button.setAttribute("id", idGenerator(bikeId));
+  button.setAttribute("onClick", `${onClickFunctionName}("${bikeId}")`);
+  button.textContent = textContent;
+  return button;
 }
 
 function formatNumber(numberAsString: string): string {
@@ -339,7 +469,8 @@ function generateUuid(): string {
 function persistBike(bike: object, formData: FormData): string {
   const bikeId = generateUuid();
   const optimizedBike = new OptimizedBike();
-  optimizedBike.bikeObject = bike;
+  optimizedBike.bikeObject = bike["bike"];
+  optimizedBike.bikePerformance = bike["bikePerformance"];
   optimizedBike.seedImageId = formData.get("seedBike") as string;
   bikeStore[bikeId] = optimizedBike;
   return bikeId;
@@ -350,13 +481,18 @@ function getBikeImgId(bikeId: string) {
   return `bike-img-${bikeId}`;
 }
 
-function getBikeBtnId(bikeId: string) {
+function getRenderBikeBtnId(bikeId: string) {
   // deterministic
   return `render-bike-btn-${bikeId}`;
 }
 
+function getDownloadBikeCadBtnId(bikeId: string) {
+  // deterministic
+  return `download-cad-bike-btn-${bikeId}`;
+}
+
 function hideRenderButton(bikeId: string) {
-  const buttonElement = getElementById(getBikeBtnId(bikeId));
+  const buttonElement = getElementById(getRenderBikeBtnId(bikeId));
   buttonElement?.setAttribute("style", "display: none");
 }
 
@@ -393,14 +529,17 @@ function createBikeLoadingElement(bikeId: string): HTMLDivElement {
   bikeLoadingDiv.setAttribute("id", bikeLoadingId(bikeId));
   bikeLoadingDiv.setAttribute(
     "class",
-    "text-center bike-render-inner-element-div"
+    "text-center bike-render-inner-element-div flex-column"
   );
   bikeLoadingDiv.setAttribute("style", "display: none;");
 
   const innerDiv = document.createElement("div");
   innerDiv.setAttribute("class", "spinner-border loading-element");
+  const labelDiv = document.createElement("div");
+  labelDiv.textContent = "Rendering bike...";
 
   bikeLoadingDiv.appendChild(innerDiv);
+  bikeLoadingDiv.appendChild(labelDiv);
   return bikeLoadingDiv;
 }
 
@@ -421,4 +560,17 @@ function renderingFailedElementId(bikeId: string): string {
   return `bike-rendering-failed-${bikeId}`;
 }
 
+function generatePerformanceElement(bikePerformance: object): HTMLElement {
+  const div = document.createElement("div");
+  div.setAttribute("class", "text-center");
+  div.innerHTML =
+    '<ul class="list-group-horizontal"><li class="list-inline-item">ONE</li><li class="list-inline-item">TWO</li><li class="list-inline-item">THREE</li></ul>';
+  return div;
+}
+
+function throwIfInvalidType(optimizationType: string) {
+  if (!["aerodynamics", "ergonomics"].includes(optimizationType)) {
+    throw Error(`Invalid optimization type ${optimizationType}`);
+  }
+}
 // export { getServerHealth, postOptimizationRequest, postSeedBikeOptimization };

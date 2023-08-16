@@ -4,7 +4,7 @@ import pandas as pd
 
 from api_benchmark import RunResults, RunMetadata
 
-with open("results/benchmark-results-1691613787.1849766-5c32796f-c1ae-44bf-b9ab-2e9b1fc26ce1.txt", "r") as file:
+with open("results/benchmark-results-1691755263.381678-33df6c4f-ec9a-4c3c-8ecd-553e911f6bb3.txt", "r") as file:
     report = json.load(file)
 
 results = RunResults(**report["run_results"])
