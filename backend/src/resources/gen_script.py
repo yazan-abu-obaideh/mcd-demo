@@ -73,24 +73,13 @@ def analyze_images():
 
 def generate_seed_bikes_html():
     def fill_template(i, label):
-        return f"""              <div class="col seed-bike-div">
-                <img
-                  class="seed-bike-img"
-                  src="assets/bike{i}.png"
-                  alt="seed-bike-{i}"
-                />
-                <br />
-                <input
-                  id="seed{i}"
-                  value="{i}"
-                  name="seedBike"
-                  type="radio"
-                  class="form-check-input"
-                  checked
-                  required
-                />
-                <label class="form-check-label" for="seed{i}">{label}</label>
-              </div>
+        return f"""
+        <div class="col seed-bike-div">
+            <img class="seed-bike-img" src="assets/bike{i}.png" alt="seed-bike-{i}"/>
+            <br/>
+            <input id="seed{i}" value="{i}" name="seedBike" type="radio" class="form-check-input" required />
+            <label class="form-check-label" for="seed{i}">{label}</label>
+      </div>
 """
 
     result = ""
@@ -100,4 +89,5 @@ def generate_seed_bikes_html():
 
 
 if __name__ == "__main__":
-    print(generate_seed_bikes_html())
+    with open("file.html", "w") as _file:
+        _file.write(generate_seed_bikes_html())

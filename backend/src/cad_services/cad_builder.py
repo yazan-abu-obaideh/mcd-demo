@@ -27,10 +27,9 @@ SEED_BIKES = {
 
 
 def _get_valid_seed_bike(seed_image_id):
-    bike = SEED_BIKES.get(str(seed_image_id))
-    if bike is None:
-        raise UserInputException("Invalid seed image ID")
-    return bike
+    if int(seed_image_id) not in range(1, 10):
+        raise UserInputException(f"Invalid seed image ID [{seed_image_id}]")
+    return f"bike{seed_image_id}.bcad"
 
 
 def _build_bike_path(seed_bike_id):

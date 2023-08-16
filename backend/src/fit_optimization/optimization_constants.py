@@ -26,7 +26,7 @@ KNEE_TARGET = ContinuousTarget(label='Knee Extension', lower_bound=10, upper_bou
 ERGO_TARGETS = DesignTargets([KNEE_TARGET, BACK_TARGET, AMPIT_WRIST_TARGET, ])
 AERO_TARGETS = DesignTargets(continuous_targets=[ContinuousTarget(label="Aerodynamic Drag",
                                                                   lower_bound=0,
-                                                                  upper_bound=50)])
+                                                                  upper_bound=75)])
 
 ERGO_PERFORMANCES = pd.DataFrame.from_records(build_ergo_performances())
 AERO_PERFORMANCES = pd.DataFrame.from_records(build_aero_performances())
