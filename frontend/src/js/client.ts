@@ -346,7 +346,7 @@ function persistAndBuildCarouselItems(
   const bikesHtml = document.createElement("div");
   for (let index = 0; index < bikes.length; index++) {
     const bikeId = persistBike(bikes[index], formData);
-    const bikeItem = bikeToCarouselItem(index, bikeId, bikes[index]);
+    const bikeItem = bikeToCarouselItem(index, bikeId, bikes[index], bikes.length);
     activateFirst(index, bikeItem);
     bikesHtml.appendChild(bikeItem);
   }
@@ -359,13 +359,13 @@ function activateFirst(index: number, bikeItem: HTMLDivElement) {
   }
 }
 
-function bikeToCarouselItem(index: number, bikeId: string, bike: object) {
+function bikeToCarouselItem(index: number, bikeId: string, bike: object, totalBikes: number) {
   const optimizedBikeDiv = document.createElement("div");
   optimizedBikeDiv.setAttribute(
     "class",
     "container text-center border rounded carousel-item mb-1 p-5 optimized-bike-div"
   );
-  optimizedBikeDiv.appendChild(generateBikeDescription(index, bike));
+  optimizedBikeDiv.appendChild(generateBikeDescription(index, bike, totalBikes));
   optimizedBikeDiv.appendChild(
     generatePerformanceElement(bike["bikePerformance"])
   );
@@ -379,9 +379,9 @@ function bikeToCarouselItem(index: number, bikeId: string, bike: object) {
   return optimizedBikeDiv;
 }
 
-function generateBikeDescription(index: number, bike: object): HTMLElement {
+function generateBikeDescription(index: number, bike: object, totalBikes: number): HTMLElement {
   const element = document.createElement("h4");
-  element.textContent = `Generated Bike ${index + 1}`;
+  element.textContent = `Generated Bike ${index + 1}/${totalBikes}`;
   return element;
 }
 
