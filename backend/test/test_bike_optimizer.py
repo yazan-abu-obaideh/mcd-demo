@@ -22,7 +22,6 @@ class BikeOptimizerTest(McdDemoTestCase):
                              {"bike", "bikePerformance"})
             self.assertLess(time.time() - start, 5)
 
-    @unittest.skip
     def test_optimize_all_seeds(self):
         for j in range(1, 4):
             results = self.optimizer.optimize_ergonomics_for_seeds("1", j)

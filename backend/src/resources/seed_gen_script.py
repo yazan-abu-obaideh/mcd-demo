@@ -59,16 +59,14 @@ def render_random_sample():
 
 
 def analyze_images():
-    images = [f"person{i}.png" for i in range(1, 4)]
-    heights_inches = [73.6, 66.5, 61]
+    images = [f"person{i}.jpg" for i in range(1, 4)]
+    heights_inches = [73.6, 68.5, 61]
     analyzer = PoserAnalyzer()
     for image, person_height in zip(images, heights_inches):
         image_path = os.path.join(os.path.dirname(__file__), "rider-images", image)
-        print(image_path)
         with open(image_path, "rb") as file:
             file_bytes = file.read()
-            print(file_bytes)
-            print(analyzer.analyze_bytes_inches(heights_inches, file_bytes))
+            print(analyzer.analyze_bytes_mm(person_height, file_bytes))
 
 
 if __name__ == "__main__":

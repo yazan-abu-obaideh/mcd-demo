@@ -41,14 +41,14 @@ CONSTRAINT_FUNCTIONS = [validate_seat_height]
 
 SEED_BIKES_MAP = build_seed_map()
 RIDERS_MAP = {
-    "1": {'height': 1750.0000000000002, 'sh_height': 1429.803836126445, 'hip_to_ankle': 831.1594731503548,
-          'hip_to_knee': 437.6634157246667, 'shoulder_to_wrist': 444.7186030888706, 'arm_length': 514.7186030888705,
-          'torso_length': 528.6443629760904, 'lower_leg': 463.49605742568804, 'upper_leg': 437.6634157246667},
-    "2": {'height': 1800.0, 'sh_height': 1375.997605076646, 'hip_to_ankle': 744.2386180274794,
-          'hip_to_knee': 390.90445268758515, 'shoulder_to_wrist': 334.9436431357713, 'arm_length': 406.9436431357713,
-          'torso_length': 559.7589870491665, 'lower_leg': 425.33416533989424, 'upper_leg': 390.90445268758515},
-    "3": {'height': 1500.0, 'sh_height': 1074.8980294407877, 'hip_to_ankle': 396.87407246102737,
-          'hip_to_knee': 187.19943177185922, 'shoulder_to_wrist': 244.36887227919578, 'arm_length': 304.3688722791957,
-          'torso_length': 618.0239569797604, 'lower_leg': 269.67464068916814, 'upper_leg': 187.19943177185922}
-
+    "1": {'height': 1869.4399999999998, 'sh_height': 1522.4183722286996, 'hip_to_ankle': 859.4115496065015,
+          'hip_to_knee': 419.2707983114694, 'shoulder_to_wrist': 520.3842323834416, 'arm_length': 595.1618323834416,
+          'torso_length': 588.2292226221981, 'lower_leg': 514.9183512950322, 'upper_leg': 419.2707983114694},
+    "2": {'height': 1739.8999999999999, 'sh_height': 1396.9610037614493, 'hip_to_ankle': 698.7754665416289,
+          'hip_to_knee': 400.26991730501237, 'shoulder_to_wrist': 432.6829366967116, 'arm_length': 502.27893669671164,
+          'torso_length': 628.5895372198203, 'lower_leg': 368.1015492366165, 'upper_leg': 400.26991730501237}
+    ,
+    "3": {'height': 1549.3999999999999, 'sh_height': 1276.0760388081906, 'hip_to_ankle': 726.1107548114591,
+          'hip_to_knee': 370.3368640846207, 'shoulder_to_wrist': 385.2705359899362, 'arm_length': 447.24653598993626,
+          'torso_length': 487.9892839967315, 'lower_leg': 417.74989072683843, 'upper_leg': 370.3368640846207}
 }
