@@ -3,6 +3,7 @@ import random
 
 from cad_services.bikeCad_renderer import RenderingService
 from cad_services.bike_xml_handler import BikeXmlHandler
+from pose_analysis.pose_image_processing import PoserAnalyzer
 
 background_colors = {
     "BACKGROUND color BLUE": "255",
@@ -57,6 +58,18 @@ def render_random_sample():
             img_file.write(image)
 
 
+def analyze_images():
+    images = [f"person{i}.png" for i in range(1, 4)]
+    heights_inches = [73.6, 66.5, 61]
+    analyzer = PoserAnalyzer()
+    for image, person_height in zip(images, heights_inches):
+        image_path = os.path.join(os.path.dirname(__file__), "rider-images", image)
+        print(image_path)
+        with open(image_path, "rb") as file:
+            file_bytes = file.read()
+            print(file_bytes)
+            print(analyzer.analyze_bytes_inches(heights_inches, file_bytes))
+
+
 if __name__ == "__main__":
-    make_backgrounds_white()
-    render_seeds()
+    analyze_images()
