@@ -562,9 +562,9 @@ function renderingFailedElementId(bikeId: string): string {
 
 function generatePerformanceElement(bikePerformance: object): HTMLElement {
   const div = document.createElement("div");
-  div.setAttribute("class", "text-center");
-  div.innerHTML =
-    '<ul class="list-group-horizontal"><li class="list-inline-item">ONE</li><li class="list-inline-item">TWO</li><li class="list-inline-item">THREE</li></ul>';
+  // div.setAttribute("class", "text-center");
+  // div.innerHTML =
+  //   '<ul class="list-group-horizontal"><li class="list-inline-item">ONE</li><li class="list-inline-item">TWO</li><li class="list-inline-item">THREE</li></ul>';
   return div;
 }
 
