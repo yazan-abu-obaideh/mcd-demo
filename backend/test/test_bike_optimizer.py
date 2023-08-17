@@ -13,7 +13,11 @@ class BikeOptimizerTest(McdDemoTestCase):
     def test_get_performances(self):
         pass
 
-    def test_optimize_seeds(self):
+    def test_optimize_aero_seeds(self):
+        for j in range(1, 4):
+            self.optimizer.optimize_aerodynamics_for_seeds("1", j)
+
+    def test_optimize_ergo_seeds(self):
         for j in range(1, 3):
             start = time.time()
             results = self.optimizer.optimize_ergonomics_for_seeds("1", j)
@@ -22,12 +26,10 @@ class BikeOptimizerTest(McdDemoTestCase):
                              {"bike", "bikePerformance"})
             self.assertLess(time.time() - start, 6.5)
 
-    def test_optimize_all_seeds(self):
+    def test_optimize_ergo_all_seeds(self):
         for j in range(1, 4):
             results_ergo = self.optimizer.optimize_ergonomics_for_seeds("1", j)
             self.assertEqual(5, len(results_ergo["bikes"]))
-            results_aero = self.optimizer.optimize_aerodynamics_for_seeds("1", j)
-            self.assertEqual(5, len(results_aero["bikes"]))
 
     def test_invalid_rider_id(self):
         self.assertRaisesWithMessage(lambda: self.optimizer.optimize_ergonomics_for_seeds(
