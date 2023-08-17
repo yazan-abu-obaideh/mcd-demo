@@ -19,12 +19,6 @@ OPTIMIZED_TO_CAD = {
     "Handlebar style": "Handlebar style",
 }
 
-SEED_BIKES = {
-    "1": "bike1.bcad",
-    "2": "bike2.bcad",
-    "3": "bike3.bcad"
-}
-
 
 def _get_valid_seed_bike(seed_image_id):
     if str(seed_image_id) not in [str(_) for _ in range(1, 10)]:
