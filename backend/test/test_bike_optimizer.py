@@ -49,5 +49,5 @@ class BikeOptimizerTest(McdDemoTestCase):
 
     def test_optimize_ergo_custom_rider(self):
         with open(self.resource_path("dude.jpeg"), "rb") as file:
-            response = self.optimizer.optimize_ergonomics_for_custom_rider("15", file.read(), 75, 75)
+            response = self.optimizer.optimize_ergonomics_for_custom_rider("8", file.read(), 75, 75)
             self.assertEqual(5, len(response["bikes"]))
