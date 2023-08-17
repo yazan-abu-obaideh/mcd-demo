@@ -29,7 +29,7 @@ class OptimizeAndRenderEndTOEndTest(McdDemoTestCase):
                 "Crank length": 172.5,
                 "Handlebar style": 0,
             }, "DOES_NOT_EXIST"),
-            "Invalid seed image ID"
+            "Invalid seed image ID [DOES_NOT_EXIST]"
         )
 
     def test_e2e(self):

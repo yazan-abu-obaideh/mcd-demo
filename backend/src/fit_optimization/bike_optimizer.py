@@ -7,7 +7,9 @@ from _validation_utils import validate
 from app_config.optimization_parameters import OPTIMIZER_GENERATIONS, OPTIMIZER_POPULATION
 from exceptions import UserInputException
 from fit_analysis.demoanalysis_wrapped import calculate_angles, to_body_vector, calculate_drag
+from fit_optimization.const_maps import RIDERS_MAP
 from fit_optimization.optimization_constants import *
+from fit_optimization.performance_comparators import compare_ergonomic_performance, compare_aerodynamic_performance
 from pose_analysis.pose_image_processing import PoserAnalyzer
 
 
@@ -70,6 +72,12 @@ class BikeOptimizer:
         body_dimensions["ankle_angle"] = 24 * 25.4
         return body_dimensions
 
+    def _build_comparator(self, comparator, original_bike, prediction_function):
+        return lambda optimized_performance: comparator(
+            original=prediction_function(pd.DataFrame.from_records([original_bike])).to_dict("records")[0],
+            optimized=optimized_performance
+        )
+
     def _get_dimensions_from_image(self, image, camera_height, person_height):
         body_dimensions = self.image_analysis_service.analyze_bytes_mm(camera_height, image)
         print(f"{person_height=}")
@@ -78,24 +86,36 @@ class BikeOptimizer:
         return body_dimensions
 
     def _optimize_aerodynamics(self, seed_bike_id, user_dimensions):
+        original_bike = self._get_bike_by_id(seed_bike_id)
+
         def aero_prediction_function(bikes):
             return self._predict_aerodynamics(bikes, user_dimensions)
 
         generator = self._build_aero_generator(
             aero_prediction_function,
-            self._get_bike_by_id(seed_bike_id)
+            original_bike
         )
-        return self._optimize(generator, aero_prediction_function)
+        return self._optimize(generator, aero_prediction_function,
+                              self._build_comparator(compare_aerodynamic_performance,
+                                                     original_bike,
+                                                     aero_prediction_function
+                                                     ))
 
     def _optimize_ergonomics(self, seed_bike_id, body_dimensions):
+        original_bike = self._get_bike_by_id(seed_bike_id)
+
         def ergo_prediction_function(bikes):
             return self._predict_ergonomics(bikes, body_dimensions)
 
         generator = self._build_ergo_generator(
             ergo_prediction_function,
-            self._get_bike_by_id(seed_bike_id)
+            original_bike
         )
-        return self._optimize(generator, ergo_prediction_function)
+        return self._optimize(generator, ergo_prediction_function,
+                              self._build_comparator(
+                                  comparator=compare_ergonomic_performance,
+                                  original_bike=original_bike,
+                                  prediction_function=ergo_prediction_function))
 
     def _predict_ergonomics(self, bikes, user_dimensions):
         start = time.time()
@@ -110,7 +130,8 @@ class BikeOptimizer:
         return response
 
     def _optimize(self, generator: LoggingGenerator,
-                  prediction_function: Callable[[pd.DataFrame], pd.DataFrame]):
+                  prediction_function: Callable[[pd.DataFrame], pd.DataFrame],
+                  performance_comparator: Callable[[dict], str]):
         # noinspection PyTypeChecker
 
         # noinspection PyTypeChecker
@@ -123,11 +144,13 @@ class BikeOptimizer:
         optimized_records = bikes.to_dict("records")
         performances = prediction_function(bikes).to_dict("records")
         return {"bikes": self._to_list_of_pairs(optimized_records,
-                                                performances),
+                                                performances,
+                                                performance_comparator),
                 "logs": generator.logs_list}
 
-    def _to_list_of_pairs(self, optimized_records, performances):
-        _to_list_of_pairs = [{"bike": record, "bikePerformance": performance} for (record, performance) in
+    def _to_list_of_pairs(self, optimized_records, performances, performance_comparator: Callable[[dict], str]):
+        _to_list_of_pairs = [{"bike": record, "bikePerformance": performance_comparator(performance)}
+                             for (record, performance) in
                              zip(optimized_records, performances)]
         return _to_list_of_pairs
 
@@ -157,8 +180,8 @@ class BikeOptimizer:
         return generator
 
     def _get_bike_by_id(self, seed_bike_id):
-        seed_bike = SEED_BIKES_MAP.get(str(seed_bike_id))
-        validate(seed_bike is not None, "Invalid seed bike ID")
+        seed_bike = TEMP_SEED_BIKES_MAP.get(str(seed_bike_id))
+        validate(seed_bike is not None, f"Invalid seed bike ID [{seed_bike_id}]")
         return seed_bike
 
     def _get_body_dimensions_by_id(self, rider_id):
