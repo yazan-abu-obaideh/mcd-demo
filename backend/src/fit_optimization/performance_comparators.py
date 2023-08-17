@@ -12,7 +12,7 @@ def compare_aerodynamic_performance(original, optimized):
     original_bike_drag = original["Aerodynamic Drag"]
     optimized_bike_drag = optimized["Aerodynamic Drag"]
     if original_bike_drag == float("inf") or original_bike_drag is None:
-        return "Estimated > 100% reduction in drag"
+        return "Significant reduction in aerodynamic drag"
 
     if original_bike_drag <= optimized_bike_drag:
         APP_LOGGER.warning("Generated counterfactual with greater aerodynamic drag than original")

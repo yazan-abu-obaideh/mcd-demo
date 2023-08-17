@@ -4,12 +4,12 @@ from test_utils import McdDemoTestCase
 
 class PerformanceComparatorsTest(McdDemoTestCase):
     def test_aero_handle_nan_or_infinity(self):
-        self.assertEqual("Estimated > 100% reduction in drag",
+        self.assertEqual("Significant reduction in aerodynamic drag",
                          compare_aerodynamic_performance(
                              {"Aerodynamic Drag": float("inf")},
                              {"Aerodynamic Drag": 50}
                          ))
-        self.assertEqual("Estimated > 100% reduction in drag",
+        self.assertEqual("Significant reduction in aerodynamic drag",
                          compare_aerodynamic_performance(
                              {"Aerodynamic Drag": None},
                              {"Aerodynamic Drag": 50}
