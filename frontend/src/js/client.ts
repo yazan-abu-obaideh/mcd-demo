@@ -1,6 +1,6 @@
 const optimizationApiUrl = "http://localhost:5000/api/v1";
 const renderingApiUrl = "http://localhost:8000/api/v1/rendering";
-const bikeStore = {};
+let bikeStore = {};
 const problemFormId = "problem-form-form";
 const responseDivId = "server-response-div";
 const urlCreator = window.URL || window.webkitURL;
@@ -208,9 +208,14 @@ function submitCustomRiderForm(optimizationType: string): void {
 }
 
 function submitSeedsForm(optimizationType: string): void {
+  resetBikeStore();
   throwIfInvalidType(optimizationType);
   submitProblemForm(problemFormId, 
     (form: HTMLFormElement) => submitValidSeedsForm(optimizationType, form));
+}
+
+function resetBikeStore() {
+  bikeStore = {};
 }
 
 function submitProblemForm(
@@ -307,6 +312,7 @@ function handleSuccessfulOptimizationResponse(
       resultDivElements.showElement("no-bikes-found-div");
     } else {
       showGeneratedBikes(responseJson, formData);
+      (getElementById(getRenderBikeBtnId(Object.keys(bikeStore)[0])) as HTMLButtonElement).click();
     }
   });
 }
