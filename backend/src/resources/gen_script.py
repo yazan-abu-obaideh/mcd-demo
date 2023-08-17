@@ -87,40 +87,43 @@ def generate_seed_bikes_html():
         result += fill_template(bike_number, bike_label)
     return result
 
-# USE THIS APPENDED TO THE END OF BIKE-INTEGRATION.EVALUATION_REQUEST_PROCESSOR TO GENERATE MAP
-#     result = {}
-#     for i in range(1, 11):
-#         with open(f"seed-bikes/bike{i}.bcad", "r") as file:
-#             # noinspection PyTypeChecker
-#             file_data = file.read()
-#             mapped = EvaluationRequestProcessor(None,
-#                                                 DefaultMapperSettings()).map_to_validated_model_input(
-#                 file_data)
-#             xml_handler = BikeXmlHandler()
-#             xml_handler.set_xml(file_data)
-#             original = xml_handler.get_entries_dict()
-#             mapped = {
-#                 key: value for key, value in mapped.items() if key in ["HT Length",
-#                                                                        "HT Angle",
-#                                                                        "HT LX",
-#                                                                        "ST Length",
-#                                                                        "ST Angle",
-#                                                                        ]
-#             }
-#
-#             original = {key: value for key, value in original.items() if key in ["Stack",
-#                                                                                  "Seatpost LENGTH",
-#                                                                                  "Saddle height",
-#                                                                                  "Stem length",
-#                                                                                  "Stem angle",
-#                                                                                  "Headset spacers",
-#                                                                                  "Crank length",
-#                                                                                  "Handlebar style"]}
-#
-#             mapped.update(original)
-#             result[str(i)] = mapped
-#     print(result)
 
+# USE THIS APPENDED TO THE END OF BIKE-INTEGRATION.EVALUATION_REQUEST_PROCESSOR TO GENERATE MAP
+# result = {}
+# for i in range(1, 11):
+#     with open(f"seed-bikes/bike{i}.bcad", "r") as file:
+#         # noinspection PyTypeChecker
+#         file_data = file.read()
+#         mapped = EvaluationRequestProcessor(None,
+#                                             DefaultMapperSettings()).map_to_validated_model_input(
+#             file_data)
+#         xml_handler = BikeXmlHandler()
+#         xml_handler.set_xml(file_data)
+#         original = xml_handler.get_entries_dict()
+#         mapped = {
+#             key: value for key, value in mapped.items() if key in ["HT Length",
+#                                                                    "HT Angle",
+#                                                                    "HT LX",
+#                                                                    "ST Length",
+#                                                                    "ST Angle",
+#                                                                    ]
+#         }
+#
+#         original = {key: value for key, value in original.items() if key in ["Stack",
+#                                                                              "Seatpost LENGTH",
+#                                                                              "Saddle height",
+#                                                                              "Stem length",
+#                                                                              "Stem angle",
+#                                                                              "Headset spacers",
+#                                                                              "Crank length",
+#                                                                              "Handlebar style"]}
+#
+#         mapped.update(original)
+#         mapped["DT Length"] = 500
+#         if not ("Stack" in mapped.keys()):
+#             mapped["Stack"] = 565.5
+#         result[str(i)] = {key: float(value) for key, value in mapped.items()}
+# print(result)
 
 if __name__ == "__main__":
     with open("file.html", "w") as _file:
