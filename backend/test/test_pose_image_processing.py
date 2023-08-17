@@ -9,7 +9,7 @@ class ImageAnalyzerTest(McdDemoTestCase):
         self.analyzer = PoserAnalyzer()
 
     def test_analyze_rider_images(self):
-        rider_images = ["person1.jpeg", "person2.jpeg", "person3.jpeg"]
+        rider_images = ["person1.jpg", "person2.jpg", "person3.jpg"]
         heights_mm = [1750, 1800, 1500]
         for rider_image, height_mm in zip(rider_images, heights_mm):
             path = os.path.join(os.path.dirname(__file__), "../src/resources/rider-images", rider_image)

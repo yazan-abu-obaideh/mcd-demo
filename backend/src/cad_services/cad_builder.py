@@ -27,7 +27,7 @@ SEED_BIKES = {
 
 
 def _get_valid_seed_bike(seed_image_id):
-    if int(seed_image_id) not in range(1, 10):
+    if str(seed_image_id) not in [str(_) for _ in range(1, 10)]:
         raise UserInputException(f"Invalid seed image ID [{seed_image_id}]")
     return f"bike{seed_image_id}.bcad"
 
@@ -42,16 +42,17 @@ class BikeCadFileBuilder:
         xml_handler = BikeXmlHandler()
         self._load_seed_xml(xml_handler, seed_bike_id)
         for response_key, cad_key in OPTIMIZED_TO_CAD.items():
-            self._update_xml(xml_handler, bike_object, cad_key, response_key)
+            self._update_xml(xml_handler, cad_key, bike_object[response_key])
+        # self._update_xml(xml_handler, "Display RIDER", "true")
         return xml_handler.get_content_string()
 
     def _load_seed_xml(self, xml_handler, seed_image_id):
         with open(_build_bike_path(seed_image_id), "r") as file:
             xml_handler.set_xml(file.read())
 
-    def _update_xml(self, xml_handler, bike_object, cad_key, response_key):
+    def _update_xml(self, xml_handler, cad_key, desired_value):
         entry = xml_handler.find_entry_by_key(cad_key)
         if entry:
-            xml_handler.update_entry_value(entry, str(bike_object[response_key]))
+            xml_handler.update_entry_value(entry, str(desired_value))
         else:
-            xml_handler.add_new_entry(cad_key, str(bike_object[response_key]))
+            xml_handler.add_new_entry(cad_key, str(desired_value))

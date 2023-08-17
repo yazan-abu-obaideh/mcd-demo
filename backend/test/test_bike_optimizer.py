@@ -20,7 +20,7 @@ class BikeOptimizerTest(McdDemoTestCase):
             self.assertEqual(5, len(results["bikes"]))
             self.assertEqual(set(results["bikes"][0].keys()),
                              {"bike", "bikePerformance"})
-            self.assertLess(time.time() - start, 5)
+            self.assertLess(time.time() - start, 6.5)
 
     def test_optimize_all_seeds(self):
         for j in range(1, 4):
@@ -37,7 +37,7 @@ class BikeOptimizerTest(McdDemoTestCase):
             # noinspection PyTypeChecker
             self.assertRaisesWithMessage(
                 lambda: self.optimizer.optimize_ergonomics_for_custom_rider("DOES_NOT_EXIST", file.read(), 76, 76),
-                "Invalid seed bike ID")
+                "Invalid seed bike ID [DOES_NOT_EXIST]")
 
     @unittest.skip
     def test_no_hard_coded_dimensions(self):

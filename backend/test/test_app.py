@@ -22,14 +22,12 @@ class AppTest(McdDemoTestCase):
 
     def test_bad_request(self):
         with open(self.resource_path("dude.jpeg"), "rb") as file:
-            response = requests.post(self.build_end_point("/ergonomics/optimize-custom-rider"), data=json.dumps({
+            response = requests.post(self.build_end_point("/ergonomics/optimize-seeds"), data=json.dumps({
                 "seedBikeId": "DOES_NOT_EXIST",
-                "imageBase64": b"",
-                "cameraHeight": 45,
-                "personHeight": 45
+                "riderId": "DOES_NOT_EXIST"
             }), headers={"Content-Type": "application/json"})
             self.assertEqual(HTTPStatus.BAD_REQUEST, response.status_code)
-            self.assertEqual("Invalid seed bike ID", response.json()["message"])
+            self.assertEqual("Invalid rider ID [DOES_NOT_EXIST]", response.json()["message"])
 
     def test_not_found(self):
         health_response = requests.get(self.build_end_point("healthy"))
