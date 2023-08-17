@@ -11,6 +11,9 @@ IDEAL_ARM_ANGLE = (ARMPIT_WRIST_TARGET.upper_bound - ARMPIT_WRIST_TARGET.lower_b
 def compare_aerodynamic_performance(original, optimized):
     original_bike_drag = original["Aerodynamic Drag"]
     optimized_bike_drag = optimized["Aerodynamic Drag"]
+    if original_bike_drag == float("inf") or original_bike_drag is None:
+        return "Estimated > 100% reduction in drag"
+
     if original_bike_drag <= optimized_bike_drag:
         APP_LOGGER.warning("Generated counterfactual with greater aerodynamic drag than original")
         return "Little change in aerodynamic drag"
@@ -18,7 +21,9 @@ def compare_aerodynamic_performance(original, optimized):
     return f"Offers {rounded_percentage}% reduction in aerodynamic drag"
 
 
-def compare_ergonomic_performance(original, optimized):
+def compare_ergonomic_performance(original: dict, optimized: dict):
+    if None in original.values() or float("inf") in original.values():
+        return "Significant improvement in ergonomics"
     original_differences = _to_differences_dict(original)
     optimized_differences = _to_differences_dict(optimized)
     max_difference = _get_max_difference(optimized_differences, original_differences)
