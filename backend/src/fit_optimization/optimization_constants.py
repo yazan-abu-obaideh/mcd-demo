@@ -38,3 +38,4 @@ FEATURES_DATATYPES = [Real(bounds=(DESIGNS.iloc[:, _].quantile(0.05),
                                    DESIGNS.iloc[:, _].quantile(0.99))) for _ in range(13)]
 FEATURES_DATATYPES.append(Choice(options=DESIGNS.iloc[:, 13].unique()))
 CONSTRAINT_FUNCTIONS = [validate_seat_height]
+TEMP_SEED_BIKES_MAP = build_seed_map()
