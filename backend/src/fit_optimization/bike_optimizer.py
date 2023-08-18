@@ -180,7 +180,7 @@ class BikeOptimizer:
         return generator
 
     def _get_bike_by_id(self, seed_bike_id):
-        seed_bike = SEED_BIKES_MAP.get(str(seed_bike_id))
+        seed_bike = TEMP_SEED_BIKES_MAP.get(str(seed_bike_id))
         validate(seed_bike is not None, f"Invalid seed bike ID [{seed_bike_id}]")
         return seed_bike
 

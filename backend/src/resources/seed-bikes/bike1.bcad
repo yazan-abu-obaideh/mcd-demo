@@ -770,7 +770,7 @@
 <entry key="LOWEROUTLINESTEM1 color IMAGEYES">false</entry>
 <entry key="nSSAUXANGLE_ONE offset">0.0</entry>
 <entry key="Head tube diameter">35.0</entry>
-<entry key="Seatpost LENGTH">200.0</entry>
+<entry key="Seatpost LENGTH">300.0</entry>
 <entry key="TEXTTOPTUBE1 color IMAGEFitWidth">false</entry>
 <entry key="OUTLINEREARWHEEL1 color ALPHA">255</entry>
 <entry key="HEADTUBEBOTTOM_HJY show">false</entry>
@@ -778,7 +778,7 @@
 <entry key="SADDLE_CLAMP_TO_BB show">false</entry>
 <entry key="LOWEROUTLINEFORK1 color RED">204</entry>
 <entry key="CSAUXA show">false</entry>
-<entry key="Stem angle">0.0</entry>
+<entry key="Stem angle">-10.0</entry>
 <entry key="SEATSTAYEND2X offsetX">0.0</entry>
 <entry key="CROSS_PATTERN front">3</entry>
 <entry key="TEXTCHAINSTAYS1 color RED">0</entry>
@@ -1340,7 +1340,7 @@
 <entry key="Crosshair X">0.0</entry>
 <entry key="SADDLE color IMAGEaspectR">false</entry>
 <entry key="nCHAINSTAY_K offsetX">-89.0</entry>
-<entry key="Seat tube length">430.0</entry>
+<entry key="Seat tube length">588.7</entry>
 <entry key="SADDLE color TILED">false</entry>
 <entry key="DOWNTUBEOFFSET_AT_BB offset">0.0</entry>
 <entry key="STANTIONS color IMAGEYES">false</entry>
@@ -1399,7 +1399,7 @@
 <entry key="DECAL_ANGLE_STATEREARWHEEL2">0</entry>
 <entry key="DECAL_ANGLE_STATEREARWHEEL1">2</entry>
 <entry key="SEATSTAYANGLE offset">17.0</entry>
-<entry key="Headset spacers">10.0</entry>
+<entry key="Headset spacers">15.0</entry>
 <entry key="SHOES color GREEN">64</entry>
 <entry key="OUTLINESEATTUBE1 color IMAGEYES">false</entry>
 <entry key="CHAINSTAYTAPERLENGTH offset">0.0</entry>
@@ -1897,7 +1897,7 @@
 <entry key="LOWERTEXTFRONTWHEEL2 color IMAGENAME">none</entry>
 <entry key="LOWEROUTLINEREARWHEEL2 color TILED">true</entry>
 <entry key="NOTES color ALPHA">255</entry>
-<entry key="Head tube length textfield">145.0</entry>
+<entry key="Head tube length textfield">135.6</entry>
 <entry key="LOWEROUTLINEFRONTWHEEL2 color RED">204</entry>
 <entry key="SEATSTAY_TOPJOINT_ANGLE offsetX">0.5682565174449135</entry>
 <entry key="TIRES color ALPHA">255</entry>
@@ -2345,7 +2345,7 @@
 <entry key="MTNGRIPDIA show">false</entry>
 <entry key="SEATSTAYLENGTH2 offsetX">0.0</entry>
 <entry key="AEROBARS color IMAGENAME">none</entry>
-<entry key="Crank length">170.0</entry>
+<entry key="Crank length">172.5</entry>
 <entry key="CSSIDED show">false</entry>
 <entry key="PEDALS color ALPHA">255</entry>
 <entry key="CHAINSTAYENDZ offset">60.0</entry>
@@ -2670,7 +2670,7 @@
 <entry key="DECAL_OFFSETTOPTUBE2">200.0</entry>
 <entry key="NOTES color RED">0</entry>
 <entry key="DECAL_OFFSETTOPTUBE1">370.0</entry>
-<entry key="Head tube lower extension2">30.9</entry>
+<entry key="Head tube lower extension2">50.0</entry>
 <entry key="CSSIDEANGLE_ONE offset">0.0</entry>
 <entry key="BB length">170.0</entry>
 <entry key="nChain stay horizontal diameter">20.1</entry>
@@ -3189,7 +3189,7 @@
 <entry key="TITLEBLOCK color IMAGEFitHeight">true</entry>
 <entry key="LOWERTEXTFORK2 color IMAGEYES">false</entry>
 <entry key="SEATSTAYEND2Y offsetX">0.0</entry>
-<entry key="Saddle height">570.0</entry>
+<entry key="Saddle height">768.0</entry>
 <entry key="LOWEROUTLINEDOWNTUBE2 color IMAGEYES">false</entry>
 <entry key="HANDLEBAR color IMAGEaspectR">false</entry>
 <entry key="FENDERS color GREEN">64</entry>
@@ -3335,7 +3335,7 @@
 <entry key="SBLADEW rear">80.0</entry>
 <entry key="DOWNTUBECY2">-40.0</entry>
 <entry key="DOWNTUBECY1">60.0</entry>
-<entry key="Stem length">40.0</entry>
+<entry key="Stem length">120.0</entry>
 <entry key="HUBS color RED">255</entry>
 <entry key="OUTLINESEATPOST2 color IMAGENAME">none</entry>
 <entry key="OUTLINECHAINSTAYS1 color ALPHA">255</entry>
@@ -3462,7 +3462,7 @@
 <entry key="LOWEROUTLINESTEM1 color BLUE">0</entry>
 <entry key="THICKNESSofPELVIS offset">133.69536566759956</entry>
 <entry key="RACK_EYELET_ANGLE show">false</entry>
-<entry key="Handlebar style">1</entry>
+<entry key="Handlebar style">0</entry>
 <entry key="CRANK_SPIDER color ALPHA">255</entry>
 <entry key="LOWEROUTLINEDOWNTUBE2 color BLUE">0</entry>
 <entry key="nCSAUXD show">false</entry>
@@ -3511,7 +3511,7 @@
 <entry key="DECAL_LOGODOWNTUBE2">FOREST</entry>
 <entry key="DECAL_LOGODOWNTUBE1">NO FEAR!</entry>
 <entry key="HBARRADIUS2 show">false</entry>
-<entry key="Seat angle">74.0</entry>
+<entry key="Seat angle">72.5</entry>
 <entry key="DECAL_FontDOWNTUBE2">Impact</entry>
 <entry key="DECAL_FontDOWNTUBE1">Impact</entry>
 <entry key="DECAL_OFFSETDOWNTUBE2">340.0</entry>
@@ -3568,4 +3568,4 @@
 <entry key="KNEETHICKNESS">113.0</entry>
 <entry key="SLOTDIA show">false</entry>
 <entry key="nWISHBONE_DIAMETER offsetX">0.0</entry>
-<entry key="BACKGROUND color sRGB">-1</entry></properties>
+<entry key="BACKGROUND color sRGB">-1</entry><entry key="Stack">565.6</entry></properties>

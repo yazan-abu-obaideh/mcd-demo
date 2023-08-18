@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 <comment>Created on Tue Jan 26 11:50:22 EST 2021</comment>
@@ -947,7 +947,7 @@
 <entry key="DOWNTUBE2SnSshift show">false</entry>
 <entry key="SPOKE_HOLE_DIA rear">2.4</entry>
 <entry key="ANKLETHICKNESS">80.0</entry>
-<entry key="BB to handlebar direct"></entry>
+<entry key="BB to handlebar direct"/>
 <entry key="SIDEWALLS color IMAGEFitWidth">true</entry>
 <entry key="nCSAUXZ1 offsetX">0.0</entry>
 <entry key="BB_TO_HANDS offsetX">0.0</entry>
@@ -965,7 +965,7 @@
 <entry key="BATTERYmount">DOWNTUBE</entry>
 <entry key="CHNG_CRNK_CLEAR offsetX">0.0</entry>
 <entry key="QFACTOR offsetX">0.0</entry>
-<entry key="Crank length">172.5</entry>
+<entry key="Crank length">175.0</entry>
 <entry key="DECAL_heightRATIOCHAINSTAYS2">100.0</entry>
 <entry key="DECAL_heightRATIOCHAINSTAYS1">100.0</entry>
 <entry key="SEATTUBE2SnSlen1 offsetX">0.0</entry>
@@ -979,7 +979,7 @@
 <entry key="TRISPOKE color IMAGEaspectR">false</entry>
 <entry key="Mountain bar sweep">16.4</entry>
 <entry key="DROPOUT_SLIDER_OR_HANGER color IMAGEFitHeight">false</entry>
-<entry key="Phone"></entry>
+<entry key="Phone"/>
 <entry key="CHAINSTAYDIMPLEX show">false</entry>
 <entry key="LINKS show">false</entry>
 <entry key="rackS1TX show">false</entry>
@@ -1227,7 +1227,7 @@
 <entry key="SHOES color IMAGENAME">none</entry>
 <entry key="M2MTOPDOWNTUBE offsetX">141.0</entry>
 <entry key="FLANGEDIST_DS rear">35.0</entry>
-<entry key="Seat tube length">515.2</entry>
+<entry key="Seat tube length">457.0</entry>
 <entry key="REARBRAKEPX offset">93.0</entry>
 <entry key="BELTorCHAIN">1</entry>
 <entry key="TEXTSEATTUBE1 color sRGB">-1</entry>
@@ -1576,7 +1576,7 @@
 <entry key="SPC_RAD2 offset">117.35733391915372</entry>
 <entry key="nCSAUXBENDS">1</entry>
 <entry key="FRONTRack seat stay mount">-20.0</entry>
-<entry key="BB to hands angle"></entry>
+<entry key="BB to hands angle"/>
 <entry key="rackRADS3 show">false</entry>
 <entry key="Dimension units">1</entry>
 <entry key="AEROBAR_PAD_DROP_FROM_SADDLE offsetX">0.0</entry>
@@ -1695,11 +1695,11 @@
 <entry key="DECAL_LOGOFRONTWHEEL1">BIKECAD</entry>
 <entry key="OUTLINE_STEM1">false</entry>
 <entry key="nSSSIDECENTER_TO_CENTER offset">0.0</entry>
-<entry key="Address line 3"></entry>
+<entry key="Address line 3"/>
 <entry key="ST_BOTTOM_LENGTH show">false</entry>
-<entry key="Address line 2"></entry>
-<entry key="Address line 1"></entry>
-<entry key="Address line 0"></entry>
+<entry key="Address line 2"/>
+<entry key="Address line 1"/>
+<entry key="Address line 0"/>
 <entry key="DOWNTUBEZ1 offset">0.0</entry>
 <entry key="LOWERTEXTREARWHEEL1 color IMAGENAME">none</entry>
 <entry key="fPANNIERoffset show">false</entry>
@@ -1725,7 +1725,7 @@
 <entry key="DOWNTUBEC_ang2">49.29</entry>
 <entry key="COUPLERS color IMAGEaspectR">true</entry>
 <entry key="DOWNTUBEC_ang3">-39.06</entry>
-<entry key="BRAND"></entry>
+<entry key="BRAND"/>
 <entry key="AEROF">30.0</entry>
 <entry key="AEROG">0.0</entry>
 <entry key="nSSSIDEE1 offsetX">0.0</entry>
@@ -2023,7 +2023,7 @@
 <entry key="SSAUXS1 offset">0.0</entry>
 <entry key="REARROTORJ">55.89</entry>
 <entry key="REARROTORL">98.34</entry>
-<entry key="Stem angle">-5.0</entry>
+<entry key="Stem angle">0.0</entry>
 <entry key="Cadence">90</entry>
 <entry key="fCARGOShiftY offsetX">-80.0</entry>
 <entry key="SPOKE_OFFSET front">0.0</entry>
@@ -2424,7 +2424,7 @@
 <entry key="REARAXLE_TO_CHAINSTAY_BRAKEHOLE offsetX">-15.0</entry>
 <entry key="EFFECTIVE_RIM_DIA front offsetX">0.7219757857398488</entry>
 <entry key="SADDLELENGTH show">false</entry>
-<entry key="SIZE"></entry>
+<entry key="SIZE"/>
 <entry key="TORSOLENGTH offset">60.0</entry>
 <entry key="SEATPOSTSETBACK offset">-60.0</entry>
 <entry key="STEME2 offset">0.0</entry>
@@ -2475,7 +2475,7 @@
 <entry key="SSAUXE1 offsetX">0.0</entry>
 <entry key="SEATTUBE_TOPTUBE_JUNCTION_TO_BB_X offsetX">0.0</entry>
 <entry key="SSSIDE2SnSCheck">false</entry>
-<entry key="Email"></entry>
+<entry key="Email"/>
 <entry key="BRAKE_TRIM color IMAGENAME">none</entry>
 <entry key="CARGO color IMAGEFitWidth">false</entry>
 <entry key="LOWEROUTLINEDOWNTUBE2 color IMAGEaspectR">true</entry>
@@ -2742,7 +2742,7 @@
 <entry key="FRONTDISCBRKF offset">0.0</entry>
 <entry key="HAND_TWEAK_X2">0.0</entry>
 <entry key="HAND_TWEAK_X1">0.0</entry>
-<entry key="Notes"></entry>
+<entry key="Notes"/>
 <entry key="HAND_TWEAK_X3">0.0</entry>
 <entry key="CSSIDE2SnSshift offsetX">0.0</entry>
 <entry key="nSEATSTAYTOPDIAMETER show">false</entry>
@@ -2937,7 +2937,7 @@
 <entry key="TOPTUBEL11">30.0</entry>
 <entry key="TOPTUBEL10">30.0</entry>
 <entry key="SEATSTAYINNER_EDGE_TO_EDGE_AT_FRONT show">false</entry>
-<entry key="Seat angle">73.99701145675202</entry>
+<entry key="Seat angle">72.99997971982306</entry>
 <entry key="DECAL_ANGLE_STATESEATSTAYS2">2</entry>
 <entry key="SEATTUBER3 show">false</entry>
 <entry key="SADDLETIPtoMIDDLE offset">0.0</entry>
@@ -3173,7 +3173,7 @@
 <entry key="TITLEBLOCK color IMAGEYES">false</entry>
 <entry key="CSSIDE2SnSshift">300.0</entry>
 <entry key="SEATTUBECHAINSTAYANGLE offsetX">0.0</entry>
-<entry key="Notes drawing"></entry>
+<entry key="Notes drawing"/>
 <entry key="nCSAUXB_STYLE">0</entry>
 <entry key="LOWEROUTLINEFRONTWHEEL2 color IMAGEYES">false</entry>
 <entry key="DECAL_SPACESEATSTAYS2">0.0</entry>
@@ -4492,7 +4492,7 @@
 <entry key="SEATPOSTDIAMETERtext show">false</entry>
 <entry key="CHAINSTAYbrdgshift">350.0</entry>
 <entry key="SPOKES rear">7</entry>
-<entry key="FRAME_NUMBER"></entry>
+<entry key="FRAME_NUMBER"/>
 <entry key="nSSTopZOFFSET offsetX">129.0</entry>
 <entry key="SPACERS color IMAGEFitHeight">true</entry>
 <entry key="ALTERNATIVE_TOP_TUBE offset">0.0</entry>
@@ -4691,9 +4691,9 @@
 <entry key="STEMLENGTH offset">43.0</entry>
 <entry key="nCSAUXB offset">0.0</entry>
 <entry key="SEATTUBE2SnSdia2 offset">0.0</entry>
-<entry key="ClmpYfromBB"></entry>
+<entry key="ClmpYfromBB"/>
 <entry key="nSSSIDE1_MM_RATIO">1</entry>
-<entry key="Name"></entry>
+<entry key="Name"/>
 <entry key="REACH show">false</entry>
 <entry key="THRU_AXLE">false</entry>
 <entry key="M2MBOTTOMDOWNTUBEdeep offsetX">0.0</entry>
@@ -4771,7 +4771,7 @@
 <entry key="SEATTUBE1SnSdia2 show">false</entry>
 <entry key="LOWERTEXTCHAINSTAYS1 color IMAGEaspectR">true</entry>
 <entry key="STEMR2 offset">0.0</entry>
-<entry key="MODEL_YEAR"></entry>
+<entry key="MODEL_YEAR"/>
 <entry key="Dim D mmInch">0</entry>
 <entry key="Saddle N offsetX">0.0</entry>
 <entry key="LOWERTEXTSTEM1 color IMAGENAME">none</entry>
@@ -5198,7 +5198,7 @@
 <entry key="PANNIERHEIGHT">340.0</entry>
 <entry key="DOWNTUBECX3">95.0</entry>
 <entry key="SSSIDE1SnSlength offsetX">0.0</entry>
-<entry key="Stem length">100.0</entry>
+<entry key="Stem length">80.0</entry>
 <entry key="OUTLINESEATTUBE1 color TILED">true</entry>
 <entry key="GEARBOX color sRGB">-13421773</entry>
 <entry key="BBdrop offsetX">0.0</entry>
@@ -5233,7 +5233,7 @@
 <entry key="REARCNTIlen2 offset">0.0</entry>
 <entry key="LOWERTEXTSEATPOST2 color sRGB">-16777216</entry>
 <entry key="HIP_ANGLE show">false</entry>
-<entry key="Head tube lower extension2">49.2</entry>
+<entry key="Head tube lower extension2">68.1</entry>
 <entry key="nSSAUXANGLE_TWO offsetX">0.0</entry>
 <entry key="TEXTFORK2 color IMAGEYES">false</entry>
 <entry key="CRANKS color IMAGEYES">false</entry>
@@ -5654,7 +5654,7 @@
 <entry key="SEATTUBE2SnSdia2 offsetX">0.0</entry>
 <entry key="AXLE_OFF offset">0.0</entry>
 <entry key="WIDTH_AT_BB offset">-181.0</entry>
-<entry key="Head angle">73.0</entry>
+<entry key="Head angle">72.0</entry>
 <entry key="PREVIEW color IMAGENAME">none</entry>
 <entry key="ANKLETHICKNESS offsetX">2.6101007629091137</entry>
 <entry key="FDBRZLEN offsetX">0.0</entry>
@@ -5805,7 +5805,7 @@
 <entry key="HANDLEBARfromBB_Direct show">false</entry>
 <entry key="HANDLEBARfromBB_Direct offset">-60.0</entry>
 <entry key="TIRE_aux">true</entry>
-<entry key="MODEL_NAME"></entry>
+<entry key="MODEL_NAME"/>
 <entry key="DOWNTUBEZ4 offsetX">0.0</entry>
 <entry key="SPOKE_HOLE_DIA front">2.4</entry>
 <entry key="SEATTUBE_Center_to_Top show">false</entry>
@@ -5939,7 +5939,7 @@
 <entry key="STEMANGLE_TWO offset">0.0</entry>
 <entry key="SADDLESETBACK offset">0.0</entry>
 <entry key="TEXTTOPTUBE2 color IMAGEFitHeight">false</entry>
-<entry key="Saddle height">718.0</entry>
+<entry key="Saddle height">830.0</entry>
 <entry key="Hand vertical">30.0</entry>
 <entry key="FRONTDISCBRKG offsetX">0.0</entry>
 <entry key="FRONTCNTIdia1">7.98</entry>
@@ -6015,7 +6015,7 @@
 <entry key="SSAUXZ2 offset">0.0</entry>
 <entry key="Fit scheme">Road</entry>
 <entry key="DOWNTUBE2SnSdia2 offset">0.0</entry>
-<entry key="Head tube length textfield">145.0</entry>
+<entry key="Head tube length textfield">105.0</entry>
 <entry key="nSSAUXSLIDER">33</entry>
 <entry key="DERAILLEUR color TILED">true</entry>
 <entry key="ANGLE_SYMB2 show">false</entry>
@@ -6041,7 +6041,7 @@
 <entry key="CSAUXR2 offsetX">0.0</entry>
 <entry key="REARDISCBRKL offset">0.0</entry>
 <entry key="Seatpost MAST">false</entry>
-<entry key="MORE_INFO"></entry>
+<entry key="MORE_INFO"/>
 <entry key="SADDLE_FROM_BB_Y show">false</entry>
 <entry key="Saddle R offsetX">0.0</entry>
 <entry key="STEERER_TUBE_LENGTH_THREADED show">false</entry>
@@ -6148,7 +6148,7 @@
 <entry key="DECAL_vSHIFTREARWHEEL1">0.0</entry>
 <entry key="DOWNTUBELEADINGEDGE offsetX">112.0</entry>
 <entry key="DISC_ROTOR color IMAGEaspectR">true</entry>
-<entry key="Handlebar style">0</entry>
+<entry key="Handlebar style">1</entry>
 <entry key="SSTopXOFFSET offset">110.0</entry>
 <entry key="Front fender start angle">80.0</entry>
 <entry key="TwoColP2Y">663.9355049048555</entry>

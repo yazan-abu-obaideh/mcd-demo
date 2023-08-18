@@ -17,7 +17,7 @@ def get_bikes():
     csv_path = os.path.join(os.path.dirname(__file__), "../resources/bike_vector_df_with_id.csv")
     from_csv = pd.read_csv(csv_path).drop(columns=["Bike ID"]).set_index("Unnamed: 0")
     from_seed_bikes = pd.DataFrame.from_records(list(SEED_BIKES_MAP.values()))
-    return pd.concat([from_seed_bikes, from_csv], axis=0, ignore_index=True)
+    return from_csv
 
 
 def build_ergo_performances():
