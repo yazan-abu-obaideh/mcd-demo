@@ -21,8 +21,8 @@ OPTIMIZED_TO_CAD = {
 
 
 def _get_valid_seed_bike(seed_image_id):
-    if str(seed_image_id) not in [str(_) for _ in range(1, 11)]:
-        raise UserInputException(f"Invalid seed image ID [{seed_image_id}]")
+    # if str(seed_image_id) not in [str(_) for _ in range(1, 11)]:
+    #     raise UserInputException(f"Invalid seed image ID [{seed_image_id}]")
     return f"bike{seed_image_id}.bcad"
 
 

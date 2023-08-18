@@ -4,7 +4,6 @@ import numpy as np
 import pandas as pd
 
 from fit_analysis.demoanalysis_wrapped import calculate_angles, calculate_drag
-from fit_optimization.const_maps import SEED_BIKES_MAP
 
 BODY_DIMENSIONS = {'height': 75, 'sh_height': 61.09855828510818, 'hip_to_ankle': 31.167514055725047,
                    'hip_to_knee': 15.196207871637029, 'shoulder_to_wrist': 13.538605228960089,
@@ -15,9 +14,7 @@ BODY_DIMENSIONS = {'height': 75, 'sh_height': 61.09855828510818, 'hip_to_ankle':
 
 def get_bikes():
     csv_path = os.path.join(os.path.dirname(__file__), "../resources/bike_vector_df_with_id.csv")
-    from_csv = pd.read_csv(csv_path).drop(columns=["Bike ID"]).set_index("Unnamed: 0")
-    from_seed_bikes = pd.DataFrame.from_records(list(SEED_BIKES_MAP.values()))
-    return from_csv
+    return pd.read_csv(csv_path).drop(columns=["Bike ID"]).set_index("Unnamed: 0")
 
 
 def build_ergo_performances():

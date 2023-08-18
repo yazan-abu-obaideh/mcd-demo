@@ -24,7 +24,7 @@ background_colors = {
 
 
 def make_backgrounds_white():
-    for i in range(1, 8):
+    for i in range(1, 14):
         xml_handler = BikeXmlHandler()
         file_path = f"seed-bikes/bike{i}.bcad"
         with open(file_path, "r") as file:
@@ -137,5 +137,4 @@ def modify_seeds():
 # print(result)
 
 if __name__ == "__main__":
-    modify_seeds()
     render_seeds()
