@@ -6349,4 +6349,4 @@
 <entry key="CSAUXR1 offsetX">0.0</entry>
 <entry key="TEXTHEADTUBE2 color IMAGENAME">none</entry>
 <entry key="REARROTORANGLE_ONEP">-15.0</entry>
-</properties>
+<entry key="BACKGROUND color BLUE">255</entry><entry key="BACKGROUND color RED">255</entry><entry key="BACKGROUND color GREEN">255</entry></properties>

@@ -1141,7 +1141,7 @@
 <entry key="HUBS color TILED">true</entry>
 <entry key="DIM_ARROW_LEN">13</entry>
 <entry key="M2MTOPDOWNTUBEnotch offsetX">119.0</entry>
-<entry key="BACKGROUND color BLUE">153</entry>
+<entry key="BACKGROUND color BLUE">255</entry>
 <entry key="TEXTFORK2 color IMAGENAME">none</entry>
 <entry key="LOWEROUTLINEFRONTWHEEL1 color IMAGEFitHeight">false</entry>
 <entry key="BRAKE_TRIM color GREEN">64</entry>
@@ -1368,7 +1368,7 @@
 <entry key="OUTGRADIENT_REARWHEEL1">false</entry>
 <entry key="DECAL_Font styleCHAINSTAYS1">3</entry>
 <entry key="SADDLETIP_TO_BRAKE_HOOD_DIRECT offsetX">0.0</entry>
-<entry key="BACKGROUND color IMAGEFitWidth">false</entry>
+<entry key="BACKGROUND color IMAGEFitWidth">true</entry>
 <entry key="SPROCKETS color ALPHA">255</entry>
 <entry key="SADDLE_HEIGHT_OFF_GROUND offsetX">0.0</entry>
 <entry key="FIRST color GREEN">0</entry>
@@ -1911,7 +1911,7 @@
 <entry key="SSSIDECrad2">110.0</entry>
 <entry key="HEADTUBE_TOPTUBE_JUNCTION_TO_TOP_OF_HEADTUBE show">false</entry>
 <entry key="SSSIDECrad1">110.0</entry>
-<entry key="BACKGROUND color IMAGENAME">bikeforest.png</entry>
+<entry key="BACKGROUND color IMAGENAME">fade_to_black_at_top.png</entry>
 <entry key="FORKLENGTH_AXLE_TO_CROWN offsetX">0.0</entry>
 <entry key="SADDLETOHANDLEBARREACH offset">0.0</entry>
 <entry key="HANDLEBARfromBB_Y offsetX">0.0</entry>
@@ -1963,7 +1963,7 @@
 <entry key="CSAUXCY1">10.0</entry>
 <entry key="SEATSTAYENDZ offset">52.0</entry>
 <entry key="CSAUXANGLE_ONE offset">0.0</entry>
-<entry key="BACKGROUND color GREEN">153</entry>
+<entry key="BACKGROUND color GREEN">255</entry>
 <entry key="BOTTLE_TOPS color TILED">true</entry>
 <entry key="HEADTUBE_DOWNTUBE_JUNCTION_TO_BOTTOM_OF_HEADTUBE show">false</entry>
 <entry key="OUTLINETOPTUBE2 color ALPHA">255</entry>
@@ -3448,7 +3448,7 @@
 <entry key="GAPBETWEENTOPTUBEandDOWNTUBE offsetX">0.0</entry>
 <entry key="WATERBOTTLES color RED">200</entry>
 <entry key="HEADTUBEB offset">0.0</entry>
-<entry key="BACKGROUND color RED">153</entry>
+<entry key="BACKGROUND color RED">255</entry>
 <entry key="BRAKE_TRIM color IMAGEFitHeight">true</entry>
 <entry key="SPOKE_OFFSET rear">0.0</entry>
 <entry key="TEXTSEATTUBE2 color GREEN">0</entry>
@@ -3568,4 +3568,4 @@
 <entry key="KNEETHICKNESS">113.0</entry>
 <entry key="SLOTDIA show">false</entry>
 <entry key="nWISHBONE_DIAMETER offsetX">0.0</entry>
-<entry key="Stack">565.6</entry></properties>
+<entry key="Stack">565.6</entry><entry key="BACKGROUND color sRGB">-1</entry></properties>
