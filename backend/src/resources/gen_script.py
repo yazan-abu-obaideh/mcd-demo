@@ -42,7 +42,7 @@ def make_backgrounds_white():
 
 def render_seeds():
     rendering_service = RenderingService(1)
-    for i in range(1, 13):
+    for i in range(1, 14):
         file_path = f"seed-bikes/bike{i}.bcad"
         with open(file_path, "r") as file:
             rendered = rendering_service.render(file.read())
@@ -93,7 +93,7 @@ def generate_seed_bikes_html():
 def modify_seeds():
     all_bikes = list(TEMP_SEED_BIKES_MAP.values())
     builder = BikeCadFileBuilder()
-    for i in range(12):
+    for i in range(13):
         updated_cad = builder.build_cad_from_object(all_bikes[i], str(i + 1))
         with open(f"seed-bikes/bike{i + 1}.bcad", "w") as file:
             file.write(updated_cad)
