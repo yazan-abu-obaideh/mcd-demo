@@ -312,9 +312,13 @@ function handleSuccessfulOptimizationResponse(
       resultDivElements.showElement("no-bikes-found-div");
     } else {
       showGeneratedBikes(responseJson, formData);
-      (getElementById(getRenderBikeBtnId(Object.keys(bikeStore)[0])) as HTMLButtonElement).click();
+      renderFirstBike();
     }
   });
+}
+
+function renderFirstBike() {
+  (getElementById(getRenderBikeBtnId(Object.keys(bikeStore)[0])) as HTMLButtonElement).click();
 }
 
 function showGeneratedBikes(responseJson: object, formData: FormData) {
