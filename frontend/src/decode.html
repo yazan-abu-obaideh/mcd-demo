@@ -138,7 +138,7 @@
                   checked
                   required
                 />
-                <label class="form-check-label" for="rider-image-1">6'1"</label>
+                <label class="form-check-label" for="rider-image-1">6'2"</label>
               </div>
               <div class="col seed-bike-div">
                 <img
@@ -155,7 +155,7 @@
                   class="form-check-input"
                   required
                 />
-                <label class="form-check-label" for="rider-image-2">5'8"</label>
+                <label class="form-check-label" for="rider-image-2">5'10"</label>
               </div>
               <div class="col seed-bike-div">
                 <img
@@ -411,8 +411,9 @@
                   />
                 </div>
               </div>
+
               <div class="row flex-cont">
-                <div class="col-3">
+                <div class="col-6">
                   <input
                     type="number"
                     class="form-control"
@@ -423,36 +424,6 @@
                   />
                   <label class="form-label" for="user-height-input">
                     User Height (Inches)
-                  </label>
-                </div>
-                <div class="col-3">
-                  <input
-                    form="upload-rider-image-form"
-                    type="number"
-                    class="form-control"
-                    name="camera-height"
-                    id="camera-height-input"
-                    step="0.01"
-                    required
-                  />
-                  <label class="form-label" for="camera-height-input">
-                    Camera Height (Inches)
-                  </label>
-                </div>
-              </div>
-              <div class="row flex-cont">
-                <div class="col-6">
-                  <input
-                    form="upload-rider-image-form"
-                    type="number"
-                    class="form-control"
-                    name="camera-distance"
-                    id="camera-distance-input"
-                    step="0.01"
-                    required
-                  />
-                  <label class="form-label" for="camera-distance-input">
-                    Camera Distance (Inches)
                   </label>
                 </div>
               </div>
@@ -695,7 +666,10 @@
         </form>
         <form id="specify-rider-dimensions-form" style="display: none">
           <div id="specify-rider-dimensions-container" class="m-3">
-            <h3>Specify rider dimensions <span style="font-size: small;">(Inches)</span> </h3>
+            <h3>
+              Specify rider dimensions
+              <span style="font-size: small">(Inches)</span>
+            </h3>
             <div class="p-3">
               <div class="row flex-cont">
                 <div class="col-3">
@@ -1178,18 +1152,6 @@
                 ></span>
                 <span class="visually-hidden">Next</span>
               </button>
-            </div>
-            <a
-              class="btn btn-outline-danger btn-sm"
-              data-bs-toggle="collapse"
-              data-bs-target="#collapse-logs-div"
-              href="#collapse-logs-div"
-              onclick="onShowLogs()"
-            >
-              Show Generator Logs
-            </a>
-            <div class="collapse m-3" id="collapse-logs-div">
-              <div class="card card-body" id="mcd-logs-consumer"></div>
             </div>
           </div>
           <div

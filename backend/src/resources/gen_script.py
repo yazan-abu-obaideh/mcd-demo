@@ -363,74 +363,9 @@ def generate_form_html(form_id, display, seed_bike_id_suffix, dimension_input_di
 # print(result)
 
 if __name__ == "__main__":
-    form_id = "specify-rider-dimensions-form"
-    print(generate_form_html(
-        form_id,
-        "none",
-        "specify-rider-dimensions",
-        f"""          <div id="specify-rider-dimensions-container" class="m-3">
-                <h3>Specify rider dimensions</h3>
-                <div class="p-3">
-                  <div class="row flex-cont">
-                    <div class="col-6">
-                      <input
-                        class="form-control"
-                        type="file"
-                        accept=".jpg, .jpeg, .png, .svg"
-                        id="user-img-upload"
-                        name="user-img"
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div class="row flex-cont">
-                    <div class="col-3">
-                      <label class="form-label" for="user-height-input">
-                        User Height (Inches)
-                      </label>
-    
-                      <input
-                        type="number"
-                        class="form-control"
-                        name="user-height"
-                        id="user-height-input"
-                        step="0.01"
-                        required
-                      />
-                    </div>
-                    <div class="col-3">
-                      <label class="form-label" for="camera-height-input">
-                        Camera Height (Inches)
-                      </label>
-                      <input
-                        form="{form_id}"
-                        type="number"
-                        class="form-control"
-                        name="camera-height"
-                        id="camera-height-input"
-                        step="0.01"
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div class="row flex-cont">
-                    <div class="col-6">
-                      <label class="form-label" for="camera-distance-input">
-                        Camera Distance (Inches)
-                      </label>
-                      <input
-                        form="{form_id}"
-                        type="number"
-                        class="form-control"
-                        name="camera-distance"
-                        id="camera-distance-input"
-                        step="0.01"
-                        required
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-    """,
-        "submitRiderDimensionsForm"
-    ))
+    with open("rider-images/person2.jpg", "rb") as file:
+        print(PoserAnalyzer().analyze_bytes_mm(
+            70,
+            file.read()
+        ))
+
