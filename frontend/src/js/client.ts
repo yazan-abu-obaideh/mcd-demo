@@ -398,9 +398,6 @@ function renderFirstBike() {
 
 function showGeneratedBikes(responseJson: object, formData: FormData) {
   resultDivElements.showElement("response-received-div");
-  getElementById("mcd-logs-consumer").innerHTML = logsToHtml(
-    responseJson["logs"]
-  );
   getElementById("generated-designs-consumer-carousel").innerHTML =
     persistAndBuildCarouselItems(responseJson["bikes"], formData).innerHTML;
 }
@@ -575,17 +572,9 @@ function formatNumber(numberAsString: string): string {
   return Number(numberAsString).toFixed(3);
 }
 
-function logsToHtml(logs: Array<string>): string {
-  let inner = "";
-  logs.forEach((logMessage) => {
-    inner += logMessage + "<br>";
-  });
-  return `<p> ${inner} </p>`;
-}
 
-function onShowLogs() {
-  getElementById("collapse-logs-div")?.scrollIntoView();
-}
+
+
 
 function generateUuid(): string {
   const S4 = function (): string {
