@@ -118,7 +118,7 @@
         </ul>
       </div>
       <div id="generation-forms" class="container border rounded p-3 mb-3">
-        <form id="seeds-form-form">
+        <form id="seeds-form-form" style="display: none">
           <div id="person-image-container" class="m-3">
             <h3>Select Rider</h3>
             <div class="row p-5">
@@ -693,10 +693,162 @@
             </div>
           </div>
         </form>
-        <form id="specify-rider-dimensions-form" style="display: none">
+        <form id="specify-rider-dimensions-form" style="display: block">
           <div id="specify-rider-dimensions-container" class="m-3">
             <h3>Specify rider dimensions</h3>
-            <div></div>
+            <div class="p-3">
+              <div class="row flex-cont">
+                <div class="col-3">
+                  <input
+                    type="number"
+                    class="form-control"
+                    name="rider-height"
+                    id="user-height-input-specify-rider-dimensions"
+                    step="0.01"
+                    required
+                  />
+                  <label
+                    class="form-label"
+                    for="user-height-input-specify-rider-dimensions"
+                  >
+                    Height (Inches)
+                  </label>
+                </div>
+                <div class="col-3">
+                  <input
+                    type="number"
+                    class="form-control"
+                    name="shoulder-height"
+                    id="shoulder-height-input"
+                    step="0.01"
+                    required
+                  />
+                  <label class="form-label" for="shoulder-height-input">
+                    Shoulder Height (Inches)
+                  </label>
+                </div>
+              </div>
+              <div class="row flex-cont">
+                <div class="col-3">
+                  <input
+                    type="number"
+                    class="form-control"
+                    name="rider-height"
+                    id="hip-ankle-input-specify-rider-dimensions"
+                    step="0.01"
+                    required
+                  />
+                  <label
+                    class="form-label"
+                    for="hip-ankle-input-specify-rider-dimensions"
+                  >
+                    Hip to Ankle (Inches)
+                  </label>
+                </div>
+                <div class="col-3">
+                  <input
+                    type="number"
+                    class="form-control"
+                    name="rider-height"
+                    id="hip-knee-input-specify-rider-dimensions"
+                    step="0.01"
+                    required
+                  />
+                  <label
+                    class="form-label"
+                    for="hip-knee-input-specify-rider-dimensions"
+                  >
+                    Hip to Knee (Inches)
+                  </label>
+                </div>
+              </div>
+              <div class="row flex-cont">
+                <div class="col-3">
+                  <input
+                    type="number"
+                    class="form-control"
+                    name="rider-height"
+                    id="shoulder-wrist-input-specify-rider-dimensions"
+                    step="0.01"
+                    required
+                  />
+                  <label
+                    class="form-label"
+                    for="shoulder-wrist-input-specify-rider-dimensions"
+                  >
+                    Shoulder to wrist (Inches)
+                  </label>
+                </div>
+                <div class="col-3">
+                  <input
+                    type="number"
+                    class="form-control"
+                    name="rider-height"
+                    id="arm-length-input-specify-rider-dimensions"
+                    step="0.01"
+                    required
+                  />
+                  <label
+                    class="form-label"
+                    for="arm-length-input-specify-rider-dimensions"
+                  >
+                    Arm Length (Inches)
+                  </label>
+                </div>
+              </div>
+              <div class="row flex-cont">
+                <div class="col-3">
+                  <input
+                    type="number"
+                    class="form-control"
+                    name="rider-height"
+                    id="upper-leg-input-specify-rider-dimensions"
+                    step="0.01"
+                    required
+                  />
+                  <label
+                    class="form-label"
+                    for="upper-leg-input-specify-rider-dimensions"
+                  >
+                    Upper Leg
+                  </label>
+                </div>
+                <div class="col-3">
+                  <input
+                    type="number"
+                    class="form-control"
+                    name="rider-height"
+                    id="lower-leg-input-specify-rider-dimensions"
+                    step="0.01"
+                    required
+                  />
+                  <label
+                    class="form-label"
+                    for="lower-leg-input-specify-rider-dimensions"
+                  >
+                    Lower Leg
+                  </label>
+                </div>
+              </div>
+              <div class="row flex-cont">
+                <div class="col-3" style="width: 50%">
+                  <input
+                    type="number"
+                    class="form-control"
+                    name="rider-height"
+                    id="torso-length-input-specify-rider-dimensions"
+                    step="0.01"
+                    required
+                  />
+                  <label
+                    class="form-label"
+                    for="torso-length-input-specify-rider-dimensions"
+                  >
+                    Torso Length
+                  </label>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div
