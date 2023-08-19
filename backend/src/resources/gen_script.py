@@ -3,6 +3,8 @@ import random
 
 from cad_services.bikeCad_renderer import RenderingService
 from cad_services.bike_xml_handler import BikeXmlHandler
+from cad_services.cad_builder import BikeCadFileBuilder
+from fit_optimization.optimization_constants import TEMP_SEED_BIKES_MAP
 from pose_analysis.pose_image_processing import PoserAnalyzer
 
 """This just exists so I can retrace my steps and if necessary redo some of the work fast"""
@@ -22,9 +24,9 @@ background_colors = {
 
 
 def make_backgrounds_white():
-    for i in range(1, 8):
+    for i in range(1, 14):
         xml_handler = BikeXmlHandler()
-        file_path = f"good-seeds/bike{i}.bcad"
+        file_path = f"seed-bikes/bike{i}.bcad"
         with open(file_path, "r") as file:
             xml_handler.set_xml(file.read())
 
@@ -40,8 +42,8 @@ def make_backgrounds_white():
 
 def render_seeds():
     rendering_service = RenderingService(1)
-    for i in range(1, 8):
-        file_path = f"good-seeds/bike{i}.bcad"
+    for i in range(1, 14):
+        file_path = f"seed-bikes/bike{i}.bcad"
         with open(file_path, "r") as file:
             rendered = rendering_service.render(file.read())
         with open(file_path.replace(".bcad", ".svg"), "wb") as img_file:
@@ -88,6 +90,15 @@ def generate_seed_bikes_html():
     return result
 
 
+def modify_seeds():
+    all_bikes = list(TEMP_SEED_BIKES_MAP.values())
+    builder = BikeCadFileBuilder()
+    for i in range(13):
+        updated_cad = builder.build_cad_from_object(all_bikes[i], str(i + 1))
+        with open(f"seed-bikes/bike{i + 1}.bcad", "w") as file:
+            file.write(updated_cad)
+
+
 # USE THIS APPENDED TO THE END OF BIKE-INTEGRATION.EVALUATION_REQUEST_PROCESSOR TO GENERATE MAP
 # result = {}
 # for i in range(1, 11):
@@ -126,5 +137,4 @@ def generate_seed_bikes_html():
 # print(result)
 
 if __name__ == "__main__":
-    with open("file.html", "w") as _file:
-        _file.write(generate_seed_bikes_html())
+    render_seeds()

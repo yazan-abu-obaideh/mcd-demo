@@ -14,6 +14,14 @@
   text-align: justify;
 }
 
+.static-content-paragraph {
+  text-align: justify;
+  font-size: 20px;
+  font-weight: 300;
+  padding-left: 15%;
+  padding-right: 15%;
+}
+
 /* disable arrows in numeric input */
 
 /* Chrome, Safari, Edge, Opera */
@@ -45,8 +53,14 @@ input[type="number"] {
 }
 
 .rendered-bike-img {
-  height: 35vh;
-  width: auto;
+  width: 70%;
+  height: auto;
+}
+
+
+.original-bike-img-in-result {
+  width: 70%;
+  height: auto;
 }
 
 .optimized-bike-div {
@@ -63,6 +77,10 @@ input[type="number"] {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.bike-img-div-in-result {
+  width: 40%;
 }
 
 

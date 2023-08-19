@@ -1,6 +1,6 @@
-const optimizationApiUrl = "https://mcd-demo.com/api/v1";
-const renderingApiUrl = "https://mcd-demo.com/api/v1/rendering";
-const bikeStore = {};
+const optimizationApiUrl = "http://localhost:5000/api/v1";
+const renderingApiUrl = "http://localhost:8000/api/v1/rendering";
+let bikeStore = {};
 const problemFormId = "problem-form-form";
 const responseDivId = "server-response-div";
 const urlCreator = window.URL || window.webkitURL;
@@ -198,19 +198,29 @@ function setBikeLoading(bikeId: string, display: string): void {
 function handleRenderedBikeImage(bikeId: string, responseBlob: Blob) {
   const outputImg = getElementById(getBikeImgId(bikeId)) as HTMLImageElement;
   outputImg.src = urlCreator.createObjectURL(responseBlob);
-  outputImg.setAttribute("style", "display: inline");
+  getElementById(getBikeImagesDivId(bikeId)).setAttribute(
+    "style",
+    "display: flex"
+  );
 }
 
 function submitCustomRiderForm(optimizationType: string): void {
   throwIfInvalidType(optimizationType);
-  submitProblemForm(problemFormId, 
-    (form: HTMLFormElement) => submitValidCustomRiderForm(optimizationType, form));
+  submitProblemForm(problemFormId, (form: HTMLFormElement) =>
+    submitValidCustomRiderForm(optimizationType, form)
+  );
 }
 
 function submitSeedsForm(optimizationType: string): void {
+  resetBikeStore();
   throwIfInvalidType(optimizationType);
-  submitProblemForm(problemFormId, 
-    (form: HTMLFormElement) => submitValidSeedsForm(optimizationType, form));
+  submitProblemForm(problemFormId, (form: HTMLFormElement) =>
+    submitValidSeedsForm(optimizationType, form)
+  );
+}
+
+function resetBikeStore() {
+  bikeStore = {};
 }
 
 function submitProblemForm(
@@ -237,7 +247,10 @@ function showFormErrors(form: HTMLFormElement) {
   form.reportValidity();
 }
 
-function submitValidCustomRiderForm(optimizationType:string, form: HTMLFormElement) {
+function submitValidCustomRiderForm(
+  optimizationType: string,
+  form: HTMLFormElement
+) {
   readFile("user-img-upload", (reader) => {
     const base64File: string = arrayBufferToBase64(
       reader.result as ArrayBuffer
@@ -307,8 +320,17 @@ function handleSuccessfulOptimizationResponse(
       resultDivElements.showElement("no-bikes-found-div");
     } else {
       showGeneratedBikes(responseJson, formData);
+      renderFirstBike();
     }
   });
+}
+
+function renderFirstBike() {
+  (
+    getElementById(
+      getRenderBikeBtnId(Object.keys(bikeStore)[0])
+    ) as HTMLButtonElement
+  ).click();
 }
 
 function showGeneratedBikes(responseJson: object, formData: FormData) {
@@ -346,7 +368,12 @@ function persistAndBuildCarouselItems(
   const bikesHtml = document.createElement("div");
   for (let index = 0; index < bikes.length; index++) {
     const bikeId = persistBike(bikes[index], formData);
-    const bikeItem = bikeToCarouselItem(index, bikeId, bikes[index], bikes.length);
+    const bikeItem = bikeToCarouselItem(
+      index,
+      bikeId,
+      bikes[index],
+      bikes.length
+    );
     activateFirst(index, bikeItem);
     bikesHtml.appendChild(bikeItem);
   }
@@ -359,13 +386,20 @@ function activateFirst(index: number, bikeItem: HTMLDivElement) {
   }
 }
 
-function bikeToCarouselItem(index: number, bikeId: string, bike: object, totalBikes: number) {
+function bikeToCarouselItem(
+  index: number,
+  bikeId: string,
+  bike: object,
+  totalBikes: number
+) {
   const optimizedBikeDiv = document.createElement("div");
   optimizedBikeDiv.setAttribute(
     "class",
     "container text-center border rounded carousel-item mb-1 p-5 optimized-bike-div"
   );
-  optimizedBikeDiv.appendChild(generateBikeDescription(index, bike, totalBikes));
+  optimizedBikeDiv.appendChild(
+    generateBikeDescription(index, bike, totalBikes)
+  );
   optimizedBikeDiv.appendChild(
     generatePerformanceElement(bike["bikePerformance"])
   );
@@ -374,27 +408,67 @@ function bikeToCarouselItem(index: number, bikeId: string, bike: object, totalBi
   optimizedBikeDiv.appendChild(createRenderingFailedElement(bikeId));
   optimizedBikeDiv.appendChild(generateRenderButton(bikeId));
   optimizedBikeDiv.appendChild(generateRenderedImgElement(bikeId));
+  optimizedBikeDiv.appendChild(createSpaceDiv());
   optimizedBikeDiv.appendChild(generateDownloadCadButton(bikeId));
-  optimizedBikeDiv.appendChild(document.createElement("br"));
   return optimizedBikeDiv;
 }
 
-function generateBikeDescription(index: number, bike: object, totalBikes: number): HTMLElement {
+function generateBikeDescription(
+  index: number,
+  bike: object,
+  totalBikes: number
+): HTMLElement {
   const element = document.createElement("h4");
   element.textContent = `Generated Bike ${index + 1}/${totalBikes}`;
   return element;
 }
 
 function generateRenderedImgElement(bikeId: string): HTMLDivElement {
-  const imageDiv = document.createElement("div");
-  imageDiv.setAttribute("class", "m-3 text-center");
-  const image = document.createElement("img");
-  image.setAttribute("class", "rendered-bike-img");
-  image.setAttribute("id", getBikeImgId(bikeId));
-  image.setAttribute("alt", "rendered bike image");
-  image.setAttribute("style", "display: none");
-  imageDiv.appendChild(image);
-  return imageDiv;
+  const imagesDiv = document.createElement("div");
+  const renderedImgDiv = createResultImgDiv();
+  const originalImgDiv = createResultImgDiv();
+
+  imagesDiv.setAttribute("class", "text-center p-5 row");
+  imagesDiv.setAttribute("id", getBikeImagesDivId(bikeId));
+  imagesDiv.setAttribute("style", "display: none");
+  const renderedImg = document.createElement("img");
+
+  const originalImg = document.createElement("img");
+  originalImg.src = `assets/bike${
+    (bikeStore[bikeId] as OptimizedBike).seedImageId
+  }.png`;
+  originalImg.setAttribute("class", "original-bike-img-in-result");
+  originalImg.setAttribute("id", getOriginalImageInResultId(bikeId));
+
+  renderedImg.setAttribute("class", "rendered-bike-img");
+  renderedImg.setAttribute("id", getBikeImgId(bikeId));
+  renderedImg.setAttribute("alt", "rendered bike image");
+
+  renderedImgDiv.appendChild(renderedImg);
+  renderedImgDiv.appendChild(getImageLabel("Optimized", getBikeImgId(bikeId)));
+
+  originalImgDiv.appendChild(originalImg);
+  originalImgDiv.appendChild(
+    getImageLabel("Original", getOriginalImageInResultId(bikeId))
+  );
+
+  imagesDiv.appendChild(originalImgDiv);
+  imagesDiv.appendChild(renderedImgDiv);
+  return imagesDiv;
+}
+
+function getImageLabel(textContent: string, htmlFor: string) {
+  const label = document.createElement("label");
+  label.textContent = textContent;
+  label.htmlFor = htmlFor;
+  label.setAttribute("style", "display: block");
+  return label;
+}
+
+function createResultImgDiv() {
+  const renderedImgDiv = document.createElement("div");
+  renderedImgDiv.setAttribute("class", "col bike-img-div-in-result");
+  return renderedImgDiv;
 }
 
 function generateRenderButton(bikeId: string): HTMLElement {
@@ -481,6 +555,10 @@ function getBikeImgId(bikeId: string) {
   return `bike-img-${bikeId}`;
 }
 
+function getBikeImagesDivId(bikeId: string) {
+  return `bike-img-div-result-${bikeId}`;
+}
+
 function getRenderBikeBtnId(bikeId: string) {
   // deterministic
   return `render-bike-btn-${bikeId}`;
@@ -562,7 +640,9 @@ function renderingFailedElementId(bikeId: string): string {
 
 function generatePerformanceElement(bikePerformance: object): HTMLElement {
   const div = document.createElement("h5");
-  div.textContent = JSON.stringify(bikePerformance).replace('"', "").replace('"', "");
+  div.textContent = JSON.stringify(bikePerformance)
+    .replace('"', "")
+    .replace('"', "");
   return div;
 }
 
@@ -570,5 +650,15 @@ function throwIfInvalidType(optimizationType: string) {
   if (!["aerodynamics", "ergonomics"].includes(optimizationType)) {
     throw Error(`Invalid optimization type ${optimizationType}`);
   }
+}
+
+function createSpaceDiv(): HTMLDivElement {
+  const spaceDiv = document.createElement("div");
+  spaceDiv.setAttribute("style", "height: 5px");
+  return spaceDiv;
+}
+
+function getOriginalImageInResultId(bikeId: string): string {
+  return `original-img-in-result-${bikeId}`;
 }
 // export { getServerHealth, postOptimizationRequest, postSeedBikeOptimization };
