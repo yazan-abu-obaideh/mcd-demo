@@ -5,11 +5,18 @@ from app_config.app_constants import APP_LOGGER
 from app_config.app_parameters import LOGGING_LEVEL
 from cad_services.cad_builder import BikeCadFileBuilder
 from controller_advice import register_error_handlers
+from exceptions import UserInputException
 from fit_optimization.bike_optimizer import BikeOptimizer
 from models.model_scheme_validations import map_base64_image_to_bytes
 from pose_analysis.pose_image_processing import PoserAnalyzer
 
 POST = "POST"
+
+
+def _get_json(_request):
+    if not _request.is_json:
+        raise UserInputException("Request payload should be of type application/json")
+    return _request.json
 
 
 def build_app() -> Flask:
@@ -30,9 +37,31 @@ cad_builder = BikeCadFileBuilder()
 app = build_app()
 
 
+@app.route(endpoint("/ergonomics/optimize-dimensions"), methods=[POST])
+def optimize_ergo_specified_dimensions():
+    _request = _get_json(request)
+    return make_response(
+        optimizer.optimize_ergonomics_for_dimensions(
+            _request["seedBikeId"],
+            _request["riderDimensionsInches"],
+        )
+    )
+
+
+@app.route(endpoint("/aerodynamics/optimize-dimensions"), methods=[POST])
+def optimize_aero_specified_dimensions():
+    _request = _get_json(request)
+    return make_response(
+        optimizer.optimize_aerodynamics_for_dimensions(
+            _request["seedBikeId"],
+            _request["riderDimensionsInches"],
+        )
+    )
+
+
 @app.route(endpoint("/download-cad"), methods=[POST])
 def download_cad_file():
-    _request = request.json
+    _request = _get_json(request)
     response = make_response(cad_builder.build_cad_from_object(_request["bike"],
                                                                _request["seedBikeId"]))
     response.headers["Content-Type"] = "application/xml"
@@ -41,7 +70,7 @@ def download_cad_file():
 
 @app.route(endpoint("/ergonomics/optimize-custom-rider"), methods=[POST])
 def optimize_custom_rider():
-    _request = request.json
+    _request = _get_json(request)
     return make_response(
         optimizer.optimize_ergonomics_for_custom_rider(_request["seedBikeId"],
                                                        map_base64_image_to_bytes(_request["imageBase64"]),
@@ -52,7 +81,7 @@ def optimize_custom_rider():
 
 @app.route(endpoint("/aerodynamics/optimize-custom-rider"), methods=[POST])
 def optimize_aerodynamics_custom_rider():
-    _request = request.json
+    _request = _get_json(request)
     return make_response(
         optimizer.optimize_aerodynamics_for_custom_rider(_request["seedBikeId"],
                                                          map_base64_image_to_bytes(_request["imageBase64"]),
@@ -63,7 +92,7 @@ def optimize_aerodynamics_custom_rider():
 
 @app.route(endpoint("/ergonomics/optimize-seeds"), methods=[POST])
 def optimize_seeds():
-    _request = request.json
+    _request = _get_json(request)
     return make_response(
         optimizer.optimize_ergonomics_for_seeds(_request["seedBikeId"],
                                                 _request["riderId"])
@@ -72,7 +101,7 @@ def optimize_seeds():
 
 @app.route(endpoint("/aerodynamics/optimize-seeds"), methods=[POST])
 def optimize_aerodynamics_seeds():
-    _request = request.json
+    _request = _get_json(request)
     return make_response(
         optimizer.optimize_aerodynamics_for_seeds(_request["seedBikeId"],
                                                   _request["riderId"])

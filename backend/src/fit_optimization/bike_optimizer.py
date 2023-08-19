@@ -34,6 +34,12 @@ class BikeOptimizer:
     def __init__(self, image_analysis_service: PoserAnalyzer):
         self.image_analysis_service = image_analysis_service
 
+    def optimize_aerodynamics_for_dimensions(self, seed_bike_id, rider_dimensions_inches):
+        return self._optimize_aerodynamics(seed_bike_id, self._to_full_dimensions_mm(rider_dimensions_inches))
+
+    def optimize_ergonomics_for_dimensions(self, seed_bike_id, rider_dimensions_inches):
+        return self._optimize_ergonomics(seed_bike_id, self._to_full_dimensions_mm(rider_dimensions_inches))
+
     def optimize_aerodynamics_for_seeds(self, seed_bike_id, rider_id):
         return self._optimize_aerodynamics(seed_bike_id,
                                            self._get_full_body_dimensions(rider_id))
@@ -128,6 +134,12 @@ class BikeOptimizer:
         response = calculate_drag(bikes.values, to_body_vector(user_dimensions))
         print(f"Took {time.time() - start}")
         return response
+
+    def _to_full_dimensions_mm(self, rider_dimensions_inches: dict):
+        mm_dimensions = {key: value for key, value in rider_dimensions_inches.items()}
+        mm_dimensions["foot_length"] = 5.5 * 25.4
+        mm_dimensions["ankle_angle"] = 24 * 25.4
+        return mm_dimensions
 
     def _optimize(self, generator: LoggingGenerator,
                   prediction_function: Callable[[pd.DataFrame], pd.DataFrame],

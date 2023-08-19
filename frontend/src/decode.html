@@ -695,7 +695,7 @@
         </form>
         <form id="specify-rider-dimensions-form" style="display: block">
           <div id="specify-rider-dimensions-container" class="m-3">
-            <h3>Specify rider dimensions</h3>
+            <h3>Specify rider dimensions <span style="font-size: small;">(Inches)</span> </h3>
             <div class="p-3">
               <div class="row flex-cont">
                 <div class="col-3">
@@ -705,13 +705,15 @@
                     name="rider-height"
                     id="user-height-input-specify-rider-dimensions"
                     step="0.01"
+                    value="73.5"
+                    placeholder="73.5"
                     required
                   />
                   <label
                     class="form-label"
                     for="user-height-input-specify-rider-dimensions"
                   >
-                    Height (Inches)
+                    Height
                   </label>
                 </div>
                 <div class="col-3">
@@ -721,10 +723,12 @@
                     name="shoulder-height"
                     id="shoulder-height-input"
                     step="0.01"
+                    value="60"
+                    placeholder="60"
                     required
                   />
                   <label class="form-label" for="shoulder-height-input">
-                    Shoulder Height (Inches)
+                    Shoulder Height
                   </label>
                 </div>
               </div>
@@ -733,32 +737,36 @@
                   <input
                     type="number"
                     class="form-control"
-                    name="rider-height"
+                    name="hip-ankle"
                     id="hip-ankle-input-specify-rider-dimensions"
                     step="0.01"
+                    value="34"
+                    placeholder="34"
                     required
                   />
                   <label
                     class="form-label"
                     for="hip-ankle-input-specify-rider-dimensions"
                   >
-                    Hip to Ankle (Inches)
+                    Hip to Ankle
                   </label>
                 </div>
                 <div class="col-3">
                   <input
                     type="number"
                     class="form-control"
-                    name="rider-height"
+                    name="hip-knee"
                     id="hip-knee-input-specify-rider-dimensions"
                     step="0.01"
+                    value="16.5"
+                    placeholder="16.5"
                     required
                   />
                   <label
                     class="form-label"
                     for="hip-knee-input-specify-rider-dimensions"
                   >
-                    Hip to Knee (Inches)
+                    Hip to Knee
                   </label>
                 </div>
               </div>
@@ -767,32 +775,36 @@
                   <input
                     type="number"
                     class="form-control"
-                    name="rider-height"
+                    name="shoulder-wrist"
                     id="shoulder-wrist-input-specify-rider-dimensions"
                     step="0.01"
+                    value="20.5"
+                    placeholder="20.5"
                     required
                   />
                   <label
                     class="form-label"
                     for="shoulder-wrist-input-specify-rider-dimensions"
                   >
-                    Shoulder to wrist (Inches)
+                    Shoulder to wrist
                   </label>
                 </div>
                 <div class="col-3">
                   <input
                     type="number"
                     class="form-control"
-                    name="rider-height"
+                    name="arm-length"
                     id="arm-length-input-specify-rider-dimensions"
                     step="0.01"
+                    value="23.5"
+                    placeholder="23.5"
                     required
                   />
                   <label
                     class="form-label"
                     for="arm-length-input-specify-rider-dimensions"
                   >
-                    Arm Length (Inches)
+                    Arm Length
                   </label>
                 </div>
               </div>
@@ -801,9 +813,11 @@
                   <input
                     type="number"
                     class="form-control"
-                    name="rider-height"
+                    name="upper-leg"
                     id="upper-leg-input-specify-rider-dimensions"
                     step="0.01"
+                    placeholder="16.5"
+                    value="16.5"
                     required
                   />
                   <label
@@ -817,9 +831,11 @@
                   <input
                     type="number"
                     class="form-control"
-                    name="rider-height"
+                    name="lower-leg"
                     id="lower-leg-input-specify-rider-dimensions"
                     step="0.01"
+                    value="20.25"
+                    placeholder="20.25"
                     required
                   />
                   <label
@@ -835,9 +851,11 @@
                   <input
                     type="number"
                     class="form-control"
-                    name="rider-height"
+                    name="torso-length"
                     id="torso-length-input-specify-rider-dimensions"
                     step="0.01"
+                    placeholder="23"
+                    value="23"
                     required
                   />
                   <label
