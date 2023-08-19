@@ -47,14 +47,12 @@ class BikeOptimizer:
     def optimize_aerodynamics_for_custom_rider(self,
                                                seed_bike_id: str,
                                                image: bytes,
-                                               person_height: float,
-                                               camera_height: float):
+                                               rider_height: float):
         return self._optimize_aerodynamics(
             seed_bike_id,
             self._get_dimensions_from_image(
                 image,
-                camera_height,
-                person_height
+                rider_height
             )
         )
 
@@ -65,17 +63,15 @@ class BikeOptimizer:
     def optimize_ergonomics_for_custom_rider(self,
                                              seed_bike_id: str,
                                              image: bytes,
-                                             person_height: float,
-                                             camera_height: float):
+                                             rider_height: float):
         return self._optimize_ergonomics(seed_bike_id,
                                          self._get_dimensions_from_image(image,
-                                                                         camera_height,
-                                                                         person_height))
+                                                                         rider_height))
 
     def _get_full_body_dimensions(self, rider_id):
         body_dimensions = self._get_body_dimensions_by_id(rider_id)
         body_dimensions["foot_length"] = 5.5 * 25.4
-        body_dimensions["ankle_angle"] = 24 * 25.4
+        body_dimensions["ankle_angle"] = 100
         return body_dimensions
 
     def _build_comparator(self, comparator, original_bike, prediction_function):
@@ -84,11 +80,10 @@ class BikeOptimizer:
             optimized=optimized_performance
         )
 
-    def _get_dimensions_from_image(self, image, camera_height, person_height):
-        body_dimensions = self.image_analysis_service.analyze_bytes_mm(camera_height, image)
-        print(f"{person_height=}")
+    def _get_dimensions_from_image(self, image, rider_height):
+        body_dimensions = self.image_analysis_service.analyze_bytes_mm(rider_height, image)
         body_dimensions["foot_length"] = 5.5 * 25.4
-        body_dimensions["ankle_angle"] = 24 * 25.4
+        body_dimensions["ankle_angle"] = 100
         return body_dimensions
 
     def _optimize_aerodynamics(self, seed_bike_id, user_dimensions):
@@ -138,7 +133,7 @@ class BikeOptimizer:
     def _to_full_dimensions_mm(self, rider_dimensions_inches: dict):
         mm_dimensions = {key: value * 25.4 for key, value in rider_dimensions_inches.items()}
         mm_dimensions["foot_length"] = 5.5 * 25.4
-        mm_dimensions["ankle_angle"] = 24 * 25.4
+        mm_dimensions["ankle_angle"] = 100
         return mm_dimensions
 
     def _optimize(self, generator: LoggingGenerator,

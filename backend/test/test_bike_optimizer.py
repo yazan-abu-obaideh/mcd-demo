@@ -40,7 +40,7 @@ class BikeOptimizerTest(McdDemoTestCase):
         with open(self.resource_path("dude.jpeg"), "rb") as file:
             # noinspection PyTypeChecker
             self.assertRaisesWithMessage(
-                lambda: self.optimizer.optimize_ergonomics_for_custom_rider("DOES_NOT_EXIST", file.read(), 76, 76),
+                lambda: self.optimizer.optimize_ergonomics_for_custom_rider("DOES_NOT_EXIST", file.read(), 76),
                 "Invalid seed bike ID [DOES_NOT_EXIST]")
 
     @unittest.skip
@@ -49,5 +49,5 @@ class BikeOptimizerTest(McdDemoTestCase):
 
     def test_optimize_ergo_custom_rider(self):
         with open(self.resource_path("dude.jpeg"), "rb") as file:
-            response = self.optimizer.optimize_ergonomics_for_custom_rider("8", file.read(), 75, 75)
+            response = self.optimizer.optimize_ergonomics_for_custom_rider("8", file.read(), 75)
             self.assertEqual(5, len(response["bikes"]))

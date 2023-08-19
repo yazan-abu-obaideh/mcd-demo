@@ -74,8 +74,7 @@ def optimize_custom_rider():
     return make_response(
         optimizer.optimize_ergonomics_for_custom_rider(_request["seedBikeId"],
                                                        map_base64_image_to_bytes(_request["imageBase64"]),
-                                                       _request["personHeight"],
-                                                       _request["cameraHeight"])
+                                                       _request["riderHeight"])
     )
 
 
@@ -85,8 +84,7 @@ def optimize_aerodynamics_custom_rider():
     return make_response(
         optimizer.optimize_aerodynamics_for_custom_rider(_request["seedBikeId"],
                                                          map_base64_image_to_bytes(_request["imageBase64"]),
-                                                         _request["personHeight"],
-                                                         _request["cameraHeight"])
+                                                         _request["riderHeight"])
     )
 
 

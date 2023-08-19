@@ -85,7 +85,6 @@ async function postCustomRiderOptimization(
   seedBikeId: string,
   imageBase64: string,
   personHeight: number,
-  cameraHeight: number
 ) {
   return await fetch(
     optimizationApiUrl.concat(`/${optimizationType}/optimize-custom-rider`),
@@ -95,8 +94,7 @@ async function postCustomRiderOptimization(
       body: JSON.stringify({
         seedBikeId: seedBikeId,
         imageBase64: imageBase64,
-        personHeight: personHeight,
-        cameraHeight: cameraHeight,
+        riderHeight: personHeight,
       }),
     }
   );
@@ -347,7 +345,6 @@ function postCustomRiderOptimizationForm(
       formData.get("seedBike") as string,
       base64File,
       Number(formData.get("user-height") as string),
-      Number(formData.get("camera-height") as string)
     )
   );
 }
