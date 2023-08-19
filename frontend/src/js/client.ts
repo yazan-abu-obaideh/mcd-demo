@@ -1,7 +1,9 @@
 const optimizationApiUrl = "http://localhost:5000/api/v1";
 const renderingApiUrl = "http://localhost:8000/api/v1/rendering";
 let bikeStore = {};
-const problemFormId = "problem-form-form";
+const seedsFormId = "seeds-form-form";
+const uploadRiderImageFormId = "upload-rider-image-form";
+const specifyDimensionsFormId = "specify-rider-dimensions-form";
 const responseDivId = "server-response-div";
 const urlCreator = window.URL || window.webkitURL;
 
@@ -37,8 +39,9 @@ const resultDivElements = new ExclusivelyVisibleElements([
 ]);
 
 const problemFormElements = new ExclusivelyVisibleElements([
-  "problem-form-form",
-  "specify-rider-dimensions-form"
+  seedsFormId,
+  uploadRiderImageFormId,
+  specifyDimensionsFormId
 ])
 
 async function postSeedsOptimization(
@@ -211,7 +214,7 @@ function handleRenderedBikeImage(bikeId: string, responseBlob: Blob) {
 
 function submitCustomRiderForm(optimizationType: string): void {
   throwIfInvalidType(optimizationType);
-  submitProblemForm(problemFormId, (form: HTMLFormElement) =>
+  submitProblemForm(uploadRiderImageFormId, (form: HTMLFormElement) =>
     submitValidCustomRiderForm(optimizationType, form)
   );
 }
@@ -219,7 +222,7 @@ function submitCustomRiderForm(optimizationType: string): void {
 function submitSeedsForm(optimizationType: string): void {
   resetBikeStore();
   throwIfInvalidType(optimizationType);
-  submitProblemForm(problemFormId, (form: HTMLFormElement) =>
+  submitProblemForm(seedsFormId, (form: HTMLFormElement) =>
     submitValidSeedsForm(optimizationType, form)
   );
 }

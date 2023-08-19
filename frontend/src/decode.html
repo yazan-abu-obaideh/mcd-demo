@@ -45,7 +45,7 @@
               <a
                 class="nav-link active"
                 aria-current="page"
-                href="#problem-form-div"
+                href="#generation-forms"
                 >Interactive demo</a
               >
             </li>
@@ -80,7 +80,7 @@
             <div class="col">
               <div class="row justify-content-center m-1">
                 <a
-                  href="#problem-form-div"
+                  href="#generation-forms"
                   class="btn btn-outline-danger btn-lg px-4 gap-3 w-40"
                 >
                   Generate CAD Designs
@@ -101,260 +101,24 @@
       </div>
       <div class="container border problem-form-tabs-div p-3">
         <ul class="nav">
-          <li class="nav-item" onclick="showForm('problem-form-form')">
-            <button
-              type="button"
-              class="nav-link"
-              onclick="showForm('problem-form-form')"
-            >
-              Select rider
-            </button>
+          <li class="nav-item" onclick="showForm('seeds-form-form')">
+            <button type="button" class="nav-link">Select rider</button>
           </li>
           <li
             class="nav-item"
-            onclick="showForm('specifiy-rider-dimensions-form')"
+            onclick="showForm('specify-rider-dimensions-form')"
           >
-            <button
-              type="button"
-              class="nav-link"
-              onclick="submitSeedsForm('aerodynamics')"
-            >
+            <button type="button" class="nav-link">
               Specify rider dimensions
             </button>
           </li>
-          <li class="nav-item">
-            <a
-              class="nav-link disabled"
-              href="#"
-              tabindex="-1"
-              aria-disabled="true"
-              >Upload rider image [COMING SOON]</a
-            >
+          <li class="nav-item" onclick="showForm('upload-rider-image-form')">
+            <button type="button" class="nav-link">Upload rider image</button>
           </li>
         </ul>
       </div>
-      <div id="problem-form-div" class="container border rounded p-3 mb-3">
-        <form id="problem-form-form">
-          <div id="seed-bike-selection-container-specify-dims" class="m-3">
-            <h3>Select Seed Bike</h3>
-            <div id="all-bikes-helper-div-specify-dims">
-              <div class="row p-5">
-                <div class="col seed-bike-div">
-                  <img
-                    class="seed-bike-img"
-                    src="assets/bike1.png"
-                    alt="seed-bike-1"
-                  />
-                  <br />
-                  <input
-                    id="seed1-dims"
-                    value="1"
-                    name="seedBike"
-                    type="radio"
-                    class="form-check-input"
-                    required
-                  />
-                  <label class="form-check-label" for="seed1-dims">Snow Camo</label>
-                </div>
-
-                <div class="col seed-bike-div">
-                  <img
-                    class="seed-bike-img"
-                    src="assets/bike2.png"
-                    alt="seed-bike-2"
-                  />
-                  <br />
-                  <input
-                    id="seed2-dims"
-                    value="2"
-                    name="seedBike"
-                    type="radio"
-                    class="form-check-input"
-                    required
-                  />
-                  <label class="form-check-label" for="seed2-dims">Childlike</label>
-                </div>
-
-                <div class="col seed-bike-div">
-                  <img
-                    class="seed-bike-img"
-                    src="assets/bike3.png"
-                    alt="seed-bike-3"
-                  />
-                  <br />
-                  <input
-                    id="seed3-dims"
-                    value="3"
-                    name="seedBike"
-                    type="radio"
-                    class="form-check-input"
-                    required
-                  />
-                  <label class="form-check-label" for="seed3-dims">Fiery</label>
-                </div>
-              </div>
-
-              <div class="row p-5">
-                <div class="col seed-bike-div">
-                  <img
-                    class="seed-bike-img"
-                    src="assets/bike11.png"
-                    alt="seed-bike-11"
-                  />
-                  <br />
-                  <input
-                    id="seed11-dims"
-                    value="11"
-                    name="seedBike"
-                    type="radio"
-                    class="form-check-input"
-                    required
-                  />
-                  <label class="form-check-label" for="seed11-dims">Pythonic</label>
-                </div>
-
-                <div class="col seed-bike-div">
-                  <img
-                    class="seed-bike-img"
-                    src="assets/bike5.png"
-                    alt="seed-bike-5"
-                  />
-                  <br />
-                  <input
-                    id="seed5-dims"
-                    value="5"
-                    name="seedBike"
-                    type="radio"
-                    class="form-check-input"
-                    required
-                  />
-                  <label class="form-check-label" for="seed5-dims">Inferno</label>
-                </div>
-
-                <div class="col seed-bike-div">
-                  <img
-                    class="seed-bike-img"
-                    src="assets/bike6.png"
-                    alt="seed-bike-6"
-                  />
-                  <br />
-                  <input
-                    id="seed6-dims"
-                    value="6"
-                    name="seedBike"
-                    type="radio"
-                    class="form-check-input"
-                    required
-                  />
-                  <label class="form-check-label" for="seed6-dims">Wintery</label>
-                </div>
-              </div>
-              <div class="row p-5">
-                <div class="col seed-bike-div">
-                  <img
-                    class="seed-bike-img"
-                    src="assets/bike7.png"
-                    alt="seed-bike-7"
-                  />
-                  <br />
-                  <input
-                    id="seed7-dims"
-                    value="7"
-                    name="seedBike"
-                    type="radio"
-                    class="form-check-input"
-                    required
-                  />
-                  <label class="form-check-label" for="seed7-dims">Pastel</label>
-                </div>
-
-                <div class="col seed-bike-div">
-                  <img
-                    class="seed-bike-img"
-                    src="assets/bike10.png"
-                    alt="seed-bike-10"
-                  />
-                  <br />
-                  <input
-                    id="seed10-dims"
-                    value="10"
-                    name="seedBike"
-                    type="radio"
-                    class="form-check-input"
-                    required
-                  />
-                  <label class="form-check-label" for="seed10-dims">Standard</label>
-                </div>
-
-                <div class="col seed-bike-div">
-                  <img
-                    class="seed-bike-img"
-                    src="assets/bike12.png"
-                    alt="seed-bike-12"
-                  />
-                  <br />
-                  <input
-                    id="seed12-dims"
-                    value="12"
-                    name="seedBike"
-                    type="radio"
-                    class="form-check-input"
-                    required
-                  />
-                  <label class="form-check-label" for="seed12-dims">Sleek</label>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="p-3">
-            <div class="row flex-cont text-center justify-content-center">
-              <div class="dropdown">
-                <button
-                  class="btn btn-outline-danger btn-lg dropdown-toggle w-40"
-                  type="button"
-                  id="dropdownMenuButton1-dims"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  Generate!
-                </button>
-                <ul
-                  class="dropdown-menu w-40"
-                  aria-labelledby="dropdownMenuButton1"
-                >
-                  <li>
-                    <button
-                      type="button"
-                      class="dropdown-item"
-                      onclick="submitSeedsForm('ergonomics')"
-                    >
-                      Ergonomic bikes!
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      type="button"
-                      class="dropdown-item"
-                      onclick="submitSeedsForm('aerodynamics')"
-                    >
-                      Aerodynamic bikes!
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      type="button"
-                      class="dropdown-item disabled"
-                      onclick="submitSeedsForm('aerodynamics')"
-                    >
-                      Structurally-optimal bikes! [COMING SOON]
-                    </button>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </form>
-        <form id="specifiy-rider-dimensions-form" style="display: none">
+      <div id="generation-forms" class="container border rounded p-3 mb-3">
+        <form id="seeds-form-form">
           <div id="person-image-container" class="m-3">
             <h3>Select Rider</h3>
             <div class="row p-5">
@@ -412,9 +176,9 @@
               </div>
             </div>
           </div>
-          <div id="seed-bike-selection-container" class="m-3">
+          <div id="seed-bike-selection-container-specify" class="m-3">
             <h3>Select Seed Bike</h3>
-            <div id="all-bikes-helper-div">
+            <div id="all-bikes-helper-div-specify">
               <div class="row p-5">
                 <div class="col seed-bike-div">
                   <img
@@ -623,6 +387,568 @@
                       class="dropdown-item disabled"
                       onclick="submitSeedsForm('aerodynamics')"
                     >
+                      Structurally-optimal bikes! [COMING SOON]
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </form>
+        <form id="upload-rider-image-form" style="display: none">
+          <div id="upload-image-container" class="m-3">
+            <h3>Upload Rider Image</h3>
+            <div class="p-3">
+              <div class="row flex-cont">
+                <div class="col-6">
+                  <input
+                    class="form-control"
+                    type="file"
+                    accept=".jpg, .jpeg, .png, .svg"
+                    id="user-img-upload"
+                    name="user-img"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="row flex-cont">
+                <div class="col-3">
+                  <input
+                    type="number"
+                    class="form-control"
+                    name="user-height"
+                    id="user-height-input"
+                    step="0.01"
+                    required
+                  />
+                  <label class="form-label" for="user-height-input">
+                    User Height (Inches)
+                  </label>
+                </div>
+                <div class="col-3">
+                  <input
+                    form="upload-rider-image-form"
+                    type="number"
+                    class="form-control"
+                    name="camera-height"
+                    id="camera-height-input"
+                    step="0.01"
+                    required
+                  />
+                  <label class="form-label" for="camera-height-input">
+                    Camera Height (Inches)
+                  </label>
+                </div>
+              </div>
+              <div class="row flex-cont">
+                <div class="col-6">
+                  <input
+                    form="upload-rider-image-form"
+                    type="number"
+                    class="form-control"
+                    name="camera-distance"
+                    id="camera-distance-input"
+                    step="0.01"
+                    required
+                  />
+                  <label class="form-label" for="camera-distance-input">
+                    Camera Distance (Inches)
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="seed-bike-selection-container-upload-rider" class="m-3">
+            <h3>Select Seed Bike</h3>
+            <div id="bikes-container-upload-rider" class="m-3"></div>
+            <div id="all-bikes-helper-div-upload-rider">
+              <div class="row p-5">
+                <div class="col seed-bike-div">
+                  <img
+                    class="seed-bike-img"
+                    src="assets/bike1.png"
+                    alt="seed-bike-1"
+                  />
+                  <br />
+                  <input
+                    id="seed1-upload-rider"
+                    value="1"
+                    name="seedBike"
+                    type="radio"
+                    class="form-check-input"
+                    required
+                  />
+                  <label class="form-check-label" for="seed1-upload-rider"
+                    >Snow Camo</label
+                  >
+                </div>
+
+                <div class="col seed-bike-div">
+                  <img
+                    class="seed-bike-img"
+                    src="assets/bike2.png"
+                    alt="seed-bike-2"
+                  />
+                  <br />
+                  <input
+                    id="seed2-upload-rider"
+                    value="2"
+                    name="seedBike"
+                    type="radio"
+                    class="form-check-input"
+                    required
+                  />
+                  <label class="form-check-label" for="seed2-upload-rider"
+                    >Childlike</label
+                  >
+                </div>
+
+                <div class="col seed-bike-div">
+                  <img
+                    class="seed-bike-img"
+                    src="assets/bike3.png"
+                    alt="seed-bike-3"
+                  />
+                  <br />
+                  <input
+                    id="seed3-upload-rider"
+                    value="3"
+                    name="seedBike"
+                    type="radio"
+                    class="form-check-input"
+                    required
+                  />
+                  <label class="form-check-label" for="seed3-upload-rider"
+                    >Fiery</label
+                  >
+                </div>
+              </div>
+
+              <div class="row p-5">
+                <div class="col seed-bike-div">
+                  <img
+                    class="seed-bike-img"
+                    src="assets/bike11.png"
+                    alt="seed-bike-11"
+                  />
+                  <br />
+                  <input
+                    id="seed11-upload-rider"
+                    value="11"
+                    name="seedBike"
+                    type="radio"
+                    class="form-check-input"
+                    required
+                  />
+                  <label class="form-check-label" for="seed11-upload-rider"
+                    >Pythonic</label
+                  >
+                </div>
+
+                <div class="col seed-bike-div">
+                  <img
+                    class="seed-bike-img"
+                    src="assets/bike5.png"
+                    alt="seed-bike-5"
+                  />
+                  <br />
+                  <input
+                    id="seed5-upload-rider"
+                    value="5"
+                    name="seedBike"
+                    type="radio"
+                    class="form-check-input"
+                    required
+                  />
+                  <label class="form-check-label" for="seed5-upload-rider"
+                    >Inferno</label
+                  >
+                </div>
+
+                <div class="col seed-bike-div">
+                  <img
+                    class="seed-bike-img"
+                    src="assets/bike6.png"
+                    alt="seed-bike-6"
+                  />
+                  <br />
+                  <input
+                    id="seed6-upload-rider"
+                    value="6"
+                    name="seedBike"
+                    type="radio"
+                    class="form-check-input"
+                    required
+                  />
+                  <label class="form-check-label" for="seed6-upload-rider"
+                    >Wintery</label
+                  >
+                </div>
+              </div>
+              <div class="row p-5">
+                <div class="col seed-bike-div">
+                  <img
+                    class="seed-bike-img"
+                    src="assets/bike7.png"
+                    alt="seed-bike-7"
+                  />
+                  <br />
+                  <input
+                    id="seed7-upload-rider"
+                    value="7"
+                    name="seedBike"
+                    type="radio"
+                    class="form-check-input"
+                    required
+                  />
+                  <label class="form-check-label" for="seed7-upload-rider"
+                    >Pastel</label
+                  >
+                </div>
+
+                <div class="col seed-bike-div">
+                  <img
+                    class="seed-bike-img"
+                    src="assets/bike10.png"
+                    alt="seed-bike-10"
+                  />
+                  <br />
+                  <input
+                    id="seed10-upload-rider"
+                    value="10"
+                    name="seedBike"
+                    type="radio"
+                    class="form-check-input"
+                    required
+                  />
+                  <label class="form-check-label" for="seed10-upload-rider"
+                    >Standard</label
+                  >
+                </div>
+
+                <div class="col seed-bike-div">
+                  <img
+                    class="seed-bike-img"
+                    src="assets/bike12.png"
+                    alt="seed-bike-12"
+                  />
+                  <br />
+                  <input
+                    id="seed12-upload-rider"
+                    value="12"
+                    name="seedBike"
+                    type="radio"
+                    class="form-check-input"
+                    required
+                  />
+                  <label class="form-check-label" for="seed12-upload-rider"
+                    >Sleek</label
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="p-3">
+            <div class="row flex-cont text-center justify-content-center">
+              <div class="dropdown">
+                <button
+                  class="btn btn-outline-danger btn-lg dropdown-toggle w-40"
+                  type="button"
+                  id="dropdownMenuButton1-upload-rider"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  Generate!
+                </button>
+                <ul
+                  class="dropdown-menu w-40"
+                  aria-labelledby="dropdownMenuButton1"
+                >
+                  <li>
+                    <button
+                      type="button"
+                      class="dropdown-item"
+                      onclick="submitCustomRiderForm('ergonomics')"
+                    >
+                      Ergonomic bikes!
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      type="button"
+                      class="dropdown-item"
+                      onclick="submitCustomRiderForm('aerodynamics')"
+                    >
+                      Aerodynamic bikes!
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" class="dropdown-item disabled">
+                      Structurally-optimal bikes! [COMING SOON]
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </form>
+        <form id="specify-rider-dimensions-form" style="display: none">
+          <div id="specify-rider-dimensions-container" class="m-3">
+            <h3>Specify rider dimensions</h3>
+            <div></div>
+          </div>
+
+          <div
+            id="seed-bike-selection-container-specify-rider-dimensions"
+            class="m-3"
+          >
+            <h3>Select Seed Bike</h3>
+            <div
+              id="bikes-container-specify-rider-dimensions"
+              class="m-3"
+            ></div>
+            <div id="all-bikes-helper-div">
+              <div class="row p-5">
+                <div class="col seed-bike-div">
+                  <img
+                    class="seed-bike-img"
+                    src="assets/bike1.png"
+                    alt="seed-bike-1"
+                  />
+                  <br />
+                  <input
+                    id="seed1-specify-rider-dimensions"
+                    value="1"
+                    name="seedBike"
+                    type="radio"
+                    class="form-check-input"
+                    required
+                  />
+                  <label
+                    class="form-check-label"
+                    for="seed1-specify-rider-dimensions"
+                    >Snow Camo</label
+                  >
+                </div>
+
+                <div class="col seed-bike-div">
+                  <img
+                    class="seed-bike-img"
+                    src="assets/bike2.png"
+                    alt="seed-bike-2"
+                  />
+                  <br />
+                  <input
+                    id="seed2-specify-rider-dimensions"
+                    value="2"
+                    name="seedBike"
+                    type="radio"
+                    class="form-check-input"
+                    required
+                  />
+                  <label
+                    class="form-check-label"
+                    for="seed2-specify-rider-dimensions"
+                    >Childlike</label
+                  >
+                </div>
+
+                <div class="col seed-bike-div">
+                  <img
+                    class="seed-bike-img"
+                    src="assets/bike3.png"
+                    alt="seed-bike-3"
+                  />
+                  <br />
+                  <input
+                    id="seed3-specify-rider-dimensions"
+                    value="3"
+                    name="seedBike"
+                    type="radio"
+                    class="form-check-input"
+                    required
+                  />
+                  <label
+                    class="form-check-label"
+                    for="seed3-specify-rider-dimensions"
+                    >Fiery</label
+                  >
+                </div>
+              </div>
+
+              <div class="row p-5">
+                <div class="col seed-bike-div">
+                  <img
+                    class="seed-bike-img"
+                    src="assets/bike11.png"
+                    alt="seed-bike-11"
+                  />
+                  <br />
+                  <input
+                    id="seed11-specify-rider-dimensions"
+                    value="11"
+                    name="seedBike"
+                    type="radio"
+                    class="form-check-input"
+                    required
+                  />
+                  <label
+                    class="form-check-label"
+                    for="seed11-specify-rider-dimensions"
+                    >Pythonic</label
+                  >
+                </div>
+
+                <div class="col seed-bike-div">
+                  <img
+                    class="seed-bike-img"
+                    src="assets/bike5.png"
+                    alt="seed-bike-5"
+                  />
+                  <br />
+                  <input
+                    id="seed5-specify-rider-dimensions"
+                    value="5"
+                    name="seedBike"
+                    type="radio"
+                    class="form-check-input"
+                    required
+                  />
+                  <label
+                    class="form-check-label"
+                    for="seed5-specify-rider-dimensions"
+                    >Inferno</label
+                  >
+                </div>
+
+                <div class="col seed-bike-div">
+                  <img
+                    class="seed-bike-img"
+                    src="assets/bike6.png"
+                    alt="seed-bike-6"
+                  />
+                  <br />
+                  <input
+                    id="seed6-specify-rider-dimensions"
+                    value="6"
+                    name="seedBike"
+                    type="radio"
+                    class="form-check-input"
+                    required
+                  />
+                  <label
+                    class="form-check-label"
+                    for="seed6-specify-rider-dimensions"
+                    >Wintery</label
+                  >
+                </div>
+              </div>
+              <div class="row p-5">
+                <div class="col seed-bike-div">
+                  <img
+                    class="seed-bike-img"
+                    src="assets/bike7.png"
+                    alt="seed-bike-7"
+                  />
+                  <br />
+                  <input
+                    id="seed7-specify-rider-dimensions"
+                    value="7"
+                    name="seedBike"
+                    type="radio"
+                    class="form-check-input"
+                    required
+                  />
+                  <label
+                    class="form-check-label"
+                    for="seed7-specify-rider-dimensions"
+                    >Pastel</label
+                  >
+                </div>
+
+                <div class="col seed-bike-div">
+                  <img
+                    class="seed-bike-img"
+                    src="assets/bike10.png"
+                    alt="seed-bike-10"
+                  />
+                  <br />
+                  <input
+                    id="seed10-specify-rider-dimensions"
+                    value="10"
+                    name="seedBike"
+                    type="radio"
+                    class="form-check-input"
+                    required
+                  />
+                  <label
+                    class="form-check-label"
+                    for="seed10-specify-rider-dimensions"
+                    >Standard</label
+                  >
+                </div>
+
+                <div class="col seed-bike-div">
+                  <img
+                    class="seed-bike-img"
+                    src="assets/bike12.png"
+                    alt="seed-bike-12"
+                  />
+                  <br />
+                  <input
+                    id="seed12-specify-rider-dimensions"
+                    value="12"
+                    name="seedBike"
+                    type="radio"
+                    class="form-check-input"
+                    required
+                  />
+                  <label
+                    class="form-check-label"
+                    for="seed12-specify-rider-dimensions"
+                    >Sleek</label
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="p-3">
+            <div class="row flex-cont text-center justify-content-center">
+              <div class="dropdown">
+                <button
+                  class="btn btn-outline-danger btn-lg dropdown-toggle w-40"
+                  type="button"
+                  id="dropdownMenuButton1-specify-rider-dimensions"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  Generate!
+                </button>
+                <ul
+                  class="dropdown-menu w-40"
+                  aria-labelledby="dropdownMenuButton1"
+                >
+                  <li>
+                    <button
+                      type="button"
+                      class="dropdown-item"
+                      onclick="submitRiderDimensionsForm('ergonomics')"
+                    >
+                      Ergonomic bikes!
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      type="button"
+                      class="dropdown-item"
+                      onclick="submitRiderDimensionsForm('aerodynamics')"
+                    >
+                      Aerodynamic bikes!
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" class="dropdown-item disabled">
                       Structurally-optimal bikes! [COMING SOON]
                     </button>
                   </li>
