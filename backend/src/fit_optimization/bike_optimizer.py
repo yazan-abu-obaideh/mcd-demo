@@ -136,7 +136,7 @@ class BikeOptimizer:
         return response
 
     def _to_full_dimensions_mm(self, rider_dimensions_inches: dict):
-        mm_dimensions = {key: value for key, value in rider_dimensions_inches.items()}
+        mm_dimensions = {key: value * 25.4 for key, value in rider_dimensions_inches.items()}
         mm_dimensions["foot_length"] = 5.5 * 25.4
         mm_dimensions["ankle_angle"] = 24 * 25.4
         return mm_dimensions
