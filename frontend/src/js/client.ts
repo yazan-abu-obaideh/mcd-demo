@@ -36,6 +36,11 @@ const resultDivElements = new ExclusivelyVisibleElements([
   "error-response-div",
 ]);
 
+const problemFormElements = new ExclusivelyVisibleElements([
+  "problem-form-form",
+  "specify-rider-dimensions-form"
+])
+
 async function postSeedsOptimization(
   optimizationType: string,
   seedBikeId: string,
@@ -478,6 +483,10 @@ function generateRenderButton(bikeId: string): HTMLElement {
     "Render bike",
     renderBikeById.name
   );
+}
+
+function showForm(formId: string) {
+  problemFormElements.showElement(formId);  
 }
 
 function generateDownloadCadButton(bikeId: string): HTMLElement {

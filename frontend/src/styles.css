@@ -63,6 +63,11 @@ input[type="number"] {
   height: auto;
 }
 
+.problem-form-tabs-div {
+  border-bottom: 0px !important;
+
+}
+
 .optimized-bike-div {
   height: 70vh;
 }
