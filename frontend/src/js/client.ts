@@ -1,11 +1,13 @@
 const optimizationApiUrl = "https://mcd-demo.com/api/v1";
 const renderingApiUrl = "https://mcd-demo.com/api/v1/rendering";
 let bikeStore = {};
-const problemFormId = "problem-form-form";
+const seedsFormId = "seeds-form-form";
+const uploadRiderImageFormId = "upload-rider-image-form";
+const specifyDimensionsFormId = "specify-rider-dimensions-form";
 const responseDivId = "server-response-div";
 const urlCreator = window.URL || window.webkitURL;
 
-class OptimizedBike {
+class GeneratedBike {
   seedImageId: string;
   bikeObject: object;
   bikePerformance: object;
@@ -36,6 +38,12 @@ const resultDivElements = new ExclusivelyVisibleElements([
   "error-response-div",
 ]);
 
+const problemFormElements = new ExclusivelyVisibleElements([
+  seedsFormId,
+  uploadRiderImageFormId,
+  specifyDimensionsFormId,
+]);
+
 async function postSeedsOptimization(
   optimizationType: string,
   seedBikeId: string,
@@ -49,6 +57,24 @@ async function postSeedsOptimization(
       body: JSON.stringify({
         seedBikeId: seedBikeId,
         riderId: riderImageId,
+      }),
+    }
+  );
+}
+
+async function postDimensionsOptimization(
+  optimizationType: string,
+  seedBikeId: string,
+  riderDimensionsInches: object
+) {
+  return await fetch(
+    optimizationApiUrl.concat(`/${optimizationType}/optimize-dimensions`),
+    {
+      headers: { "Content-Type": "application/json" },
+      method: "POST",
+      body: JSON.stringify({
+        seedBikeId: seedBikeId,
+        riderDimensionsInches: riderDimensionsInches,
       }),
     }
   );
@@ -91,7 +117,7 @@ function getFileById(inputElementId: string): File {
   return (getElementById(inputElementId) as HTMLInputElement).files![0];
 }
 
-function postRenderBikeRequest(bike: OptimizedBike): Promise<Response> {
+function postRenderBikeRequest(bike: GeneratedBike): Promise<Response> {
   return fetch(renderingApiUrl.concat("/render-bike-object"), {
     headers: { "Content-Type": "application/json" },
     method: "POST",
@@ -102,7 +128,7 @@ function postRenderBikeRequest(bike: OptimizedBike): Promise<Response> {
   });
 }
 
-function postDownloadBikeCadRequest(bike: OptimizedBike): Promise<Response> {
+function postDownloadBikeCadRequest(bike: GeneratedBike): Promise<Response> {
   return fetch(optimizationApiUrl.concat("/download-cad"), {
     headers: { "Content-Type": "application/json" },
     method: "POST",
@@ -153,7 +179,7 @@ function download(text: string) {
   anchor.setAttribute("download", "bike.bcad");
   anchor.setAttribute(
     "href",
-    "data:applcation/xml;charset=utf-8," + encodeURIComponent(text)
+    "data:application/xml;charset=utf-8," + encodeURIComponent(text)
   );
   anchor.click();
 }
@@ -205,16 +231,26 @@ function handleRenderedBikeImage(bikeId: string, responseBlob: Blob) {
 }
 
 function submitCustomRiderForm(optimizationType: string): void {
+  resetBikeStore();
   throwIfInvalidType(optimizationType);
-  submitProblemForm(problemFormId, (form: HTMLFormElement) =>
+  submitProblemForm(uploadRiderImageFormId, (form: HTMLFormElement) =>
     submitValidCustomRiderForm(optimizationType, form)
   );
 }
 
+function submitRiderDimensionsForm(optimizationType: string): void {
+  resetBikeStore();
+  throwIfInvalidType(optimizationType);
+  submitProblemForm(specifyDimensionsFormId, (form: HTMLFormElement) =>
+    submitValidDimensionsForm(optimizationType, form)
+  );
+}
+
+
 function submitSeedsForm(optimizationType: string): void {
   resetBikeStore();
   throwIfInvalidType(optimizationType);
-  submitProblemForm(problemFormId, (form: HTMLFormElement) =>
+  submitProblemForm(seedsFormId, (form: HTMLFormElement) =>
     submitValidSeedsForm(optimizationType, form)
   );
 }
@@ -271,6 +307,33 @@ function submitValidSeedsForm(optimizationType: string, form: HTMLFormElement) {
     )
   );
 }
+
+function getNumberFrom(formData: FormData, fieldName: string): number {
+  return Number(formData.get(fieldName) as string)
+}
+
+function submitValidDimensionsForm(optimizationType: string, form: HTMLFormElement) {
+  const formData = new FormData(form);
+  postOptimizationForm(
+    formData,
+    postDimensionsOptimization(
+      optimizationType,
+      formData.get("seedBike") as string,
+      {
+        height: getNumberFrom(formData, "rider-height"),
+        sh_height: getNumberFrom(formData,"shoulder-height"),
+        hip_to_ankle: getNumberFrom(formData,"hip-ankle"),
+        hip_to_knee: getNumberFrom(formData,"hip-knee"),
+        shoulder_to_wrist: getNumberFrom(formData,"shoulder-wrist"),
+        arm_length: getNumberFrom(formData,"arm-length"),
+        torso_length: getNumberFrom(formData,"torso-length"),
+        lower_leg: getNumberFrom(formData,"lower-leg"),
+        upper_leg: getNumberFrom(formData,"upper-leg")
+      }
+    )
+  );
+}
+
 
 function postCustomRiderOptimizationForm(
   optimizationType: string,
@@ -435,7 +498,7 @@ function generateRenderedImgElement(bikeId: string): HTMLDivElement {
 
   const originalImg = document.createElement("img");
   originalImg.src = `assets/bike${
-    (bikeStore[bikeId] as OptimizedBike).seedImageId
+    (bikeStore[bikeId] as GeneratedBike).seedImageId
   }.png`;
   originalImg.setAttribute("class", "original-bike-img-in-result");
   originalImg.setAttribute("id", getOriginalImageInResultId(bikeId));
@@ -445,7 +508,7 @@ function generateRenderedImgElement(bikeId: string): HTMLDivElement {
   renderedImg.setAttribute("alt", "rendered bike image");
 
   renderedImgDiv.appendChild(renderedImg);
-  renderedImgDiv.appendChild(getImageLabel("Optimized", getBikeImgId(bikeId)));
+  renderedImgDiv.appendChild(getImageLabel("Generated", getBikeImgId(bikeId)));
 
   originalImgDiv.appendChild(originalImg);
   originalImgDiv.appendChild(
@@ -478,6 +541,10 @@ function generateRenderButton(bikeId: string): HTMLElement {
     "Render bike",
     renderBikeById.name
   );
+}
+
+function showForm(formId: string) {
+  problemFormElements.showElement(formId);
 }
 
 function generateDownloadCadButton(bikeId: string): HTMLElement {
@@ -542,11 +609,11 @@ function generateUuid(): string {
 
 function persistBike(bike: object, formData: FormData): string {
   const bikeId = generateUuid();
-  const optimizedBike = new OptimizedBike();
-  optimizedBike.bikeObject = bike["bike"];
-  optimizedBike.bikePerformance = bike["bikePerformance"];
-  optimizedBike.seedImageId = formData.get("seedBike") as string;
-  bikeStore[bikeId] = optimizedBike;
+  const generatedBike = new GeneratedBike();
+  generatedBike.bikeObject = bike["bike"];
+  generatedBike.bikePerformance = bike["bikePerformance"];
+  generatedBike.seedImageId = formData.get("seedBike") as string;
+  bikeStore[bikeId] = generatedBike;
   return bikeId;
 }
 
