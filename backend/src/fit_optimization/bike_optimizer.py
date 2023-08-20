@@ -18,7 +18,7 @@ class LoggingGenerator(CounterfactualsGenerator):
     are single-use objects and should be garbage-collected ASAP"""
 
     def __init__(self, problem: MultiObjectiveProblem, pop_size: int):
-        super().__init__(problem, pop_size, initialize_from_dataset=False, verbose=True)
+        super().__init__(problem, pop_size, initialize_from_dataset=True, verbose=True)
         self.logs_list = []
 
     def _log(self, log_message):
