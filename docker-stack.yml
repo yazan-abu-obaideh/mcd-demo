@@ -17,8 +17,10 @@ services:
       - APP_WORKERS=6
       - APP_ROOT_DIR=backend/src/
       - APP_PORT=8080
+      - APP_THREADS=3
       - RENDERER_POOL_SIZE=0
     deploy:
+      replicas: 1
       restart_policy:
         condition: on-failure
         delay: 5s
