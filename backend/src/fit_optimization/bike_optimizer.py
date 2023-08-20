@@ -17,8 +17,8 @@ class LoggingGenerator(CounterfactualsGenerator):
     """Note that the logs_list is never 'cleaned'... Instances of LoggingGenerator
     are single-use objects and should be garbage-collected ASAP"""
 
-    def __init__(self, problem: MultiObjectiveProblem, pop_size: int):
-        super().__init__(problem, pop_size, initialize_from_dataset=True, verbose=True)
+    def __init__(self, problem: MultiObjectiveProblem, pop_size: int, initialize_from_dataset):
+        super().__init__(problem, pop_size, initialize_from_dataset=initialize_from_dataset, verbose=True)
         self.logs_list = []
 
     def _log(self, log_message):
@@ -86,7 +86,7 @@ class BikeOptimizer:
         body_dimensions["ankle_angle"] = 100
         return body_dimensions
 
-    def _optimize_aerodynamics(self, seed_bike_id, user_dimensions):
+    def _optimize_aerodynamics(self, seed_bike_id, user_dimensions, initialize_from_dataset=False):
         original_bike = self._get_bike_by_id(seed_bike_id)
 
         def aero_prediction_function(bikes):
@@ -94,7 +94,8 @@ class BikeOptimizer:
 
         generator = self._build_aero_generator(
             aero_prediction_function,
-            original_bike
+            original_bike,
+            initialize_from_dataset
         )
         return self._optimize(generator, aero_prediction_function,
                               self._build_comparator(compare_aerodynamic_performance,
@@ -102,7 +103,7 @@ class BikeOptimizer:
                                                      aero_prediction_function
                                                      ))
 
-    def _optimize_ergonomics(self, seed_bike_id, body_dimensions):
+    def _optimize_ergonomics(self, seed_bike_id, body_dimensions, initialize_from_dataset=False):
         original_bike = self._get_bike_by_id(seed_bike_id)
 
         def ergo_prediction_function(bikes):
@@ -110,7 +111,8 @@ class BikeOptimizer:
 
         generator = self._build_ergo_generator(
             ergo_prediction_function,
-            original_bike
+            original_bike,
+            initialize_from_dataset
         )
         return self._optimize(generator, ergo_prediction_function,
                               self._build_comparator(
@@ -161,7 +163,7 @@ class BikeOptimizer:
                              zip(optimized_records, performances)]
         return _to_list_of_pairs
 
-    def _build_ergo_generator(self, predict, seed_bike):
+    def _build_ergo_generator(self, predict, seed_bike, initialize_from_dataset=False):
         data_package = DataPackage(
             features_dataset=DESIGNS,
             predictions_dataset=ERGO_PERFORMANCES,
@@ -170,10 +172,10 @@ class BikeOptimizer:
             datatypes=FEATURES_DATATYPES
         )
         problem = MultiObjectiveProblem(data_package, predict, CONSTRAINT_FUNCTIONS)
-        generator = LoggingGenerator(problem, OPTIMIZER_POPULATION)
+        generator = LoggingGenerator(problem, OPTIMIZER_POPULATION, initialize_from_dataset)
         return generator
 
-    def _build_aero_generator(self, predict, seed_bike):
+    def _build_aero_generator(self, predict, seed_bike, initialize_from_dataset=False):
         data_package = DataPackage(
             features_dataset=DESIGNS,
             predictions_dataset=AERO_PERFORMANCES,
@@ -183,7 +185,7 @@ class BikeOptimizer:
             bonus_objectives=["Aerodynamic Drag"]
         )
         problem = MultiObjectiveProblem(data_package, predict, CONSTRAINT_FUNCTIONS)
-        generator = LoggingGenerator(problem, OPTIMIZER_POPULATION)
+        generator = LoggingGenerator(problem, OPTIMIZER_POPULATION, initialize_from_dataset)
         return generator
 
     def _get_bike_by_id(self, seed_bike_id):
