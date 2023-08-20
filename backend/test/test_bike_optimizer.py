@@ -17,6 +17,24 @@ class BikeOptimizerTest(McdDemoTestCase):
         for j in range(1, 4):
             self.optimizer.optimize_aerodynamics_for_seeds("1", j)
 
+    def _test_rider_reliability(self):
+        total_results = {}
+        for rider_id in ["1", "2", "3"]:
+            rider_results = {}
+            for bike_id in ["1", "2", "3", "11", "5", "6", "7", "10", "12"]:
+                ergo_results = self.optimizer.optimize_ergonomics_for_seeds(bike_id, rider_id)
+                aero_results = self.optimizer.optimize_aerodynamics_for_seeds(bike_id, rider_id)
+                ergo_len = len(ergo_results["bikes"])
+                aero_len = len(aero_results["bikes"])
+                print(f"Rider {rider_id}, bike {bike_id}. Ergo {ergo_len}, Aero {aero_len}")
+                rider_results[bike_id] = {
+                    "ergo": ergo_len,
+                    "aero": aero_len
+                }
+            print(rider_results)
+            total_results[rider_id] = rider_results
+        print(total_results)
+
     def test_optimize_ergo_seeds(self):
         for j in range(1, 3):
             start = time.time()
