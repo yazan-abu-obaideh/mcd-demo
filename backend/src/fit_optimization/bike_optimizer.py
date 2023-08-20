@@ -42,7 +42,8 @@ class BikeOptimizer:
 
     def optimize_aerodynamics_for_seeds(self, seed_bike_id, rider_id):
         return self._optimize_aerodynamics(seed_bike_id,
-                                           self._get_full_body_dimensions(rider_id))
+                                           self._get_full_body_dimensions(rider_id),
+                                           self._get_initialize_from_dataset(rider_id))
 
     def optimize_aerodynamics_for_custom_rider(self,
                                                seed_bike_id: str,
@@ -58,7 +59,12 @@ class BikeOptimizer:
 
     def optimize_ergonomics_for_seeds(self, seed_bike_id, rider_id):
         dimensions = self._get_full_body_dimensions(rider_id)
-        return self._optimize_ergonomics(seed_bike_id, dimensions)
+        return self._optimize_ergonomics(seed_bike_id, dimensions, self._get_initialize_from_dataset(rider_id))
+
+    def _get_initialize_from_dataset(self, rider_id):
+        if str(rider_id) == "3":
+            return True
+        return False
 
     def optimize_ergonomics_for_custom_rider(self,
                                              seed_bike_id: str,
@@ -163,7 +169,7 @@ class BikeOptimizer:
                              zip(optimized_records, performances)]
         return _to_list_of_pairs
 
-    def _build_ergo_generator(self, predict, seed_bike, initialize_from_dataset=False):
+    def _build_ergo_generator(self, predict, seed_bike, initialize_from_dataset):
         data_package = DataPackage(
             features_dataset=DESIGNS,
             predictions_dataset=ERGO_PERFORMANCES,
@@ -175,7 +181,7 @@ class BikeOptimizer:
         generator = LoggingGenerator(problem, OPTIMIZER_POPULATION, initialize_from_dataset)
         return generator
 
-    def _build_aero_generator(self, predict, seed_bike, initialize_from_dataset=False):
+    def _build_aero_generator(self, predict, seed_bike, initialize_from_dataset):
         data_package = DataPackage(
             features_dataset=DESIGNS,
             predictions_dataset=AERO_PERFORMANCES,
