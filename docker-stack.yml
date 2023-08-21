@@ -19,7 +19,7 @@ services:
       - APP_THREADS=3
       - RENDERER_POOL_SIZE=0
     deploy:
-      replicas: 2
+      replicas: 1
       restart_policy:
         condition: on-failure
         delay: 5s
@@ -40,7 +40,7 @@ services:
       - RENDERER_TIMEOUT_GRANULARITY=1
       - RENDERER_TIMEOUT=15
     deploy:
-      replicas: 12
+      replicas: 6
       restart_policy:
         condition: on-failure
         delay: 5s
