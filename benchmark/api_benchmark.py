@@ -108,7 +108,6 @@ def run_full_benchmark(base_rul,
                        optimization_workers,
                        rendering_workers,
                        ):
-    _total_requests = 100
     benchmark_start = time.time()
     (optimization_run_results, rendering_run_results,
      interleaved_run_results) = _run_all_benchmarks(base_rul, max_concurrent_requests, total_optimization_requests,

@@ -30,6 +30,14 @@ class LoggingGenerator(CounterfactualsGenerator):
         super()._verbose_log(log_message)
 
 
+class ErgonomicsOptimizer:
+    pass
+
+
+class AerodynamicsOptimizer:
+    pass
+
+
 class BikeOptimizer:
     def __init__(self, image_analysis_service: PoserAnalyzer):
         self.image_analysis_service = image_analysis_service
