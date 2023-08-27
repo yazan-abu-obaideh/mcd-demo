@@ -1,6 +1,4 @@
-import base64
 import json
-import unittest
 from http import HTTPStatus
 from multiprocessing import Process
 from time import sleep
@@ -21,13 +19,12 @@ class AppTest(McdDemoTestCase):
         cls.handle_timeout()
 
     def test_bad_request(self):
-        with open(self.resource_path("dude.jpeg"), "rb") as file:
-            response = requests.post(self.build_end_point("/ergonomics/optimize-seeds"), data=json.dumps({
-                "seedBikeId": "DOES_NOT_EXIST",
-                "riderId": "DOES_NOT_EXIST"
-            }), headers={"Content-Type": "application/json"})
-            self.assertEqual(HTTPStatus.BAD_REQUEST, response.status_code)
-            self.assertEqual("Invalid rider ID [DOES_NOT_EXIST]", response.json()["message"])
+        response = requests.post(self.build_end_point("/ergonomics/optimize-seeds"), data=json.dumps({
+            "seedBikeId": "DOES_NOT_EXIST",
+            "riderId": "DOES_NOT_EXIST"
+        }), headers={"Content-Type": "application/json"})
+        self.assertEqual(HTTPStatus.BAD_REQUEST, response.status_code)
+        self.assertEqual("Invalid rider ID [DOES_NOT_EXIST]", response.json()["message"])
 
     def test_not_found(self):
         health_response = requests.get(self.build_end_point("healthy"))
