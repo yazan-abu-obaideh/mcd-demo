@@ -1,14 +1,14 @@
 import random
 
 from cad_services.bikeCad_renderer import RenderingService
-from fit_optimization.bike_optimizer import BikeOptimizer
+from fit_optimization.bike_optimizers import ErgonomicsOptimizer
 from pose_analysis.pose_image_processing import PoserAnalyzer
 from test_utils import McdDemoTestCase
 
 
 class OptimizeAndRenderEndTOEndTest(McdDemoTestCase):
     def setUp(self) -> None:
-        self.optimizer = BikeOptimizer(PoserAnalyzer())
+        self.optimizer = ErgonomicsOptimizer(PoserAnalyzer())
         self.renderer = RenderingService(renderer_pool_size=1)
 
     def test_invalid_seed_image(self):
@@ -33,5 +33,5 @@ class OptimizeAndRenderEndTOEndTest(McdDemoTestCase):
         )
 
     def test_e2e(self):
-        optimized_bikes = self.optimizer.optimize_ergonomics_for_seeds("1", "1")
+        optimized_bikes = self.optimizer.optimize_for_seeds("1", "1")
         self.renderer.render_object(random.choice(optimized_bikes["bikes"])["bike"], "1")
