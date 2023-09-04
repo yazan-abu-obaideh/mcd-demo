@@ -1,12 +1,11 @@
 import os.path
 
+import cv2
 import numpy as np
-import tensorflow as tf
 
 import pose_analysis.utils as utils
 from exceptions import UserInputException
 from pose_analysis.movenet import Movenet
-from tensorflow.python.framework.errors_impl import InvalidArgumentError
 
 _movenet = Movenet(os.path.join(os.path.dirname(__file__),
                                 "../resources/movenet_thunder.tflite"))
@@ -96,14 +95,14 @@ def _calculation_with_img_bytes(heights, img_bytes, output_overlayed=True):
 
 def _decode_image(img_bytes):
     try:
-        return tf.io.decode_image(img_bytes)
-    except InvalidArgumentError as e:
+        return cv2.imdecode(img_bytes, flags=cv2.IMREAD_COLOR)
+    except Exception:
         raise UserInputException("Unknown image file format. One of JPEG, PNG, GIF, BMP required.")
 
 
 def _calculation_with_img_path(heights, imgroute, output_overlayed=True):
     # height = heights
-    return _calculation(heights, tf.io.decode_jpeg(tf.io.read_file(imgroute)), output_overlayed)
+    return _calculation(heights, cv2.imdecode(cv2.imread(imgroute), flags=cv2.IMREAD_COLOR), output_overlayed)
 
 
 def _calculation(heights, image, output_overlayed=True):
