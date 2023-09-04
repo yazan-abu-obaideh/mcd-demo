@@ -61,11 +61,11 @@ def _decompose_to_dictionary(prediction_array):
     return base
 
 
-def _detect(input_tensor, inference_count=10):
+def _detect(input_array: np.ndarray, inference_count=10):
     """Runs detection on an input image.
 
     Args:
-      input_tensor: A [height, width, 3] Tensor of type tf.float32.
+      input_array: A [height, width, 3] array of type np.ndarray.
         Note that height and width can be anything since the image will be
         immediately resized according to the needs of the model within this
         function.
@@ -77,12 +77,12 @@ def _detect(input_tensor, inference_count=10):
     """
 
     # Detect pose using the full input image
-    _movenet.detect(input_tensor.numpy(), reset_crop_region=True)
+    _movenet.detect(input_array, reset_crop_region=True)
 
     # Repeatedly using previous detection result to identify the region of
     # interest and only croping that region to improve detection accuracy
     for _ in range(inference_count - 1):
-        person = _movenet.detect(input_tensor.numpy(),
+        person = _movenet.detect(input_array,
                                  reset_crop_region=False)
 
     return person
@@ -94,19 +94,19 @@ def _calculation_with_img_bytes(heights, img_bytes, output_overlayed=True):
 
 
 def _decode_image(img_bytes):
-    try:
-        return cv2.imdecode(img_bytes, flags=cv2.IMREAD_COLOR)
-    except Exception:
-        raise UserInputException("Unknown image file format. One of JPEG, PNG, GIF, BMP required.")
+    image_array = cv2.imdecode(np.frombuffer(img_bytes, dtype=np.int8), flags=cv2.IMREAD_COLOR)
+    if image_array is None:
+        raise UserInputException("Invalid image")
+    return image_array
 
 
 def _calculation_with_img_path(heights, imgroute, output_overlayed=True):
     # height = heights
-    return _calculation(heights, cv2.imdecode(cv2.imread(imgroute), flags=cv2.IMREAD_COLOR), output_overlayed)
+    return _calculation(heights, cv2.imread(imgroute), output_overlayed)
 
 
-def _calculation(heights, image, output_overlayed=True):
-    pheight = image.get_shape()[0]
+def _calculation(heights, image: np.ndarray, output_overlayed=True):
+    pheight = image.shape[0]
     person = _detect(image)
     keys = []
 
@@ -167,7 +167,7 @@ def _calculation(heights, image, output_overlayed=True):
 
     # Return prediction or (prediction, overlayed image) for use in analyze_and_display
     if output_overlayed:
-        overlayed = utils.visualize(image.numpy(), [person])
+        overlayed = utils.visualize(image, [person])
         return pred, overlayed
 
     return pred
