@@ -16,7 +16,7 @@ def compare_aerodynamic_performance(original, optimized):
 
     if original_bike_drag <= optimized_bike_drag:
         APP_LOGGER.warning("Generated counterfactual with greater aerodynamic drag than original")
-        return "Little change in aerodynamic drag"
+        return "Little or undesirable change in aerodynamic drag"
     rounded_percentage = int(((abs(optimized_bike_drag - original_bike_drag) * 100) / original_bike_drag))
     return f"Offers {rounded_percentage}% reduction in aerodynamic drag"
 
@@ -28,7 +28,7 @@ def compare_ergonomic_performance(original: dict, optimized: dict):
     optimized_differences = _to_differences_dict(optimized)
     max_difference = _get_max_difference(optimized_differences, original_differences)
     if not max_difference:
-        return "Little change in ergonomics"
+        return "Little or undesirable change in ergonomics"
     return f"{round(max_difference['value'], 1)} degrees closer to desired {max_difference['key'].lower()}"
 
 
