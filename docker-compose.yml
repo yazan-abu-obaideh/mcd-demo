@@ -2,13 +2,13 @@ version: "3.8"
 services:
   nginx:
     build:
-      context: .
-      dockerfile: nginx.dockerfile
+      context: ./
+      dockerfile: deployment/nginx.dockerfile
   optimization:
     build:
-      context: .
-      dockerfile: app.dockerfile
+      context: ./
+      dockerfile: deployment/app.dockerfile
   rendering:
     build:
-      context: .
-      dockerfile: app.dockerfile
+      context: ./
+      dockerfile: deployment/app.dockerfile
