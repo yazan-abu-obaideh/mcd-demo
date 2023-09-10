@@ -1,3 +1,9 @@
+import {
+  OptimizationController,
+  RenderingController,
+  GeneratedBike,
+} from "frontend-shared/src/controller";
+
 const optimizationApiUrl = "http://localhost:5000/api/v1";
 const renderingApiUrl = "http://localhost:8000/api/v1/rendering";
 let bikeStore = {};
@@ -6,12 +12,8 @@ const uploadRiderImageFormId = "upload-rider-image-form";
 const specifyDimensionsFormId = "specify-rider-dimensions-form";
 const responseDivId = "server-response-div";
 const urlCreator = window.URL || window.webkitURL;
-
-class GeneratedBike {
-  seedImageId: string;
-  bikeObject: object;
-  bikePerformance: object;
-}
+const optimizationController = new OptimizationController(optimizationApiUrl);
+const renderingController = new RenderingController(renderingApiUrl);
 
 class ExclusivelyVisibleElements {
   // a class that encapsulates the logic of a bunch of elements where only one can be visible at a time
@@ -44,62 +46,6 @@ const problemFormElements = new ExclusivelyVisibleElements([
   specifyDimensionsFormId,
 ]);
 
-async function postSeedsOptimization(
-  optimizationType: string,
-  seedBikeId: string,
-  riderImageId: string
-) {
-  return await fetch(
-    optimizationApiUrl.concat(`/${optimizationType}/optimize-seeds`),
-    {
-      headers: { "Content-Type": "application/json" },
-      method: "POST",
-      body: JSON.stringify({
-        seedBikeId: seedBikeId,
-        riderId: riderImageId,
-      }),
-    }
-  );
-}
-
-async function postDimensionsOptimization(
-  optimizationType: string,
-  seedBikeId: string,
-  riderDimensionsInches: object
-) {
-  return await fetch(
-    optimizationApiUrl.concat(`/${optimizationType}/optimize-dimensions`),
-    {
-      headers: { "Content-Type": "application/json" },
-      method: "POST",
-      body: JSON.stringify({
-        seedBikeId: seedBikeId,
-        riderDimensionsInches: riderDimensionsInches,
-      }),
-    }
-  );
-}
-
-async function postCustomRiderOptimization(
-  optimizationType: string,
-  seedBikeId: string,
-  imageBase64: string,
-  personHeight: number,
-) {
-  return await fetch(
-    optimizationApiUrl.concat(`/${optimizationType}/optimize-custom-rider`),
-    {
-      headers: { "Content-Type": "application/json" },
-      method: "POST",
-      body: JSON.stringify({
-        seedBikeId: seedBikeId,
-        imageBase64: imageBase64,
-        riderHeight: personHeight,
-      }),
-    }
-  );
-}
-
 function readFile(
   inputElementId: string,
   successHandler: (fileReader: FileReader) => void
@@ -115,28 +61,6 @@ function getFileById(inputElementId: string): File {
   return (getElementById(inputElementId) as HTMLInputElement).files![0];
 }
 
-function postRenderBikeRequest(bike: GeneratedBike): Promise<Response> {
-  return fetch(renderingApiUrl.concat("/render-bike-object"), {
-    headers: { "Content-Type": "application/json" },
-    method: "POST",
-    body: JSON.stringify({
-      bike: bike.bikeObject,
-      seedImageId: bike.seedImageId,
-    }),
-  });
-}
-
-function postDownloadBikeCadRequest(bike: GeneratedBike): Promise<Response> {
-  return fetch(optimizationApiUrl.concat("/download-cad"), {
-    headers: { "Content-Type": "application/json" },
-    method: "POST",
-    body: JSON.stringify({
-      bike: bike.bikeObject,
-      seedBikeId: bike.seedImageId,
-    }),
-  });
-}
-
 function downloadBikeById(bikeId: string) {
   const downloadButton = getElementById(
     getDownloadBikeCadBtnId(bikeId)
@@ -144,7 +68,8 @@ function downloadBikeById(bikeId: string) {
 
   downloadButton.innerHTML = "Downloading bike...";
 
-  postDownloadBikeCadRequest(bikeStore[bikeId])
+  optimizationController
+    .postDownloadBikeCadRequest(bikeStore[bikeId])
     .then((response) => {
       if (response.status == 200) {
         response.text().then((responseText) => {
@@ -185,7 +110,8 @@ function download(text: string) {
 function renderBikeById(bikeId: string) {
   hideRenderButton(bikeId);
   setBikeLoading(bikeId, "flex");
-  postRenderBikeRequest(bikeStore[bikeId])
+  renderingController
+    .postRenderBikeRequest(bikeStore[bikeId])
     .then((response) => {
       if (response.status == 200) {
         handleSuccessfulRenderResponse(response, bikeId);
@@ -244,7 +170,6 @@ function submitRiderDimensionsForm(optimizationType: string): void {
   );
 }
 
-
 function submitSeedsForm(optimizationType: string): void {
   resetBikeStore();
   throwIfInvalidType(optimizationType);
@@ -298,7 +223,7 @@ function submitValidSeedsForm(optimizationType: string, form: HTMLFormElement) {
   const formData = new FormData(form);
   postOptimizationForm(
     formData,
-    postSeedsOptimization(
+    optimizationController.postSeedsOptimization(
       optimizationType,
       formData.get("seedBike") as string,
       formData.get("riderImage") as string
@@ -307,31 +232,33 @@ function submitValidSeedsForm(optimizationType: string, form: HTMLFormElement) {
 }
 
 function getNumberFrom(formData: FormData, fieldName: string): number {
-  return Number(formData.get(fieldName) as string)
+  return Number(formData.get(fieldName) as string);
 }
 
-function submitValidDimensionsForm(optimizationType: string, form: HTMLFormElement) {
+function submitValidDimensionsForm(
+  optimizationType: string,
+  form: HTMLFormElement
+) {
   const formData = new FormData(form);
   postOptimizationForm(
     formData,
-    postDimensionsOptimization(
+    optimizationController.postDimensionsOptimization(
       optimizationType,
       formData.get("seedBike") as string,
       {
         height: getNumberFrom(formData, "rider-height"),
-        sh_height: getNumberFrom(formData,"shoulder-height"),
-        hip_to_ankle: getNumberFrom(formData,"hip-ankle"),
-        hip_to_knee: getNumberFrom(formData,"hip-knee"),
-        shoulder_to_wrist: getNumberFrom(formData,"shoulder-wrist"),
-        arm_length: getNumberFrom(formData,"arm-length"),
-        torso_length: getNumberFrom(formData,"torso-length"),
-        lower_leg: getNumberFrom(formData,"lower-leg"),
-        upper_leg: getNumberFrom(formData,"upper-leg")
+        sh_height: getNumberFrom(formData, "shoulder-height"),
+        hip_to_ankle: getNumberFrom(formData, "hip-ankle"),
+        hip_to_knee: getNumberFrom(formData, "hip-knee"),
+        shoulder_to_wrist: getNumberFrom(formData, "shoulder-wrist"),
+        arm_length: getNumberFrom(formData, "arm-length"),
+        torso_length: getNumberFrom(formData, "torso-length"),
+        lower_leg: getNumberFrom(formData, "lower-leg"),
+        upper_leg: getNumberFrom(formData, "upper-leg"),
       }
     )
   );
 }
-
 
 function postCustomRiderOptimizationForm(
   optimizationType: string,
@@ -340,11 +267,11 @@ function postCustomRiderOptimizationForm(
 ) {
   postOptimizationForm(
     formData,
-    postCustomRiderOptimization(
+    optimizationController.postImageOptimization(
       optimizationType,
       formData.get("seedBike") as string,
       base64File,
-      Number(formData.get("user-height") as string),
+      Number(formData.get("user-height") as string)
     )
   );
 }
@@ -491,7 +418,7 @@ function generateRenderedImgElement(bikeId: string): HTMLDivElement {
   const renderedImg = document.createElement("img");
 
   const originalImg = document.createElement("img");
-  originalImg.src = `assets/bike${
+  originalImg.src = `../assets/bike${
     (bikeStore[bikeId] as GeneratedBike).seedImageId
   }.png`;
   originalImg.setAttribute("class", "original-bike-img-in-result");
@@ -568,10 +495,6 @@ function generateBikeActionButton(
 function formatNumber(numberAsString: string): string {
   return Number(numberAsString).toFixed(3);
 }
-
-
-
-
 
 function generateUuid(): string {
   const S4 = function (): string {
@@ -714,4 +637,11 @@ function createSpaceDiv(): HTMLDivElement {
 function getOriginalImageInResultId(bikeId: string): string {
   return `original-img-in-result-${bikeId}`;
 }
-// export { getServerHealth, postOptimizationRequest, postSeedBikeOptimization };
+export {
+  showForm,
+  submitSeedsForm,
+  submitCustomRiderForm,
+  submitRiderDimensionsForm,
+  renderBikeById,
+  downloadBikeById,
+};
