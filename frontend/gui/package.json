@@ -1,18 +1,18 @@
 {
-  "name": "gui-app",
+  "name": "mcd-demo-gui",
   "version": "1.0.0",
-  "description": "GUI application for MCD-Demo",
-  "main": "src/main.js",
+  "description": "Desktop application for the MCD interactive demo",
+  "main": "main.js",
   "directories": {
     "test": "test"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "electron ."
+    "start": "cd src && npx @neutralinojs/neu run"
   },
-  "author": "yazan",
+  "author": "Yazan Amer",
   "license": "MIT",
   "devDependencies": {
-    "electron": "^26.2.0"
+    "@neutralinojs/neu": "^9.6.1"
   }
 }
