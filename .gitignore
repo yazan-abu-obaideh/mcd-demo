@@ -8,3 +8,6 @@
 nginx/secrets/
 /backend/src/data_wrangling/original_datasets/
 /backend/src/data_wrangling/generated/
+**/dist/
+/frontend/gui/src/bin/
+**/*.log
