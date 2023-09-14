@@ -14,12 +14,17 @@ class AppTest(McdDemoTestCase):
 
     @classmethod
     def setUpClass(cls) -> None:
-        cls.APP_PROCESS = Process(target=lambda: build_full_app().run())
+        cls.APP_PROCESS = Process(target=lambda: build_full_app().run(port=5000))
         cls.APP_PROCESS.start()
+        cls.await_app()
         cls.handle_timeout()
 
+    @classmethod
+    def await_app(cls):
+        sleep(0.1)
+
     def test_bad_request(self):
-        response = requests.post(self.build_end_point("/rendering/ergonomics/optimize-seeds"), data=json.dumps({
+        response = requests.post(self.build_end_point("/optimization/ergonomics/optimize-seeds"), data=json.dumps({
             "seedBikeId": "DOES_NOT_EXIST",
             "riderId": "DOES_NOT_EXIST"
         }), headers={"Content-Type": "application/json"})
