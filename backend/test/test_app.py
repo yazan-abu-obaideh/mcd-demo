@@ -27,7 +27,7 @@ class AppTest(McdDemoTestCase):
         self.assertEqual("Invalid rider ID [DOES_NOT_EXIST]", response.json()["message"])
 
     def test_not_found(self):
-        health_response = requests.get(self.build_end_point("healthy"))
+        health_response = requests.get(self.build_end_point("/healthy"))
         self.assertEqual(HTTPStatus.NOT_FOUND, health_response.status_code)
 
     def test_health(self):

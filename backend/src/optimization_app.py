@@ -79,19 +79,27 @@ def register_optimization_endpoints(_app: Flask,
                       methods=[POST])
 
 
-register_optimization_endpoints(app, "ergonomics", ergonomics_optimizer)
-register_optimization_endpoints(app, "aerodynamics", aerodynamics_optimizer)
+def register_download_endpoint(_app: Flask):
+    @_app.route(endpoint("/download-cad"), methods=[POST])
+    def download_cad_file():
+        _request = _get_json(request)
+        response = make_response(cad_builder.build_cad_from_object(_request["bike"],
+                                                                   _request["seedBikeId"]))
+        response.headers["Content-Type"] = "application/xml"
+        return response
 
 
-@app.route(endpoint("/download-cad"), methods=[POST])
-def download_cad_file():
-    _request = _get_json(request)
-    response = make_response(cad_builder.build_cad_from_object(_request["bike"],
-                                                               _request["seedBikeId"]))
-    response.headers["Content-Type"] = "application/xml"
-    return response
+def register_health_endpoint(_app: Flask):
+    @_app.route(endpoint("/health"))
+    def health():
+        return make_response({"status": "UP"})
 
 
-@app.route(endpoint("/health"))
-def health():
-    return make_response({"status": "UP"})
+def register_all_optimization_endpoints(_app):
+    register_optimization_endpoints(_app, "ergonomics", ergonomics_optimizer)
+    register_optimization_endpoints(_app, "aerodynamics", aerodynamics_optimizer)
+    register_download_endpoint(_app)
+    register_health_endpoint(_app)
+
+
+register_all_optimization_endpoints(app)
