@@ -5,7 +5,7 @@ from time import sleep
 
 import requests
 
-from optimization_app import app
+from app import build_full_app
 from test_utils import McdDemoTestCase
 
 
@@ -14,12 +14,12 @@ class AppTest(McdDemoTestCase):
 
     @classmethod
     def setUpClass(cls) -> None:
-        cls.APP_PROCESS = Process(target=app.run)
+        cls.APP_PROCESS = Process(target=lambda: build_full_app().run())
         cls.APP_PROCESS.start()
         cls.handle_timeout()
 
     def test_bad_request(self):
-        response = requests.post(self.build_end_point("/ergonomics/optimize-seeds"), data=json.dumps({
+        response = requests.post(self.build_end_point("/rendering/ergonomics/optimize-seeds"), data=json.dumps({
             "seedBikeId": "DOES_NOT_EXIST",
             "riderId": "DOES_NOT_EXIST"
         }), headers={"Content-Type": "application/json"})
