@@ -5,12 +5,12 @@ block_cipher = None
 
 
 a = Analysis(
-    ['backend/src/optimization_app_dev.py'],
+    ['backend/src/run_dev_app.py'],
     pathex=['backend/src', 'venv/lib/python3.9/site-packages',
     'venv/lib64/python3.9/site-packages'],
     binaries=[],
     datas=[('backend/src', '.')],
-    hiddenimports=['autograd', 'sklearn', 'sklearn.neural_network'],
+    hiddenimports=['autograd', 'sklearn', 'sklearn.neural_network', 'pymoo.cython.non_dominated_sorting'],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
