@@ -1,3 +1,5 @@
+import logging
+
 from flask import Flask, make_response, request
 from flask.views import View
 from flask_cors import CORS
@@ -23,24 +25,32 @@ def _get_json(_request):
     return _request.json
 
 
+def _configure_logger():
+    APP_LOGGER.setLevel(LOGGING_LEVEL)
+    console_handler = logging.StreamHandler()
+    console_handler.setLevel(LOGGING_LEVEL)
+    APP_LOGGER.addHandler(console_handler)
+    APP_LOGGER.info(f"Logging level set to {logging.getLevelName(LOGGING_LEVEL)}")
+
+
 def build_app() -> Flask:
+    _configure_logger()
     _app = Flask(__name__)
     CORS(_app)
     register_error_handlers(_app)
-    APP_LOGGER.setLevel(LOGGING_LEVEL)
     return _app
 
 
-def endpoint(url):
-    return f"/api/v1{url}"
+def endpoint(suffix):
+    return f"/api/v1{suffix}"
 
 
-def optimization_endpoint(url):
-    return endpoint(f"/optimization{url}")
+def optimization_endpoint(suffix):
+    return endpoint(f"/optimization{suffix}")
 
 
 def rendering_endpoint(suffix):
-    return f"/api/v1/rendering/{suffix}"
+    return endpoint(f"rendering{suffix}")
 
 
 def register_health_endpoint(_app: Flask):
@@ -100,7 +110,7 @@ def register_download_endpoint(_app: Flask):
 
 
 def register_render_from_object_endpoint(_app: Flask, rendering_service: RenderingService):
-    @_app.route(rendering_endpoint("render-bike-object"), methods=["POST"])
+    @_app.route(rendering_endpoint("/render-bike-object"), methods=["POST"])
     def render_bike_object():
         response = make_response(rendering_service.render_object(request.json["bike"],
                                                                  request.json["seedImageId"]))
