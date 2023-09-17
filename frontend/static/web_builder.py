@@ -18,10 +18,27 @@ def from_relative_path(relative_path):
     return absolute_path
 
 
+def template_path(template_name):
+    return from_relative_path(f"html-building-blocks/{template_name}")
+
+
+def build_template(template_name, **kwargs):
+    with open(template_path(template_name)) as file:
+        return jinja2.Environment().from_string(file.read()).render(**kwargs)
+
+
+def build_seed_bike_selection(id_suffix):
+    return build_template("seed-bike-selection.html", id_suffix=id_suffix)
+
+
 if __name__ == '__main__':
-    os.makedirs(from_relative_path("web-target"))
-    with open(from_relative_path("html-building-blocks/decode-template.html")) as file:
-        template = jinja2.Environment().from_string(file.read())
-    with open(from_relative_path("web-target/decode.html"), "w") as file:
-        file.write(template.render(bootstrap_css_link_element=BOOT_STRAP_CSS_LINK,
-                                   bootstrap_script_element=BOOT_STRAP_SCRIPT_ELEMENT))
+    os.makedirs(from_relative_path("web-target"), exist_ok=True)
+    with open(from_relative_path("html-building-blocks/decode-template.html")) as _file:
+        template = jinja2.Environment().from_string(_file.read())
+    with open(from_relative_path("web-target/decode.html"), "w") as _file:
+        _file.write(template.render(bootstrap_css_link_element=BOOT_STRAP_CSS_LINK,
+                                    bootstrap_script_element=BOOT_STRAP_SCRIPT_ELEMENT,
+                                    seed_bike_selection_upload=build_seed_bike_selection(id_suffix="upload-rider"),
+                                    seed_bike_selection_specify_dimensions=build_seed_bike_selection(
+                                        id_suffix="specify-rider-dimensions"),
+                                    seed_bike_selection_seeds=build_seed_bike_selection(id_suffix="specify")))
