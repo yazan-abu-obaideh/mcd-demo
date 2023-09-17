@@ -12,10 +12,16 @@ BOOT_STRAP_SCRIPT_ELEMENT = """    <script
     ></script>
 """
 
+
+def from_relative_path(relative_path):
+    absolute_path = os.path.join(os.path.dirname(__file__), relative_path)
+    return absolute_path
+
+
 if __name__ == '__main__':
-    with open(os.path.join(os.path.dirname(__file__), "html-building-blocks/decode-template.html")) as file:
-        template_string = file.read()
-        template = jinja2.Environment().from_string(template_string)
-    with open(os.path.join(os.path.dirname(__file__), "target/decode.html"), "w") as file:
+    os.makedirs(from_relative_path("web-target"))
+    with open(from_relative_path("html-building-blocks/decode-template.html")) as file:
+        template = jinja2.Environment().from_string(file.read())
+    with open(from_relative_path("web-target/decode.html"), "w") as file:
         file.write(template.render(bootstrap_css_link_element=BOOT_STRAP_CSS_LINK,
                                    bootstrap_script_element=BOOT_STRAP_SCRIPT_ELEMENT))
