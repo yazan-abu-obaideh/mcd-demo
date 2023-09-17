@@ -13,4 +13,5 @@ nginx/secrets/
 **/*.log
 /build/
 **/web-target/
+**/dev-target/
 **/.tmp/

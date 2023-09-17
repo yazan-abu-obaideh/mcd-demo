@@ -31,15 +31,26 @@ def build_seed_bike_selection(id_suffix):
     return build_template("seed-bike-selection.html", id_suffix=id_suffix)
 
 
-if __name__ == '__main__':
+def build_web_target():
     os.makedirs(from_relative_path("web-target"), exist_ok=True)
-    with open(from_relative_path("web-target/decode.html"), "w") as _file:
-        _file.write(build_template("decode-template.html",
-                                   bootstrap_css_link_element=BOOT_STRAP_CSS_LINK,
-                                   bootstrap_script_element=BOOT_STRAP_SCRIPT_ELEMENT,
-                                   seed_bike_selection_upload=build_seed_bike_selection(id_suffix="upload-rider"),
-                                   seed_bike_selection_specify_dimensions=build_seed_bike_selection(
-                                       id_suffix="specify-rider-dimensions"),
-                                   seed_bike_selection_seeds=build_seed_bike_selection(id_suffix="specify")))
-    with open(from_relative_path("web-target/read-more.html"), "w") as _file:
-        _file.write(build_template("read-more.html"))
+    with open(from_relative_path("web-target/decode.html"), "w") as file:
+        file.write(
+            build_template(
+                "decode-template.html",
+                bootstrap_css_link_element=BOOT_STRAP_CSS_LINK,
+                bootstrap_script_element=BOOT_STRAP_SCRIPT_ELEMENT,
+                seed_bike_selection_upload=build_seed_bike_selection(id_suffix="upload-rider"),
+                seed_bike_selection_specify_dimensions=build_seed_bike_selection(
+                    id_suffix="specify-rider-dimensions"),
+                seed_bike_selection_seeds=build_seed_bike_selection(id_suffix="specify")))
+    with open(from_relative_path("web-target/read-more.html"), "w") as file:
+        file.write(build_template("read-more.html"))
+
+
+def build_gui_target():
+    pass
+
+
+if __name__ == '__main__':
+    build_web_target()
+    build_gui_target()
