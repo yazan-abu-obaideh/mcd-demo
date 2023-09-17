@@ -32,8 +32,9 @@ def build_seed_bike_selection(id_suffix):
 
 
 def build_web_target():
-    os.makedirs(from_relative_path("web-target"), exist_ok=True)
-    with open(from_relative_path("web-target/decode.html"), "w") as file:
+    target_dir = "web-target"
+    os.makedirs(from_relative_path(f"{target_dir}"), exist_ok=True)
+    with open(from_relative_path(f"{target_dir}/decode.html"), "w") as file:
         file.write(
             build_template(
                 "decode-template.html",
@@ -43,7 +44,7 @@ def build_web_target():
                 seed_bike_selection_specify_dimensions=build_seed_bike_selection(
                     id_suffix="specify-rider-dimensions"),
                 seed_bike_selection_seeds=build_seed_bike_selection(id_suffix="specify")))
-    with open(from_relative_path("web-target/read-more.html"), "w") as file:
+    with open(from_relative_path(f"{target_dir}/read-more.html"), "w") as file:
         file.write(build_template("read-more.html"))
 
 

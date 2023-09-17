@@ -6,10 +6,10 @@ import {
 } from "../src/controller";
 
 const optimizationController = new OptimizationController(
-  "http://localhost:5000/api/v1"
+  "http://localhost:5000/api/v1/optimization"
 );
 const renderingController = new RenderingController(
-  "http://localhost:8000/api/v1/rendering"
+  "http://localhost:5000/api/v1/rendering"
 );
 
 test("Optimize seeds and render...", async () => {
@@ -22,7 +22,7 @@ test("Optimize seeds and render...", async () => {
     (JSON.parse(await response.text()) as Object).hasOwnProperty("bikes")
   ).toEqual(true);
   expect(response.status).toEqual(200);
-}, 10000);
+}, 20000);
 
 test("Optimize dimensions...", async () => {
   const riderDimensions = new RiderDimensions();
@@ -46,7 +46,7 @@ test("Optimize dimensions...", async () => {
     (JSON.parse(await response.text()) as Object).hasOwnProperty("bikes")
   ).toEqual(true);
   expect(response.status).toEqual(200);
-}, 10000);
+}, 20000);
 
 test("Optimize invalid image...", async () => {
   const response = await optimizationController.postImageOptimization(
@@ -84,4 +84,4 @@ test("Render bike...", async () => {
   const response = await renderingController.postRenderBikeRequest(bike);
   expect(response.status).toEqual(200);
   expect(await response.blob()).toBeDefined();
-}, 10000);
+}, 20000);

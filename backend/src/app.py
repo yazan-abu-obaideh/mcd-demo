@@ -50,7 +50,7 @@ def optimization_endpoint(suffix):
 
 
 def rendering_endpoint(suffix):
-    return endpoint(f"rendering{suffix}")
+    return endpoint(f"/rendering{suffix}")
 
 
 def register_health_endpoint(_app: Flask):
