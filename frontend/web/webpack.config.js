@@ -24,8 +24,8 @@ module.exports = {
     minimize: false,
   },
   plugins: [
-    new HtmlWebpackPlugin({
-      template: "./html/decode.html",
-    }),
+//    new HtmlWebpackPlugin({
+//      template: "../static/web-target/decode.html",
+//    }),
   ],
 };

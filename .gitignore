@@ -11,3 +11,6 @@ nginx/secrets/
 **/dist/
 /frontend/gui/src/bin/
 **/*.log
+/build/
+**/web-target/
+**/.tmp/

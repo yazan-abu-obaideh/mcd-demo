@@ -4,7 +4,7 @@ import {
   GeneratedBike,
 } from "frontend-shared/src/controller";
 
-const optimizationApiUrl = "http://localhost:5000/api/v1";
+const optimizationApiUrl = "http://localhost:5000/api/v1/optimization";
 const renderingApiUrl = "http://localhost:8000/api/v1/rendering";
 let bikeStore = {};
 const seedsFormId = "seeds-form-form";

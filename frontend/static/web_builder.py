@@ -41,3 +41,5 @@ if __name__ == '__main__':
                                    seed_bike_selection_specify_dimensions=build_seed_bike_selection(
                                        id_suffix="specify-rider-dimensions"),
                                    seed_bike_selection_seeds=build_seed_bike_selection(id_suffix="specify")))
+    with open(from_relative_path("web-target/read-more.html"), "w") as _file:
+        _file.write(build_template("read-more.html"))
