@@ -33,12 +33,11 @@ def build_seed_bike_selection(id_suffix):
 
 if __name__ == '__main__':
     os.makedirs(from_relative_path("web-target"), exist_ok=True)
-    with open(from_relative_path("html-building-blocks/decode-template.html")) as _file:
-        template = jinja2.Environment().from_string(_file.read())
     with open(from_relative_path("web-target/decode.html"), "w") as _file:
-        _file.write(template.render(bootstrap_css_link_element=BOOT_STRAP_CSS_LINK,
-                                    bootstrap_script_element=BOOT_STRAP_SCRIPT_ELEMENT,
-                                    seed_bike_selection_upload=build_seed_bike_selection(id_suffix="upload-rider"),
-                                    seed_bike_selection_specify_dimensions=build_seed_bike_selection(
-                                        id_suffix="specify-rider-dimensions"),
-                                    seed_bike_selection_seeds=build_seed_bike_selection(id_suffix="specify")))
+        _file.write(build_template("decode-template.html",
+                                   bootstrap_css_link_element=BOOT_STRAP_CSS_LINK,
+                                   bootstrap_script_element=BOOT_STRAP_SCRIPT_ELEMENT,
+                                   seed_bike_selection_upload=build_seed_bike_selection(id_suffix="upload-rider"),
+                                   seed_bike_selection_specify_dimensions=build_seed_bike_selection(
+                                       id_suffix="specify-rider-dimensions"),
+                                   seed_bike_selection_seeds=build_seed_bike_selection(id_suffix="specify")))
