@@ -31,25 +31,43 @@ def build_seed_bike_selection(id_suffix):
     return build_template("seed-bike-selection.html", id_suffix=id_suffix)
 
 
-def build_web_target():
-    target_dir = "web-target"
+def build_target(target_dir,
+                 bootstrap_css_link_element,
+                 bootstrap_script_element,
+                 read_more_href):
     os.makedirs(from_relative_path(f"{target_dir}"), exist_ok=True)
     with open(from_relative_path(f"{target_dir}/decode.html"), "w") as file:
         file.write(
             build_template(
                 "decode-template.html",
-                bootstrap_css_link_element=BOOT_STRAP_CSS_LINK,
-                bootstrap_script_element=BOOT_STRAP_SCRIPT_ELEMENT,
                 seed_bike_selection_upload=build_seed_bike_selection(id_suffix="upload-rider"),
                 seed_bike_selection_specify_dimensions=build_seed_bike_selection(
                     id_suffix="specify-rider-dimensions"),
-                seed_bike_selection_seeds=build_seed_bike_selection(id_suffix="specify")))
+                seed_bike_selection_seeds=build_seed_bike_selection(id_suffix="specify"),
+                bootstrap_css_link_element=bootstrap_css_link_element,
+                bootstrap_script_element=bootstrap_script_element,
+                read_more_href=read_more_href
+            ))
     with open(from_relative_path(f"{target_dir}/read-more.html"), "w") as file:
         file.write(build_template("read-more.html"))
 
 
+def build_web_target():
+    return build_target(
+        "web-target",
+        bootstrap_css_link_element=BOOT_STRAP_CSS_LINK,
+        bootstrap_script_element=BOOT_STRAP_SCRIPT_ELEMENT,
+        read_more_href="/read-more"
+    )
+
+
 def build_gui_target():
-    pass
+    return build_target(
+        "gui-target",
+        bootstrap_css_link_element=BOOT_STRAP_CSS_LINK,
+        bootstrap_script_element=BOOT_STRAP_SCRIPT_ELEMENT,
+        read_more_href="/read-more.html"
+    )
 
 
 if __name__ == '__main__':
