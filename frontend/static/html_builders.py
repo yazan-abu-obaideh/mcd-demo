@@ -34,7 +34,8 @@ def build_seed_bike_selection(id_suffix):
 def build_target(target_dir,
                  bootstrap_css_link_element,
                  bootstrap_script_element,
-                 read_more_href):
+                 read_more_href,
+                 decode_href):
     os.makedirs(from_relative_path(f"{target_dir}"), exist_ok=True)
     with open(from_relative_path(f"{target_dir}/decode.html"), "w") as file:
         file.write(
@@ -49,7 +50,7 @@ def build_target(target_dir,
                 read_more_href=read_more_href
             ))
     with open(from_relative_path(f"{target_dir}/read-more.html"), "w") as file:
-        file.write(build_template("read-more.html"))
+        file.write(build_template("read-more-template.html", decode_href=decode_href))
 
 
 def build_web_target():
@@ -57,7 +58,8 @@ def build_web_target():
         "web-target",
         bootstrap_css_link_element=BOOT_STRAP_CSS_LINK,
         bootstrap_script_element=BOOT_STRAP_SCRIPT_ELEMENT,
-        read_more_href="/read-more"
+        read_more_href="/read-more",
+        decode_href="/"
     )
 
 
@@ -66,7 +68,8 @@ def build_gui_target():
         "gui-target",
         bootstrap_css_link_element=BOOT_STRAP_CSS_LINK,
         bootstrap_script_element=BOOT_STRAP_SCRIPT_ELEMENT,
-        read_more_href="/read-more.html"
+        read_more_href="/gui-target/read-more.html",
+        decode_href="/gui-target/decode.html"
     )
 
 
