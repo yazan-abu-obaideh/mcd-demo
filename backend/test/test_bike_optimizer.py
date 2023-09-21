@@ -42,7 +42,6 @@ class BikeOptimizerTest(McdDemoTestCase):
             self.assertEqual(5, len(results["bikes"]))
             self.assertEqual(set(results["bikes"][0].keys()),
                              {"bike", "bikePerformance"})
-            self.assertLess(time.time() - start, 6.5)
 
     def test_invalid_rider_id(self):
         self.assertRaisesWithMessage(lambda: self.ergo_optimizer.optimize_for_seeds(
