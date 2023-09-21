@@ -21,19 +21,7 @@ from pose_analysis.pose_data import BodyPart
 from pose_analysis.pose_data import Person
 from pose_analysis.pose_data import person_from_keypoints_with_scores
 import numpy as np
-
-# pylint: disable=g-import-not-at-top
-try:
-    # Import TFLite interpreter from tflite_runtime package if it's available.
-    from tflite_runtime.interpreter import Interpreter
-except ImportError:
-    # If not, fallback to use the TFLite interpreter from the full TF package.
-    import tensorflow as tf
-
-    Interpreter = tf.lite.Interpreter
-
-
-# pylint: enable=g-import-not-at-top
+from tflite_runtime.interpreter import Interpreter
 
 
 class Movenet(object):

@@ -1,13 +1,11 @@
-import base64
 import json
-import unittest
 from http import HTTPStatus
 from multiprocessing import Process
 from time import sleep
 
 import requests
 
-from optimization_app import app
+from app import build_full_app
 from test_utils import McdDemoTestCase
 
 
@@ -16,21 +14,25 @@ class AppTest(McdDemoTestCase):
 
     @classmethod
     def setUpClass(cls) -> None:
-        cls.APP_PROCESS = Process(target=app.run)
+        cls.APP_PROCESS = Process(target=lambda: build_full_app().run(port=5000))
         cls.APP_PROCESS.start()
+        cls.await_app()
         cls.handle_timeout()
 
+    @classmethod
+    def await_app(cls):
+        sleep(0.1)
+
     def test_bad_request(self):
-        with open(self.resource_path("dude.jpeg"), "rb") as file:
-            response = requests.post(self.build_end_point("/ergonomics/optimize-seeds"), data=json.dumps({
-                "seedBikeId": "DOES_NOT_EXIST",
-                "riderId": "DOES_NOT_EXIST"
-            }), headers={"Content-Type": "application/json"})
-            self.assertEqual(HTTPStatus.BAD_REQUEST, response.status_code)
-            self.assertEqual("Invalid rider ID [DOES_NOT_EXIST]", response.json()["message"])
+        response = requests.post(self.build_end_point("/optimization/ergonomics/optimize-seeds"), data=json.dumps({
+            "seedBikeId": "DOES_NOT_EXIST",
+            "riderId": "DOES_NOT_EXIST"
+        }), headers={"Content-Type": "application/json"})
+        self.assertEqual(HTTPStatus.BAD_REQUEST, response.status_code)
+        self.assertEqual("Invalid rider ID [DOES_NOT_EXIST]", response.json()["message"])
 
     def test_not_found(self):
-        health_response = requests.get(self.build_end_point("healthy"))
+        health_response = requests.get(self.build_end_point("/healthy"))
         self.assertEqual(HTTPStatus.NOT_FOUND, health_response.status_code)
 
     def test_health(self):

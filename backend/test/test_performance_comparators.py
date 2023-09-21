@@ -41,7 +41,7 @@ class PerformanceComparatorsTest(McdDemoTestCase):
 
     def test_ergonomics_comparator_when_no_difference(self):
         self.assertEqual(
-            "Little change in ergonomics",
+            "Little or undesirable change in ergonomics",
             compare_ergonomic_performance(
                 original={
                     "Back Angle": 25,
@@ -83,10 +83,10 @@ class PerformanceComparatorsTest(McdDemoTestCase):
                              optimized={"Aerodynamic Drag": 50}))
 
     def test_no_change_in_drag(self):
-        self.assertEqual("Little change in aerodynamic drag",
+        self.assertEqual("Little or undesirable change in aerodynamic drag",
                          compare_aerodynamic_performance(original={"Aerodynamic Drag": 50},
                                                          optimized={"Aerodynamic Drag": 100}))
-        self.assertEqual("Little change in aerodynamic drag",
+        self.assertEqual("Little or undesirable change in aerodynamic drag",
                          compare_aerodynamic_performance(
                              original={"Aerodynamic Drag": 50},
                              optimized={"Aerodynamic Drag": 50}
