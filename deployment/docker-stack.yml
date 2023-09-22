@@ -22,7 +22,7 @@ services:
       replicas: 2
       resources:
         limits:
-          memory: 1200M
+          memory: 1500M
       restart_policy:
         condition: on-failure
         delay: 5s
