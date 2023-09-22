@@ -45,6 +45,6 @@ services:
         condition: on-failure
         delay: 5s
     healthcheck:
-      test: curl --fail rendering-app:8080/api/v1/rendering/health || exit 1
+      test: curl --fail rendering-app:8080/api/v1/health || exit 1
       interval: 10s
     image: mcd-demo_rendering
