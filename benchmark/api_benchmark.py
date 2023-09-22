@@ -79,7 +79,7 @@ def post_render_request(base_url: str) -> TimedServerResponse:
 
 
 def post_optimization_request(base_url: str) -> TimedServerResponse:
-    url = f"{base_url}/api/v1/ergonomics/optimize-seeds"
+    url = f"{base_url}/api/v1/optimization/ergonomics/optimize-seeds"
     data = {"riderId": "1", "seedBikeId": "3"}
     return _benchmark_post_request(url, data)
 
