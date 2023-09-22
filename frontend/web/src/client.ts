@@ -4,8 +4,8 @@ import {
   GeneratedBike,
 } from "./controller";
 
-const optimizationApiUrl = "http://localhost:5000/api/v1/optimization";
-const renderingApiUrl = "http://localhost:5000/api/v1/rendering";
+const optimizationApiUrl = "https://mcd-demo.com/api/v1/optimization";
+const renderingApiUrl = "https://mcd-demo.com/api/v1/rendering";
 let bikeStore = {};
 const seedsFormId = "seeds-form-form";
 const uploadRiderImageFormId = "upload-rider-image-form";
