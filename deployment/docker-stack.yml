@@ -21,8 +21,6 @@ services:
     deploy:
       replicas: 2
       resources:
-        reservations:
-          memory: 700M
         limits:
           memory: 1200M
       restart_policy:
