@@ -21,8 +21,10 @@ services:
     deploy:
       replicas: 2
       resources:
+        reservations:
+          memory: 700M
         limits:
-          memory: 1000M
+          memory: 1200M
       restart_policy:
         condition: on-failure
         delay: 5s
@@ -46,7 +48,7 @@ services:
       replicas: 2
       resources:
         limits:
-          memory: 600M
+          memory: 550M
       restart_policy:
         condition: on-failure
         delay: 5s
