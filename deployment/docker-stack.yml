@@ -14,16 +14,16 @@ services:
     entrypoint: sh ./run_optimization_service.sh
     environment:
       - APP_HOSTNAME=optimization-app
-      - APP_WORKERS=5
+      - APP_WORKERS=1
       - APP_ROOT_DIR=backend/src/
       - APP_PORT=8080
       - APP_THREADS=3
       - RENDERER_POOL_SIZE=0
     deploy:
-      replicas: 1
+      replicas: 6
       resources:
         limits:
-          memory: 750M
+          memory: 1500M
       restart_policy:
         condition: on-failure
         delay: 5s
