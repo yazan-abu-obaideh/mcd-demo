@@ -1,5 +1,6 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
   entry: "./src/client.ts",
@@ -24,8 +25,12 @@ module.exports = {
     minimize: false,
   },
   plugins: [
-//    new HtmlWebpackPlugin({
-//      template: "../static/web-target/decode.html",
-//    }),
+    new CopyPlugin({
+      patterns: [
+        {from: "assets", to: "./assets/"},
+        {from: "html", to: "./html/"},
+        {from: "css", to: "./css/"}
+      ]
+    })
   ],
 };

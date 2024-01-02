@@ -4,8 +4,11 @@ import {
   GeneratedBike,
 } from "./controller";
 
-const optimizationApiUrl = "http://localhost:5000/api/v1/optimization";
-const renderingApiUrl = "http://localhost:5000/api/v1/rendering";
+import { apiRoot } from "./config";
+
+
+const optimizationApiUrl = apiRoot.concat("/api/v1/optimization");
+const renderingApiUrl = apiRoot.concat("/api/v1/rendering");
 let bikeStore = {};
 const seedsFormId = "seeds-form-form";
 const uploadRiderImageFormId = "upload-rider-image-form";
