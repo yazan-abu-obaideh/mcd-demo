@@ -22,7 +22,7 @@ jobs:
         with:
           python-version: 3.9
       - name: Prepare virtual display
-        run: apt install xvfb && Xvfb :99 -screen 0 800x600x8 & export DISPLAY=:99
+        run: sudo apt install xvfb -y && Xvfb :99 -screen 0 800x600x8 & export DISPLAY=:99
       - name: Install dependencies
         run: python -m pip install --upgrade pip && pip install -r requirements.txt;
       - name: Install backend
