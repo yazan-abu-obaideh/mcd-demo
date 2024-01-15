@@ -2,7 +2,7 @@ name: Run tests
 
 on:
   push:
-    branches: [ pipeline-test ]
+    branches: [ main ]
   pull_request:
     branches: [ main ]
 
