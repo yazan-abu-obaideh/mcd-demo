@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  test:
+  test-backend:
 
     runs-on: ubuntu-latest
     env:
@@ -31,3 +31,21 @@ jobs:
         run: cd backend && pip install .;
       - name: run tests
         run: python -m unittest discover -s backend/test -t ./backend/test -v;
+
+
+  test-frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - name: "Node set-up"
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.x'
+      - name: Install dependencies
+        run: npm install
+      - name: Build
+        run: npm run build -- --mode=production
+
