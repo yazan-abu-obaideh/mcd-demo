@@ -1,0 +1,104 @@
+.seed-bike-img {
+  height: 200px;
+  padding: 10px;
+  /* border-radius: 75px; */
+  width: auto;
+}
+.flex-cont {
+  display: flex;
+  justify-content: center;
+  padding: 5px;
+}
+
+.intro-paragraph {
+  text-align: justify;
+}
+
+.static-content-paragraph {
+  text-align: justify;
+  font-size: 20px;
+  font-weight: 300;
+  padding-left: 15%;
+  padding-right: 15%;
+}
+
+.inner-static-content-paragraph {
+  text-align: justify;
+  font-size: 18px;
+  font-weight: 300;
+  padding-left: 25%;
+  padding-right: 25%;
+}
+
+/* disable arrows in numeric input */
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.non-nav-body {
+  padding-bottom: 15px;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.seed-bike-div {
+  text-align: center;
+}
+
+.fully-hidden-div {
+  height: 0vh;
+  width: 0vw;
+  visibility: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+.rendered-bike-img {
+  width: 70%;
+  height: auto;
+}
+
+
+.original-bike-img-in-result {
+  width: 70%;
+  height: auto;
+}
+
+.problem-form-tabs-div {
+  border-bottom: 0px !important;
+
+}
+
+.optimized-bike-div {
+  height: 70vh;
+}
+
+.loading-element {
+  width: 3rem;
+  height: 3rem;
+}
+
+.bike-render-inner-element-div {
+  height: 66%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bike-img-div-in-result {
+  width: 40%;
+}
+
+
+.w-40 {
+  width: 40%;
+}
+
+/* ^ disable arrows in numeric input ^ */

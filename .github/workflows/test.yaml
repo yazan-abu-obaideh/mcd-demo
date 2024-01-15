@@ -1,0 +1,51 @@
+name: Run tests
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  test-backend:
+
+    runs-on: ubuntu-latest
+    env:
+      DISPLAY: :99
+
+    steps:
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Prepare virtual display
+        run: Xvfb :99 -screen 0 800x600x8 &
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip && pip install -r requirements.txt;
+      - name: Install backend
+        run: cd backend && pip install .;
+      - name: run tests
+        run: python -m unittest discover -s backend/test -t ./backend/test -v;
+
+
+  test-frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - name: "Node set-up"
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.x'
+      - name: Install dependencies
+        run: npm install
+      - name: Build
+        run: npm run build -- --mode=production
+
