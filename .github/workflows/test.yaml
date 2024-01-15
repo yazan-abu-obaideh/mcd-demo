@@ -22,7 +22,7 @@ jobs:
         with:
           python-version: 3.9
       - name: Prepare virtual display
-        run: Xvfb :99 -screen 0 800x600x8
+        run: Xvfb :99 -screen 0 800x600x8 &
       - name: export display variable
         run: export DISPLAY=:99
       - name: check display variable
