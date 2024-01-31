@@ -3,7 +3,7 @@ import os.path
 import numpy as np
 import pandas as pd
 
-from fit_analysis.demoanalysis import bike_body_calculation
+from mcd_demo.fit_analysis.demoanalysis import bike_body_calculation
 from test_utils import McdDemoTestCase
 
 INFINITY = float("inf")

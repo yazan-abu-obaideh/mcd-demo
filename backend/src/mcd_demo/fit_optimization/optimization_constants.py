@@ -4,7 +4,7 @@ import pandas as pd
 from decode_mcd import ContinuousTarget, DesignTargets
 from pymoo.core.variable import Real, Choice, Variable
 
-from fit_optimization.bike_dataset_builder import build_ergo_performances, get_bikes, build_aero_performances
+from mcd_demo.fit_optimization.bike_dataset_builder import build_ergo_performances, get_bikes, build_aero_performances
 
 
 def build_seed_map():

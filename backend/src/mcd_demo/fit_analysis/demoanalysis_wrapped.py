@@ -1,7 +1,6 @@
 import numpy as np
 
-from fit_analysis.demoanalysis import bike_body_calculation, ergonomics_bike_body_calculation
-from fit_analysis.vectorizedangles import prob_dists
+from mcd_demo.fit_analysis.demoanalysis import bike_body_calculation, ergonomics_bike_body_calculation
 
 INFINITY = float("inf")
 DEFAULT_ARM_ANGLE = 150

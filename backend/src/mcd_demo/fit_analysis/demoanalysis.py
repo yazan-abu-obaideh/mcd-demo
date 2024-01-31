@@ -4,8 +4,8 @@ import pickle
 import numpy as np
 import pandas as pd
 
-from fit_analysis.interfacepoints import interface_points
-from fit_analysis.vectorizedangles import all_angles, validity_mask
+from mcd_demo.fit_analysis.interfacepoints import interface_points
+from mcd_demo.fit_analysis.vectorizedangles import all_angles, validity_mask
 
 # from sklearn.neural_network import MLPRegressor
 
@@ -22,7 +22,7 @@ from fit_analysis.vectorizedangles import all_angles, validity_mask
 
 
 # GLOBAL MODEL
-with open(os.path.join(os.path.dirname(__file__), "../resources/new_formatted_model.pkl"), "rb") as file:
+with open(os.path.join(os.path.dirname(__file__), "../../resources/new_formatted_model.pkl"), "rb") as file:
     global_model = pickle.load(file)[2]
 
 
