@@ -9,11 +9,11 @@ from mcd_demo.app_config.app_parameters import LOGGING_LEVEL
 from mcd_demo.app_config.rendering_parameters import RENDERER_POOL_SIZE
 from cad_services.bikeCad_renderer import RenderingService
 from cad_services.cad_builder import BikeCadFileBuilder
-from controller_advice import register_error_handlers
-from exceptions import UserInputException
+from mcd_demo.controller_advice import register_error_handlers
+from mcd_demo.exceptions import UserInputException
 from mcd_demo.fit_optimization.bike_optimizers import ErgonomicsOptimizer, AerodynamicsOptimizer, BikeOptimizer
 from models.model_scheme_validations import map_base64_image_to_bytes
-from pose_analysis.pose_image_processing import PoserAnalyzer
+from mcd_demo.pose_analysis.pose_image_processing import PoserAnalyzer
 
 POST = "POST"
 CAD_BUILDER = BikeCadFileBuilder()

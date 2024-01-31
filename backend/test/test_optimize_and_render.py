@@ -2,7 +2,7 @@ import random
 
 from cad_services.bikeCad_renderer import RenderingService
 from mcd_demo.fit_optimization.bike_optimizers import ErgonomicsOptimizer
-from pose_analysis.pose_image_processing import PoserAnalyzer
+from mcd_demo.pose_analysis.pose_image_processing import PoserAnalyzer
 from test_utils import McdDemoTestCase
 
 

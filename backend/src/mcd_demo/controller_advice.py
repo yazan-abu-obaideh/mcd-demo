@@ -4,7 +4,7 @@ import werkzeug.exceptions
 from flask import Flask, make_response
 
 from mcd_demo.app_config.app_constants import APP_LOGGER
-from exceptions import UserInputException, InternalError
+from mcd_demo.exceptions import UserInputException, InternalError
 
 MESSAGE = "message"
 

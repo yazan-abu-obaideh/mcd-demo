@@ -1,4 +1,4 @@
-from exceptions import UserInputException
+from mcd_demo.exceptions import UserInputException
 
 
 def validate(condition: bool, exception_message: str):

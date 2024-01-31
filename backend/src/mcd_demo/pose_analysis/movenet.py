@@ -17,9 +17,9 @@ import os
 from typing import Dict, List
 
 import cv2
-from pose_analysis.pose_data import BodyPart
-from pose_analysis.pose_data import Person
-from pose_analysis.pose_data import person_from_keypoints_with_scores
+from mcd_demo.pose_analysis.pose_data import BodyPart
+from mcd_demo.pose_analysis.pose_data import Person
+from mcd_demo.pose_analysis.pose_data import person_from_keypoints_with_scores
 import numpy as np
 from tflite_runtime.interpreter import Interpreter
 

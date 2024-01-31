@@ -9,7 +9,7 @@ from asyncio import subprocess
 
 from mcd_demo.app_config.rendering_parameters import RENDERER_TIMEOUT, RENDERER_TIMEOUT_GRANULARITY
 from cad_services.cad_builder import BikeCadFileBuilder
-from exceptions import InternalError
+from mcd_demo.exceptions import InternalError
 
 TEMP_DIR = "bikes"
 

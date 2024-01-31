@@ -1,6 +1,6 @@
 import attrs
 
-from exceptions import UserInputException
+from mcd_demo.exceptions import UserInputException
 from models.model_scheme_validations import map_request_to_model, map_base64_image_to_bytes
 from test_utils import McdDemoTestCase
 

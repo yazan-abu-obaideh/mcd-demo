@@ -5,7 +5,7 @@ from cad_services.bikeCad_renderer import RenderingService
 from cad_services.bike_xml_handler import BikeXmlHandler
 from cad_services.cad_builder import BikeCadFileBuilder
 from mcd_demo.fit_optimization.optimization_constants import TEMP_SEED_BIKES_MAP
-from pose_analysis.pose_image_processing import PoserAnalyzer
+from mcd_demo.pose_analysis.pose_image_processing import PoserAnalyzer
 
 """This just exists so I can retrace my steps and if necessary redo some of the work fast"""
 

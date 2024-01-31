@@ -2,8 +2,8 @@ import base64
 import binascii
 from typing import get_type_hints, Type
 
-from _validation_utils import validate
-from exceptions import UserInputException
+from mcd_demo._validation_utils import validate
+from mcd_demo.exceptions import UserInputException
 
 
 def map_base64_image_to_bytes(base64str: str):
