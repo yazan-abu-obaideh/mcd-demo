@@ -7,7 +7,7 @@ import threading
 import uuid
 from asyncio import subprocess
 
-from app_config.rendering_parameters import RENDERER_TIMEOUT, RENDERER_TIMEOUT_GRANULARITY
+from mcd_demo.app_config.rendering_parameters import RENDERER_TIMEOUT, RENDERER_TIMEOUT_GRANULARITY
 from cad_services.cad_builder import BikeCadFileBuilder
 from exceptions import InternalError
 

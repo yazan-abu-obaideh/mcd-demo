@@ -3,7 +3,7 @@ from http import HTTPStatus
 import werkzeug.exceptions
 from flask import Flask, make_response
 
-from app_config.app_constants import APP_LOGGER
+from mcd_demo.app_config.app_constants import APP_LOGGER
 from exceptions import UserInputException, InternalError
 
 MESSAGE = "message"

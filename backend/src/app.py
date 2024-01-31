@@ -4,9 +4,9 @@ from flask import Flask, make_response, request
 from flask.views import View
 from flask_cors import CORS
 
-from app_config.app_constants import APP_LOGGER
-from app_config.app_parameters import LOGGING_LEVEL
-from app_config.rendering_parameters import RENDERER_POOL_SIZE
+from mcd_demo.app_config.app_constants import APP_LOGGER
+from mcd_demo.app_config.app_parameters import LOGGING_LEVEL
+from mcd_demo.app_config.rendering_parameters import RENDERER_POOL_SIZE
 from cad_services.bikeCad_renderer import RenderingService
 from cad_services.cad_builder import BikeCadFileBuilder
 from controller_advice import register_error_handlers

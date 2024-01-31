@@ -1,6 +1,6 @@
 import os
 
-from app_config.app_constants import APP_LOGGER
+from mcd_demo.app_config.app_constants import APP_LOGGER
 
 
 def get_config(variable_name, default_value):

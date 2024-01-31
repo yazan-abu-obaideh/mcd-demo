@@ -1,6 +1,6 @@
 from typing import Optional
 
-from app_config.app_constants import APP_LOGGER
+from mcd_demo.app_config.app_constants import APP_LOGGER
 from fit_optimization.optimization_constants import BACK_TARGET, KNEE_TARGET, ARMPIT_WRIST_TARGET
 
 IDEAL_BACK_ANGLE = (BACK_TARGET.upper_bound - BACK_TARGET.lower_bound) / 2
