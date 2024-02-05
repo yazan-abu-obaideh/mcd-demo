@@ -1,6 +1,6 @@
 import os
 
-from cad_services.bike_xml_handler import BikeXmlHandler
+from mcd_demo.cad_services.bike_xml_handler import BikeXmlHandler
 from mcd_demo.exceptions import UserInputException
 
 OPTIMIZED_TO_CAD = {

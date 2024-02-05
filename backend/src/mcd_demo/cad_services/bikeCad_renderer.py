@@ -8,10 +8,11 @@ import uuid
 from asyncio import subprocess
 
 from mcd_demo.app_config.rendering_parameters import RENDERER_TIMEOUT, RENDERER_TIMEOUT_GRANULARITY
-from cad_services.cad_builder import BikeCadFileBuilder
+from mcd_demo.cad_services.cad_builder import BikeCadFileBuilder
 from mcd_demo.exceptions import InternalError
 
 TEMP_DIR = "bikes"
+BIKE_CAD_PATH = os.path.join(os.path.dirname(__file__), '..', 'resources', 'ConsoleBikeCAD.jar')
 
 LOGGER_NAME = "BikeCadLogger"
 
@@ -91,7 +92,7 @@ class BikeCad:
         self._run("pnglist<>" + "<>".join(files) + "\n")
 
     async def _init_instance(self):
-        command = f"java -Djava.awt.headless=false -jar  {os.path.dirname(__file__)}/console_BikeCAD_final.jar"
+        command = f"java -Djava.awt.headless=false -jar  {BIKE_CAD_PATH}"
         process = await asyncio.create_subprocess_shell(bytes(command, 'utf-8'),
                                                         stdin=subprocess.PIPE,
                                                         stdout=subprocess.PIPE,

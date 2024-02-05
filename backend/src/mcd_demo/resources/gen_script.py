@@ -1,9 +1,9 @@
 import os
 import random
 
-from cad_services.bikeCad_renderer import RenderingService
-from cad_services.bike_xml_handler import BikeXmlHandler
-from cad_services.cad_builder import BikeCadFileBuilder
+from mcd_demo.cad_services.bikeCad_renderer import RenderingService
+from mcd_demo.cad_services.bike_xml_handler import BikeXmlHandler
+from mcd_demo.cad_services.cad_builder import BikeCadFileBuilder
 from mcd_demo.fit_optimization.optimization_constants import TEMP_SEED_BIKES_MAP
 from mcd_demo.pose_analysis.pose_image_processing import PoserAnalyzer
 
