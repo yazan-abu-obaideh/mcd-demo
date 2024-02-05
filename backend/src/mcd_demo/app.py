@@ -12,7 +12,7 @@ from mcd_demo.cad_services.cad_builder import BikeCadFileBuilder
 from mcd_demo.controller_advice import register_error_handlers
 from mcd_demo.exceptions import UserInputException
 from mcd_demo.fit_optimization.bike_optimizers import ErgonomicsOptimizer, AerodynamicsOptimizer, BikeOptimizer
-from models.model_scheme_validations import map_base64_image_to_bytes
+from mcd_demo.models.model_scheme_validations import map_base64_image_to_bytes
 from mcd_demo.pose_analysis.pose_image_processing import PoserAnalyzer
 
 POST = "POST"
