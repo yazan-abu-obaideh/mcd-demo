@@ -3,7 +3,7 @@ import os.path
 import numpy as np
 import pandas as pd
 
-from fit_analysis.demoanalysis import bike_body_calculation
+from mcd_demo.fit_analysis.demoanalysis import bike_body_calculation
 from test_utils import McdDemoTestCase
 
 INFINITY = float("inf")
@@ -15,7 +15,7 @@ class DemoAnalysisTest(McdDemoTestCase):
 
     def test_analyze_dataset(self):
         data = pd.read_csv(os.path.join(os.path.dirname(__file__),
-                                        "../src/resources/bike_vector_df_with_id.csv")).iloc[:, 2:]
+                                        "../src/mcd_demo/resources/bike_vector_df_with_id.csv")).iloc[:, 2:]
         bike_angles = bike_body_calculation(data.values, self.get_body())
         self.assertEqual(len(data), len(bike_angles))
         self.assertLess(pd.Series.sum(bike_angles.isna().any(axis=1)), 65)

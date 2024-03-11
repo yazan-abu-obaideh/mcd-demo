@@ -1,7 +1,7 @@
 import os
 
-from cad_services.bike_xml_handler import BikeXmlHandler
-from exceptions import UserInputException
+from mcd_demo.cad_services.bike_xml_handler import BikeXmlHandler
+from mcd_demo.exceptions import UserInputException
 
 OPTIMIZED_TO_CAD = {
     "ST Angle": "Seat angle",

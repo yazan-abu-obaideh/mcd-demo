@@ -4,8 +4,8 @@ import pickle
 import numpy as np
 import pandas as pd
 
-from fit_analysis.interfacepoints import interface_points
-from fit_analysis.vectorizedangles import all_angles, validity_mask
+from mcd_demo.fit_analysis.interfacepoints import interface_points
+from mcd_demo.fit_analysis.vectorizedangles import all_angles, validity_mask
 
 # from sklearn.neural_network import MLPRegressor
 

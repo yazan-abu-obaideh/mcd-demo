@@ -4,14 +4,14 @@ from typing import Callable
 
 from decode_mcd import DataPackage, MultiObjectiveProblem, CounterfactualsGenerator
 
-from _validation_utils import validate
-from app_config.optimization_parameters import OPTIMIZER_GENERATIONS, OPTIMIZER_POPULATION
-from exceptions import UserInputException
-from fit_analysis.demoanalysis_wrapped import calculate_angles, to_body_vector, calculate_drag
-from fit_optimization.const_maps import RIDERS_MAP
-from fit_optimization.optimization_constants import *
-from fit_optimization.performance_comparators import compare_ergonomic_performance, compare_aerodynamic_performance
-from pose_analysis.pose_image_processing import PoserAnalyzer
+from mcd_demo._validation_utils import validate
+from mcd_demo.app_config.optimization_parameters import OPTIMIZER_GENERATIONS, OPTIMIZER_POPULATION
+from mcd_demo.exceptions import UserInputException
+from mcd_demo.fit_analysis.demoanalysis_wrapped import calculate_angles, to_body_vector, calculate_drag
+from mcd_demo.fit_optimization.const_maps import RIDERS_MAP
+from mcd_demo.fit_optimization.optimization_constants import *
+from mcd_demo.fit_optimization.performance_comparators import compare_ergonomic_performance, compare_aerodynamic_performance
+from mcd_demo.pose_analysis.pose_image_processing import PoserAnalyzer
 
 
 class LoggingGenerator(CounterfactualsGenerator):

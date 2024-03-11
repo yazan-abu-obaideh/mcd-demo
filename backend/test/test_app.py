@@ -5,7 +5,7 @@ from time import sleep
 
 import requests
 
-from app import build_full_app
+from mcd_demo.app import build_full_app
 from test_utils import McdDemoTestCase
 
 

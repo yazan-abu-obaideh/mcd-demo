@@ -1,4 +1,4 @@
-from app import build_full_app
+from mcd_demo.app import build_full_app
 
 app = build_full_app()
 

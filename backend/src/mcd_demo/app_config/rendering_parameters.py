@@ -1,4 +1,4 @@
-from app_config._config_utils import get_config
+from mcd_demo.app_config._config_utils import get_config
 
 RENDERER_POOL_SIZE = int(get_config("RENDERER_POOL_SIZE", 1))
 RENDERER_TIMEOUT = int(get_config("RENDERER_TIMEOUT", 25))

@@ -3,9 +3,9 @@ import os.path
 import cv2
 import numpy as np
 
-import pose_analysis.utils as utils
-from exceptions import UserInputException
-from pose_analysis.movenet import Movenet
+import mcd_demo.pose_analysis.utils as utils
+from mcd_demo.exceptions import UserInputException
+from mcd_demo.pose_analysis.movenet import Movenet
 
 _movenet = Movenet(os.path.join(os.path.dirname(__file__),
                                 "../resources/movenet_thunder.tflite"))

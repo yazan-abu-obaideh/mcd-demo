@@ -3,7 +3,7 @@ import os.path
 import numpy as np
 import pandas as pd
 
-from fit_analysis.demoanalysis_wrapped import calculate_angles, calculate_drag
+from mcd_demo.fit_analysis.demoanalysis_wrapped import calculate_angles, calculate_drag
 
 BODY_DIMENSIONS = {'height': 75, 'sh_height': 61.09855828510818, 'hip_to_ankle': 31.167514055725047,
                    'hip_to_knee': 15.196207871637029, 'shoulder_to_wrist': 13.538605228960089,

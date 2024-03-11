@@ -1,7 +1,7 @@
 import os.path
 from unittest import TestCase
 
-from exceptions import UserInputException
+from mcd_demo.exceptions import UserInputException
 
 
 class McdDemoTestCase(TestCase):
