@@ -457,11 +457,18 @@ function generateRenderButton(bikeId: string): HTMLElement {
   );
 }
 
-function showForm(formId: string) {
+function showForm(formId: string,  hasSelectSeedBikeDiv: boolean) {
   problemFormElements.showElement(formId);
+  fillInSelectSeedBikePlaceholder(formId);
+}
+
+function fillInSelectSeedBikePlaceholder(formId: string) {
   const selectSeedBikeDiv = document.getElementById(formId.concat(selectSeedBikePlaceholderSuffix));
-  if (selectSeedBikeDiv.innerHTML.trim() === "") {
-    selectSeedBikeDiv.innerHTML = getSeedBikeSelectionHtml(formId);
+  if (selectSeedBikeDiv !== null) {
+    const notAlreadyCreated = selectSeedBikeDiv.innerHTML.trim() === "";
+    if (notAlreadyCreated) {
+      selectSeedBikeDiv.innerHTML = getSeedBikeSelectionHtml(formId);
+    }
   }
 }
 
