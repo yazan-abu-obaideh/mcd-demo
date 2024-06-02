@@ -134,9 +134,21 @@
               </label>
             </div>
           </div>
+          <div class="p-3">
+            <div class="row flex-cont text-center justify-content-center">
+                <button
+                  class="btn btn-outline-danger btn-lg w-40"
+                  type="button"
+                  id="generate-from-text-form-submit-button"
+                  onclick="submitTextPrompt()"
+                >
+                  Generate!
+                </button>
+            </div>
+          </div>
         </form>
-        <form id="seeds-form-form">
-          <div id="person-image-container" class="m-3" style="display: none;">
+        <form id="seeds-form-form" style="display: none;">
+          <div id="person-image-container" class="m-3">
             <h3>Select Rider</h3>
             <div class="row p-5">
               <div class="col seed-bike-div">
