@@ -5,11 +5,16 @@ import {
 } from "./controller";
 
 import { apiRoot } from "./config";
+import { getSeedBikeSelectionHtml } from "./bike_selection_form";
+import { getElementById } from "./html_utils";
+import {ExclusivelyVisibleElements} from "./exclusively_visible_elements"
 
 
 const optimizationApiUrl = apiRoot.concat("/api/v1/optimization");
 const renderingApiUrl = apiRoot.concat("/api/v1/rendering");
 let bikeStore = {};
+const selectSeedBikePlaceholderSuffix = "-seed-bike-placeholder";
+const generateFromTextPromptId = "generate-from-text-form";
 const seedsFormId = "seeds-form-form";
 const uploadRiderImageFormId = "upload-rider-image-form";
 const specifyDimensionsFormId = "specify-rider-dimensions-form";
@@ -18,23 +23,7 @@ const urlCreator = window.URL || window.webkitURL;
 const optimizationController = new OptimizationController(optimizationApiUrl);
 const renderingController = new RenderingController(renderingApiUrl);
 
-class ExclusivelyVisibleElements {
-  // a class that encapsulates the logic of a bunch of elements where only one can be visible at a time
-  constructor(elementIds: Array<string>) {
-    this.elementIds = elementIds;
-  }
 
-  elementIds: Array<string>;
-  showElement(id: string, elementDisplay = "block") {
-    if (!this.elementIds.includes(id)) {
-      throw Error("Element not found");
-    }
-    this.elementIds.forEach((elementId) => {
-      getElementById(elementId).setAttribute("style", "display: none");
-    });
-    getElementById(id).setAttribute("style", `display: ${elementDisplay}`);
-  }
-}
 
 const resultDivElements = new ExclusivelyVisibleElements([
   "response-received-div",
@@ -44,6 +33,7 @@ const resultDivElements = new ExclusivelyVisibleElements([
 ]);
 
 const problemFormElements = new ExclusivelyVisibleElements([
+  generateFromTextPromptId,
   seedsFormId,
   uploadRiderImageFormId,
   specifyDimensionsFormId,
@@ -469,6 +459,10 @@ function generateRenderButton(bikeId: string): HTMLElement {
 
 function showForm(formId: string) {
   problemFormElements.showElement(formId);
+  const selectSeedBikeDiv = document.getElementById(formId.concat(selectSeedBikePlaceholderSuffix));
+  if (selectSeedBikeDiv.innerHTML.trim() === "") {
+    selectSeedBikeDiv.innerHTML = getSeedBikeSelectionHtml(formId);
+  }
 }
 
 function generateDownloadCadButton(bikeId: string): HTMLElement {
@@ -575,10 +569,6 @@ function handleJsonFailedResponse(responseText: string) {
   getElementById(
     "error-response-div"
   ).innerHTML = `<h3> Operation failed. Server responded with: ${errorResponse["message"]} </h3>`;
-}
-
-function getElementById(elementId: string): HTMLElement {
-  return document.getElementById(elementId)!;
 }
 
 function createBikeLoadingElement(bikeId: string): HTMLDivElement {
