@@ -1,4 +1,5 @@
 import __main__
+import os.path
 
 import dill
 import numpy as np
@@ -7,8 +8,11 @@ import torch
 import torch.nn as nn
 from sklearn.preprocessing import StandardScaler
 
-from mcd_clip.bike_embedding.ordered_columns import ORDERED_COLUMNS
-from mcd_clip.resource_utils import resource_path
+from mcd_demo.bike_embedding.ordered_columns import ORDERED_COLUMNS
+
+
+def resource_path(suffix: str):
+    return os.path.join(os.path.dirname(__file__), "..", "resources", suffix)
 
 
 def _get_pickled_scaler() -> StandardScaler:
