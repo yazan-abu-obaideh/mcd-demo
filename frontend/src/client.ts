@@ -17,6 +17,7 @@ const selectSeedBikePlaceholderSuffix = "-seed-bike-placeholder";
 const generateFromTextPromptId = "generate-from-text-form";
 const seedsFormId = "seeds-form-form";
 const uploadRiderImageFormId = "upload-rider-image-form";
+const textPromptFormId = "generate-from-text-form";
 const specifyDimensionsFormId = "specify-rider-dimensions-form";
 const responseDivId = "server-response-div";
 const urlCreator = window.URL || window.webkitURL;
@@ -155,6 +156,13 @@ function submitCustomRiderForm(optimizationType: string): void {
   );
 }
 
+function submitTextPromptForm(): void {
+  resetBikeStore();
+  submitProblemForm(textPromptFormId, (form: HTMLFormElement) => {
+    submitValidTextPromptForm(form)
+  })
+}
+
 function submitRiderDimensionsForm(optimizationType: string): void {
   resetBikeStore();
   throwIfInvalidType(optimizationType);
@@ -226,6 +234,16 @@ function submitValidSeedsForm(optimizationType: string, form: HTMLFormElement) {
 
 function getNumberFrom(formData: FormData, fieldName: string): number {
   return Number(formData.get(fieldName) as string);
+}
+
+function submitValidTextPromptForm(form: HTMLFormElement) {
+  const formData = new FormData(form);
+  postOptimizationForm(
+    formData,
+    optimizationController.postTextPromptOptimization(
+      formData.get("bike-description") as string
+    )
+  )
 }
 
 function submitValidDimensionsForm(
@@ -640,6 +658,7 @@ function getOriginalImageInResultId(bikeId: string): string {
 export {
   showForm,
   submitSeedsForm,
+  submitTextPromptForm,
   submitCustomRiderForm,
   submitRiderDimensionsForm,
   renderBikeById,

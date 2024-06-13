@@ -59,9 +59,9 @@ def register_health_endpoint(_app: Flask):
         return make_response({"status": "UP"})
 
 
-def register_optimization_endpoints(_app: Flask,
-                                    optimization_type: str,
-                                    _optimizer: BikeOptimizer):
+def register_typed_optimization_endpoints(_app: Flask,
+                                          optimization_type: str,
+                                          _optimizer: BikeOptimizer):
     class OptimizeDimensions(View):
         def dispatch_request(self):
             _request = _get_json(request)
@@ -118,12 +118,23 @@ def register_render_from_object_endpoint(_app: Flask, rendering_service: Renderi
         return response
 
 
-def register_all_optimization_endpoints(_app):
+def register_text_prompt_optimization_endpoint(_app: Flask, _any_bike_optimizer: BikeOptimizer):
+    @_app.route(optimization_endpoint("/text-prompt"), methods=[POST])
+    def optimize_text_prompt():
+        _request = _get_json(request)
+        return make_response(
+            _any_bike_optimizer.optimize_text_prompt(_request["textPrompt"])
+        )
+
+
+def register_all_optimization_endpoints(_app: Flask):
     image_analyzer = PoserAnalyzer()
     ergonomics_optimizer = ErgonomicsOptimizer(image_analyzer)
     aerodynamics_optimizer = AerodynamicsOptimizer(image_analyzer)
-    register_optimization_endpoints(_app, "ergonomics", ergonomics_optimizer)
-    register_optimization_endpoints(_app, "aerodynamics", aerodynamics_optimizer)
+    print("Registering all optimization end points...")
+    register_typed_optimization_endpoints(_app, "ergonomics", ergonomics_optimizer)
+    register_typed_optimization_endpoints(_app, "aerodynamics", aerodynamics_optimizer)
+    register_text_prompt_optimization_endpoint(_app, ergonomics_optimizer)
     register_download_endpoint(_app)
 
 
@@ -142,6 +153,7 @@ def build_full_app() -> Flask:
     app = build_base_app()
     register_all_rendering_endpoints(app)
     register_all_optimization_endpoints(app)
+    APP_LOGGER.warn("Registered all!!")
     return app
 
 

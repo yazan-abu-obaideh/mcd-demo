@@ -10,7 +10,8 @@ from mcd_demo.exceptions import UserInputException
 from mcd_demo.fit_analysis.demoanalysis_wrapped import calculate_angles, to_body_vector, calculate_drag
 from mcd_demo.fit_optimization.const_maps import RIDERS_MAP
 from mcd_demo.fit_optimization.optimization_constants import *
-from mcd_demo.fit_optimization.performance_comparators import compare_ergonomic_performance, compare_aerodynamic_performance
+from mcd_demo.fit_optimization.performance_comparators import compare_ergonomic_performance, \
+    compare_aerodynamic_performance
 from mcd_demo.pose_analysis.pose_image_processing import PoserAnalyzer
 
 
@@ -34,6 +35,28 @@ class LoggingGenerator(CounterfactualsGenerator):
 class BikeOptimizer:
     def __init__(self, image_analysis_service):
         self.image_analysis_service = image_analysis_service
+
+    def optimize_text_prompt(self, text_prompt: str):
+        return {"bikes": [{
+            "bike": {
+                "Crank length": 165.71345389760594,
+                "DT Length": 658.7930141487176,
+                "HT Angle": 68.85389727412779,
+                "HT LX": 42.27049259201229,
+                "HT Length": 116.80374554968037,
+                "Handlebar style": 1,
+                "Headset spacers": 20.063040156415063,
+                "ST Angle": 72.9685740048344,
+                "ST Length": 291.5123690271636,
+                "Saddle height": 426.59492333782987,
+                "Seatpost LENGTH": 224.3102305896304,
+                "Stack": 565.6,
+                "Stem angle": -2.4640376023750505,
+                "Stem length": 109.90679921396946
+            },
+            "bikePerformance": "Significant improvement in ergonomics"
+        }],
+            "logs": ["1", "2", "3"]}
 
     @abstractmethod
     def optimize_for_dimensions(self, seed_bike_id: str, rider_dimensions_inches: dict):

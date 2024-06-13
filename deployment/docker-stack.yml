@@ -20,7 +20,7 @@ services:
       - APP_THREADS=3
       - RENDERER_POOL_SIZE=0
     deploy:
-      replicas: 6
+      replicas: 1
       resources:
         limits:
           memory: 2000M
@@ -44,7 +44,7 @@ services:
       - RENDERER_TIMEOUT_GRANULARITY=1
       - RENDERER_TIMEOUT=15
     deploy:
-      replicas: 6
+      replicas: 1
       resources:
         limits:
           memory: 750M
