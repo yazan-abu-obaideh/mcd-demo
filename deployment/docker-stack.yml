@@ -10,6 +10,7 @@ services:
       - "8000:443"
       - "8080:80"
   frontend:
+    hostname: frontend
     deploy:
       restart_policy:
         condition: any
