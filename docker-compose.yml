@@ -1,9 +1,13 @@
 version: "3.8"
 services:
-  nginx:
+  gateway:
     build:
       context: ./
-      dockerfile: deployment/nginx.dockerfile
+      dockerfile: deployment/gateway.dockerfile
+  frontend:
+    build:
+      context: ./
+      dockerfile: deployment/frontend.dockerfile
   optimization:
     build:
       context: ./

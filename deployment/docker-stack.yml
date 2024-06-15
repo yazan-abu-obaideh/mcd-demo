@@ -1,14 +1,22 @@
 version: "3.8"
 services:
-  nginx:
+  gateway:
     deploy:
       restart_policy:
         condition: any
         delay: 10s
-    image: mcd-demo_nginx
+    image: mcd-demo_gateway
     ports:
       - "8000:443"
       - "8080:80"
+  frontend:
+    deploy:
+      restart_policy:
+        condition: any
+        delay: 10s
+    image: mcd-demo_frontend
+    ports:
+      - "5000:80"
   optimization:
     hostname: optimization-app
     entrypoint: sh ./run_optimization_service.sh
