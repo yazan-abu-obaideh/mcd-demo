@@ -3,16 +3,6 @@ from typing import Callable, List
 import numpy as np
 import pandas as pd
 
-__MULTIPLIER = 1000
-__COMBINED_VALIDATIONS_RAW = [
-    lambda df: df["Saddle height"] < (df["ST Length"] * __MULTIPLIER) + 40,
-    lambda df: df["Saddle height"] > ((df["ST Length"] * __MULTIPLIER) + df["Seatpost LENGTH"] + 30),
-    lambda df: df["BSD rear"] < df["ERD rear"],
-    lambda df: df["BSD front"] < df["ERD front"],
-    lambda df: df["HT LX"] >= df["HT Length"],
-    lambda df: ((df["HT UX"] + df["HT LX"]) >= df['HT Length']),
-]
-
 __CLIPS_VALIDATIONS_RAW = [
     lambda df: df["Saddle height"] < df["Seat tube length"] + 40,
     lambda df: df["Saddle height"] > (df["Seat tube length"] + df["Seatpost LENGTH"] + 30),
@@ -44,4 +34,3 @@ def _build_validations(raw_validations_list: List[Callable]):
 
 
 CLIPS_VALIDATION_FUNCTIONS = _build_validations(__CLIPS_VALIDATIONS_RAW)
-COMBINED_VALIDATION_FUNCTIONS = _build_validations(__COMBINED_VALIDATIONS_RAW)

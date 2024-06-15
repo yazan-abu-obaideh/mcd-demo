@@ -83,9 +83,9 @@ class EmbeddingPredictor:
         result_tensor = prediction_function(tensor).cpu()
         return result_tensor.detach().numpy()
 
-    def _get_ordered(self, x: pd.DataFrame):
+    def _get_ordered(self, x: pd.DataFrame) -> pd.DataFrame:
         return pd.DataFrame(x, columns=ORDERED_COLUMNS)
 
-    def _get_scaled(self, x):
+    def _get_scaled(self, x: pd.DataFrame) -> pd.DataFrame:
         ordered = self._get_ordered(x)
         return pd.DataFrame(_SCALER.transform(ordered), columns=ORDERED_COLUMNS)
