@@ -289,20 +289,20 @@ function postCustomRiderOptimizationForm(
 
 function postOptimizationForm(
   formData: FormData,
-  responsePromise: Promise<Response>
+  responsePromise: Promise<Response>,
 ) {
   responsePromise
     .then((response) => {
-      handleOptimizationResponse(response, formData);
+      handleOptimizationResponse(response, formData.get("seedBike") as string);
     })
     .catch((exception) => {
       showGenericError();
     });
 }
 
-function handleOptimizationResponse(response: Response, formData: FormData) {
+function handleOptimizationResponse(response: Response, seedBikeId: string) {
   if (response.status == 200) {
-    handleSuccessfulOptimizationResponse(response, formData);
+    handleSuccessfulOptimizationResponse(response, seedBikeId);
   } else {
     handleFailedResponse(response);
   }
@@ -310,14 +310,14 @@ function handleOptimizationResponse(response: Response, formData: FormData) {
 
 function handleSuccessfulOptimizationResponse(
   response: Response,
-  formData: FormData
+  seedBikeId: string
 ) {
   response.text().then((responseText) => {
     const responseJson: object = JSON.parse(responseText);
     if (responseJson["bikes"].length == 0) {
       resultDivElements.showElement("no-bikes-found-div");
     } else {
-      showGeneratedBikes(responseJson, formData);
+      showGeneratedBikes(responseJson, seedBikeId);
       renderFirstBike();
     }
   });
@@ -331,10 +331,10 @@ function renderFirstBike() {
   ).click();
 }
 
-function showGeneratedBikes(responseJson: object, formData: FormData) {
+function showGeneratedBikes(responseJson: object, seedBikeId: string) {
   resultDivElements.showElement("response-received-div");
   getElementById("generated-designs-consumer-carousel").innerHTML =
-    persistAndBuildCarouselItems(responseJson["bikes"], formData).innerHTML;
+    persistAndBuildCarouselItems(responseJson["bikes"], seedBikeId).innerHTML;
 }
 
 function setLoading() {
@@ -358,11 +358,11 @@ function arrayBufferToBase64(arrayBuffer: ArrayBuffer) {
 
 function persistAndBuildCarouselItems(
   bikes: Array<object>,
-  formData: FormData
+  seedBikeId: string
 ): HTMLDivElement {
   const bikesHtml = document.createElement("div");
   for (let index = 0; index < bikes.length; index++) {
-    const bikeId = persistBike(bikes[index], formData);
+    const bikeId = persistBike(bikes[index], seedBikeId);
     const bikeItem = bikeToCarouselItem(
       index,
       bikeId,
@@ -538,12 +538,12 @@ function generateUuid(): string {
   );
 }
 
-function persistBike(bike: object, formData: FormData): string {
+function persistBike(bike: object, seedBikeId: string): string {
   const bikeId = generateUuid();
   const generatedBike = new GeneratedBike();
   generatedBike.bikeObject = bike["bike"];
   generatedBike.bikePerformance = bike["bikePerformance"];
-  generatedBike.seedImageId = formData.get("seedBike") as string;
+  generatedBike.seedImageId = seedBikeId;
   bikeStore[bikeId] = generatedBike;
   return bikeId;
 }

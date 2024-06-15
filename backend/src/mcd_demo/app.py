@@ -131,7 +131,6 @@ def register_all_optimization_endpoints(_app: Flask):
     image_analyzer = PoserAnalyzer()
     ergonomics_optimizer = ErgonomicsOptimizer(image_analyzer)
     aerodynamics_optimizer = AerodynamicsOptimizer(image_analyzer)
-    print("Registering all optimization end points...")
     register_typed_optimization_endpoints(_app, "ergonomics", ergonomics_optimizer)
     register_typed_optimization_endpoints(_app, "aerodynamics", aerodynamics_optimizer)
     register_text_prompt_optimization_endpoint(_app, ergonomics_optimizer)
@@ -153,7 +152,6 @@ def build_full_app() -> Flask:
     app = build_base_app()
     register_all_rendering_endpoints(app)
     register_all_optimization_endpoints(app)
-    APP_LOGGER.warn("Registered all!!")
     return app
 
 

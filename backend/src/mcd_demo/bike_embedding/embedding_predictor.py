@@ -9,10 +9,7 @@ import torch.nn as nn
 from sklearn.preprocessing import StandardScaler
 
 from mcd_demo.bike_embedding.ordered_columns import ORDERED_COLUMNS
-
-
-def resource_path(suffix: str):
-    return os.path.join(os.path.dirname(__file__), "..", "resources", suffix)
+from mcd_demo.resource_utils import resource_path
 
 
 def _get_pickled_scaler() -> StandardScaler:
