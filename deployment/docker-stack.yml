@@ -6,6 +6,8 @@ services:
         condition: any
         delay: 10s
     image: mcd-demo_gateway
+    volumes:
+      - ../nginx/secrets:/secrets/
     ports:
       - "8000:443"
       - "8080:80"
