@@ -1,4 +1,7 @@
+import pandas as pd
+
 from mcd_demo.cad_services.bikeCad_renderer import RenderingService
+from mcd_demo.cad_services.parametric_to_image_convertor import ParametricToImageConvertor
 from test_utils import McdDemoTestCase
 
 
@@ -18,3 +21,9 @@ class BikeRendererTest(McdDemoTestCase):
                 "Crank length": 0.75,
                 "Handlebar style": 2}
         RenderingService(renderer_pool_size=1).render_object(bike, "1")
+
+    def test_render_clips(self):
+        convertor = ParametricToImageConvertor()
+        series = pd.Series()
+        series["1"] = 1
+        print(series)
