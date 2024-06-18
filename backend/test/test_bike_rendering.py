@@ -1,5 +1,8 @@
+import os.path
+
 import pandas as pd
 
+from mcd_demo import resource_utils
 from mcd_demo.cad_services.bikeCad_renderer import RenderingService
 from mcd_demo.cad_services.parametric_to_image_convertor import ParametricToImageConvertor
 from test_utils import McdDemoTestCase
@@ -24,6 +27,9 @@ class BikeRendererTest(McdDemoTestCase):
 
     def test_render_clips(self):
         convertor = ParametricToImageConvertor()
-        series = pd.Series()
-        series["1"] = 1
-        print(series)
+
+        data = pd.read_csv(resource_utils.resource_path(os.path.join("clips", "clip_sBIKED_processed.csv")),
+                           index_col=0)
+        rendering_result = convertor.to_image(target_bike=data.iloc[3])
+        with open("image.png", "wb") as file:
+            file.write(rendering_result.image)
