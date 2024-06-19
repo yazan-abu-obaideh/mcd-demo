@@ -10,6 +10,7 @@ import { getElementById } from "./html_utils";
 import {ExclusivelyVisibleElements} from "./exclusively_visible_elements"
 import { readFile } from "./html_utils";
 import { downloadAsTextFile } from "./html_utils";
+import { getDownloadBikeCadBtnId, getBikeImgId, getBikeImagesDivId, getRenderBikeBtnId } from "./bike_element_id";
 
 
 const optimizationApiUrl = apiRoot.concat("/api/v1/optimization");
@@ -525,25 +526,6 @@ function persistBike(bike: object, seedBikeId: string): string {
   generatedBike.seedImageId = seedBikeId;
   bikeStore.set(bikeId, generatedBike);
   return bikeId;
-}
-
-function getBikeImgId(bikeId: string) {
-  // deterministic
-  return `bike-img-${bikeId}`;
-}
-
-function getBikeImagesDivId(bikeId: string) {
-  return `bike-img-div-result-${bikeId}`;
-}
-
-function getRenderBikeBtnId(bikeId: string) {
-  // deterministic
-  return `render-bike-btn-${bikeId}`;
-}
-
-function getDownloadBikeCadBtnId(bikeId: string) {
-  // deterministic
-  return `download-cad-bike-btn-${bikeId}`;
 }
 
 function hideRenderButton(bikeId: string) {
