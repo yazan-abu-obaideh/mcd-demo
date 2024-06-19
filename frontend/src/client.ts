@@ -8,11 +8,17 @@ import { apiRoot } from "./config";
 import { getSeedBikeSelectionHtml } from "./bike_selection_form";
 import { getElementById } from "./html_utils";
 import {ExclusivelyVisibleElements} from "./exclusively_visible_elements"
+import { readFile } from "./html_utils";
+import { downloadAsTextFile } from "./html_utils";
 
 
 const optimizationApiUrl = apiRoot.concat("/api/v1/optimization");
 const renderingApiUrl = apiRoot.concat("/api/v1/rendering");
-let bikeStore = {};
+const optimizationController = new OptimizationController(optimizationApiUrl);
+const renderingController = new RenderingController(renderingApiUrl);
+
+let bikeStore: Map<string, GeneratedBike> = new Map();
+
 const selectSeedBikePlaceholderSuffix = "-seed-bike-placeholder";
 const generateFromTextPromptId = "generate-from-text-form";
 const seedsFormId = "seeds-form-form";
@@ -21,8 +27,6 @@ const textPromptFormId = "generate-from-text-form";
 const specifyDimensionsFormId = "specify-rider-dimensions-form";
 const responseDivId = "server-response-div";
 const urlCreator = window.URL || window.webkitURL;
-const optimizationController = new OptimizationController(optimizationApiUrl);
-const renderingController = new RenderingController(renderingApiUrl);
 
 
 
@@ -40,21 +44,6 @@ const problemFormElements = new ExclusivelyVisibleElements([
   specifyDimensionsFormId,
 ]);
 
-function readFile(
-  inputElementId: string,
-  successHandler: (fileReader: FileReader) => void
-) {
-  const reader = new FileReader();
-  reader.readAsArrayBuffer(getFileById(inputElementId));
-  reader.onloadend = () => {
-    successHandler(reader);
-  };
-}
-
-function getFileById(inputElementId: string): File {
-  return (getElementById(inputElementId) as HTMLInputElement).files![0];
-}
-
 function downloadBikeById(bikeId: string) {
   const downloadButton = getElementById(
     getDownloadBikeCadBtnId(bikeId)
@@ -63,18 +52,18 @@ function downloadBikeById(bikeId: string) {
   downloadButton.innerHTML = "Downloading bike...";
 
   optimizationController
-    .postDownloadBikeCadRequest(bikeStore[bikeId])
+    .postDownloadBikeCadRequest(bikeStore.get(bikeId))
     .then((response) => {
       if (response.status == 200) {
         response.text().then((responseText) => {
-          download(responseText);
+          downloadAsTextFile(responseText, "bike.bcad");
           toPressedDownloadButton(downloadButton, "Downloaded successfully");
         });
       } else {
         toPressedDownloadButton(downloadButton, "Download failed");
       }
     })
-    .catch((error) => {
+    .catch(() => {
       toPressedDownloadButton(downloadButton, "Download failed");
     });
 }
@@ -89,16 +78,6 @@ function toPressedDownloadButton(
     downloadButton.getAttribute("class")!.replace("btn-danger", "btn-dark")
   );
   downloadButton.disabled = true;
-}
-
-function download(text: string) {
-  const anchor = document.createElement("a");
-  anchor.setAttribute("download", "bike.bcad");
-  anchor.setAttribute(
-    "href",
-    "data:application/xml;charset=utf-8," + encodeURIComponent(text)
-  );
-  anchor.click();
 }
 
 function renderBikeById(bikeId: string) {
@@ -180,7 +159,7 @@ function submitSeedsForm(optimizationType: string): void {
 }
 
 function resetBikeStore() {
-  bikeStore = {};
+  bikeStore = new Map();
 }
 
 function submitProblemForm(
@@ -430,7 +409,7 @@ function generateRenderedImgElement(bikeId: string): HTMLDivElement {
 
   const originalImg = document.createElement("img");
   originalImg.src = `../assets/bike${
-    (bikeStore[bikeId] as GeneratedBike).seedImageId
+    bikeStore.get(bikeId).seedImageId
   }.png`;
   originalImg.setAttribute("class", "original-bike-img-in-result");
   originalImg.setAttribute("id", getOriginalImageInResultId(bikeId));
@@ -544,7 +523,7 @@ function persistBike(bike: object, seedBikeId: string): string {
   generatedBike.bikeObject = bike["bike"];
   generatedBike.bikePerformance = bike["bikePerformance"];
   generatedBike.seedImageId = seedBikeId;
-  bikeStore[bikeId] = generatedBike;
+  bikeStore.set(bikeId, generatedBike);
   return bikeId;
 }
 

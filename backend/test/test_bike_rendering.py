@@ -27,7 +27,6 @@ class BikeRendererTest(McdDemoTestCase):
 
     def test_render_clips(self):
         convertor = ParametricToImageConvertor()
-
         data = pd.read_csv(resource_utils.resource_path(os.path.join("clips", "clip_sBIKED_processed.csv")),
                            index_col=0)
         rendering_result = convertor.to_image(target_bike=data.iloc[3])
