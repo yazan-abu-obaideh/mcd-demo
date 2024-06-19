@@ -24,8 +24,6 @@ let bikeStore: Map<string, GeneratedBike> = new Map();
 
 const urlCreator = window.URL || window.webkitURL;
 
-
-
 const resultDivElements = new ExclusivelyVisibleElements([
   RESPONSE_RECEIVED_DIV,
   NO_BIKES_FOUND_DIV,
@@ -198,7 +196,7 @@ function submitValidCustomRiderForm(
 function submitValidSeedsForm(optimizationType: string, form: HTMLFormElement) {
   const formData = new FormData(form);
   postOptimizationForm(
-    formData,
+    getSeedBikeId(formData),
     optimizationController.postSeedsOptimization(
       optimizationType,
       formData.get("seedBike") as string,
@@ -214,7 +212,7 @@ function getNumberFrom(formData: FormData, fieldName: string): number {
 function submitValidTextPromptForm(form: HTMLFormElement) {
   const formData = new FormData(form);
   postOptimizationForm(
-    formData,
+    getSeedBikeId(formData),
     optimizationController.postTextPromptOptimization(
       formData.get("bike-description") as string
     )
@@ -227,7 +225,7 @@ function submitValidDimensionsForm(
 ) {
   const formData = new FormData(form);
   postOptimizationForm(
-    formData,
+    getSeedBikeId(formData),
     optimizationController.postDimensionsOptimization(
       optimizationType,
       formData.get("seedBike") as string,
@@ -252,7 +250,7 @@ function postCustomRiderOptimizationForm(
   base64File: string
 ) {
   postOptimizationForm(
-    formData,
+    getSeedBikeId(formData),
     optimizationController.postImageOptimization(
       optimizationType,
       formData.get("seedBike") as string,
@@ -263,16 +261,20 @@ function postCustomRiderOptimizationForm(
 }
 
 function postOptimizationForm(
-  formData: FormData,
+  seedBikeId: string,
   responsePromise: Promise<Response>,
 ) {
   responsePromise
     .then((response) => {
-      handleOptimizationResponse(response, formData.get("seedBike") as string);
+      handleOptimizationResponse(response, seedBikeId);
     })
     .catch((exception) => {
       showGenericError();
     });
+}
+
+function getSeedBikeId(formData: FormData): string {
+  return formData.get("seedBike") as string;
 }
 
 function handleOptimizationResponse(response: Response, seedBikeId: string) {
