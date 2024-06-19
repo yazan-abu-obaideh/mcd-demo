@@ -84,7 +84,7 @@ function renderBikeById(bikeId: string) {
   hideRenderButton(bikeId);
   setBikeLoading(bikeId, "flex");
   renderingController
-    .postRenderBikeRequest(bikeStore[bikeId])
+    .postRenderBikeRequest(bikeStore.get(bikeId))
     .then((response) => {
       if (response.status == 200) {
         handleSuccessfulRenderResponse(response, bikeId);
@@ -305,7 +305,7 @@ function handleSuccessfulOptimizationResponse(
 function renderFirstBike() {
   (
     getElementById(
-      getRenderBikeBtnId(Object.keys(bikeStore)[0])
+      getRenderBikeBtnId(bikeStore.keys().next().value)
     ) as HTMLButtonElement
   ).click();
 }
