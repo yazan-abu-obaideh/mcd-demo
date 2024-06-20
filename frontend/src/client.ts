@@ -440,7 +440,7 @@ class BikeOptimizationSubmitter {
       bikeId,
       getRenderBikeBtnId,
       "Render bike",
-      this.renderBikeById
+      "submitter.renderBikeById"
     );
   }
   
@@ -464,7 +464,7 @@ class BikeOptimizationSubmitter {
       bikeId,
       getDownloadBikeCadBtnId,
       "Download CAD",
-      this.downloadBikeById
+      "submitter.downloadBikeById"
     );
   }
   
@@ -472,17 +472,14 @@ class BikeOptimizationSubmitter {
     bikeId: string,
     idGenerator: CallableFunction,
     textContent: string,
-    onClickFunction: (bikeId: string) => void
+    onClickFunction: string
   ): HTMLElement {
     const buttonCssClasses = "btn btn-outline-danger btn-lg";
     const button = document.createElement("button");
     button.setAttribute("class", buttonCssClasses);
     button.setAttribute("id", idGenerator(bikeId));
     button.textContent = textContent;
-
-    button.onclick = function () {
-      // this does nothing
-    }
+    button.setAttribute("onclick", `${onClickFunction}("${bikeId}")`)
     return button;
   }
   
@@ -608,6 +605,7 @@ function downloadBikeById(arg1) {
 }
 
 export {
+  submitter,
   showForm,
   submitSeedsForm,
   submitTextPromptForm,
