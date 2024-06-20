@@ -1,4 +1,5 @@
-class RiderDimensions {
+class DimensionsOptimizationRequest {
+  seedBikeId: string;
   height: number;
   sh_height: number;
   hip_to_ankle: number;
@@ -60,8 +61,7 @@ class OptimizationController {
 
   async postDimensionsOptimization(
     optimizationType: string,
-    seedBikeId: string,
-    riderDimensionsInches: RiderDimensions
+    dimensionsRequestInches: DimensionsOptimizationRequest
   ) {
     return await fetch(
       this.optimizationApiUrl.concat(
@@ -71,8 +71,8 @@ class OptimizationController {
         headers: { "Content-Type": "application/json" },
         method: "POST",
         body: JSON.stringify({
-          seedBikeId: seedBikeId,
-          riderDimensionsInches: riderDimensionsInches,
+          seedBikeId: dimensionsRequestInches.seedBikeId,
+          riderDimensionsInches: dimensionsRequestInches,
         }),
       }
     );
@@ -132,7 +132,7 @@ class OptimizationController {
 
 export {
   OptimizationController,
-  RiderDimensions,
+  DimensionsOptimizationRequest,
   GeneratedBike,
   RenderingController,
 };

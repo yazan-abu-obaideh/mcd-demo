@@ -8,3 +8,5 @@ export const RESPONSE_DIV_ID = "server-response-div"; export const RESPONSE_RECE
 export const NO_BIKES_FOUND_DIV = "no-bikes-found-div";
 export const RESPONSE_LOADING_DIV = "response-loading-div";
 export const ERROR_RESPONSE_DIV = "error-response-div";
+export const GENERATED_DESIGNS_CONSUMER_CAROUSEL = "generated-designs-consumer-carousel";export const USER_IMAGE_UPLOAD = "user-img-upload";
+

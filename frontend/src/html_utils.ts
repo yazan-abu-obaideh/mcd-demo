@@ -26,4 +26,9 @@ export function downloadAsTextFile(textContent: string, fileName: string) {
   );
   anchor.click();
 }
+export function createSpaceDiv(): HTMLDivElement {
+  const spaceDiv = document.createElement("div");
+  spaceDiv.setAttribute("style", "height: 5px");
+  return spaceDiv;
+}
 

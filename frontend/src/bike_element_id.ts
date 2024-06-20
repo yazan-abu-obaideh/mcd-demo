@@ -12,3 +12,12 @@ export function getRenderBikeBtnId(bikeId: string) {
 export function getDownloadBikeCadBtnId(bikeId: string) {
   return `download-cad-bike-btn-${bikeId}`;
 }
+export function getOriginalImageInResultId(bikeId: string): string {
+  return `original-img-in-result-${bikeId}`;
+}export function renderingFailedElementId(bikeId: string): string {
+  return `bike-rendering-failed-${bikeId}`;
+}
+export function bikeLoadingId(bikeId: string): string {
+  return `bike-loading-element-${bikeId}`;
+}
+
