@@ -46,527 +46,565 @@ const problemFormElements = new ExclusivelyVisibleElements([
   SPECIFY_DIMENSIONS_FORM_ID,
 ]);
 
-function downloadBikeById(bikeId: string) {
-  const downloadButton = getElementById(
-    getDownloadBikeCadBtnId(bikeId)
-  ) as HTMLButtonElement;
+class BikeOptimizationSubmitter {
 
-  downloadButton.innerHTML = "Downloading bike...";
-
-  optimizationController
-    .postDownloadBikeCadRequest(bikeStore.get(bikeId))
-    .then((response) => {
-      if (response.status == 200) {
-        response.text().then((responseText) => {
-          downloadAsTextFile(responseText, "bike.bcad");
-          toPressedDownloadButton(downloadButton, "Downloaded successfully");
-        });
-      } else {
-        toPressedDownloadButton(downloadButton, "Download failed");
-      }
-    })
-    .catch(() => {
-      toPressedDownloadButton(downloadButton, "Download failed");
-    });
-}
-
-function toPressedDownloadButton(
-  downloadButton: HTMLButtonElement,
-  textContent: string
-) {
-  downloadButton.innerHTML = textContent;
-  downloadButton.setAttribute(
-    "class",
-    downloadButton.getAttribute("class")!.replace("btn-danger", "btn-dark")
-  );
-  downloadButton.disabled = true;
-}
-
-function renderBikeById(bikeId: string) {
-  hideRenderButton(bikeId);
-  setBikeLoading(bikeId, "flex");
-  renderingController
-    .postRenderBikeRequest(bikeStore.get(bikeId))
-    .then((response) => {
-      if (response.status == 200) {
-        handleSuccessfulRenderResponse(response, bikeId);
-      } else {
-        showRenderError(bikeId);
-      }
-    })
-    .catch((error) => {
-      console.log(error);
-      showRenderError(bikeId);
-    })
-    .finally(() => setBikeLoading(bikeId, "none"));
-}
-
-function showRenderError(bikeId: string) {
-  getElementById(renderingFailedElementId(bikeId)).setAttribute(
-    "style",
-    "display: flex"
-  );
-}
-
-function handleSuccessfulRenderResponse(response: Response, bikeId: string) {
-  response.blob().then((responseBlob) => {
-    handleRenderedBikeImage(bikeId, responseBlob);
-  });
-}
-
-function setBikeLoading(bikeId: string, display: string): void {
-  document
-    .getElementById(bikeLoadingId(bikeId))!
-    .setAttribute("style", `display: ${display}`);
-}
-
-function handleRenderedBikeImage(bikeId: string, responseBlob: Blob) {
-  const outputImg = getElementById(getBikeImgId(bikeId)) as HTMLImageElement;
-  outputImg.src = urlCreator.createObjectURL(responseBlob);
-  getElementById(getBikeImagesDivId(bikeId)).setAttribute(
-    "style",
-    "display: flex"
-  );
-}
-
-function submitCustomRiderForm(optimizationType: string): void {
-  resetBikeStore();
-  throwIfInvalidType(optimizationType);
-  submitProblemForm(UPLOAD_RIDER_IMAGE_FORM_ID, (form: HTMLFormElement) =>
-    submitValidCustomRiderForm(optimizationType, form)
-  );
-}
-
-function submitTextPromptForm(): void {
-  resetBikeStore();
-  submitProblemForm(TEXT_PROMPT_FORM_ID, (form: HTMLFormElement) => {
-    submitValidTextPromptForm(form)
-  })
-}
-
-function submitRiderDimensionsForm(optimizationType: string): void {
-  resetBikeStore();
-  throwIfInvalidType(optimizationType);
-  submitProblemForm(SPECIFY_DIMENSIONS_FORM_ID, (form: HTMLFormElement) =>
-    submitValidDimensionsForm(optimizationType, form)
-  );
-}
-
-function submitSeedsForm(optimizationType: string): void {
-  resetBikeStore();
-  throwIfInvalidType(optimizationType);
-  submitProblemForm(SEEDS_FORM_ID, (form: HTMLFormElement) =>
-    submitValidSeedsForm(optimizationType, form)
-  );
-}
-
-function resetBikeStore() {
-  bikeStore = new Map();
-}
-
-function submitProblemForm(
-  formId: string,
-  validSubmissionFunction: CallableFunction
-): void {
-  const form: HTMLFormElement = getElementById(formId) as HTMLFormElement;
-  if (form.checkValidity()) {
-    showResponseDiv();
-    validSubmissionFunction(form);
-  } else {
-    showFormErrors(form);
+  downloadBikeById(bikeId: string) {
+    const downloadButton = getElementById(
+      getDownloadBikeCadBtnId(bikeId)
+    ) as HTMLButtonElement;
+  
+    downloadButton.innerHTML = "Downloading bike...";
+  
+    optimizationController
+      .postDownloadBikeCadRequest(bikeStore.get(bikeId))
+      .then((response) => {
+        if (response.status == 200) {
+          response.text().then((responseText) => {
+            downloadAsTextFile(responseText, "bike.bcad");
+            this.toPressedDownloadButton(downloadButton, "Downloaded successfully");
+          });
+        } else {
+          this.toPressedDownloadButton(downloadButton, "Download failed");
+        }
+      })
+      .catch(() => {
+        this.toPressedDownloadButton(downloadButton, "Download failed");
+      });
   }
-}
-
-function showResponseDiv() {
-  const responseDiv = getElementById(RESPONSE_DIV_ID);
-  setLoading();
-  responseDiv.setAttribute("style", "display: block;");
-  responseDiv.scrollIntoView();
-}
-
-function showFormErrors(form: HTMLFormElement) {
-  form.reportValidity();
-}
-
-function submitValidCustomRiderForm(
-  optimizationType: string,
-  form: HTMLFormElement
-) {
-  readFile(USER_IMAGE_UPLOAD, (reader) => {
-    const base64File: string = arrayBufferToBase64(
-      reader.result as ArrayBuffer
+  
+  toPressedDownloadButton(
+    downloadButton: HTMLButtonElement,
+    textContent: string
+  ) {
+    downloadButton.innerHTML = textContent;
+    downloadButton.setAttribute(
+      "class",
+      downloadButton.getAttribute("class")!.replace("btn-danger", "btn-dark")
     );
-    const formData: FormData = new FormData(form);
-    postCustomRiderOptimizationForm(optimizationType, formData, base64File);
-  });
-}
-
-function submitValidSeedsForm(optimizationType: string, form: HTMLFormElement) {
-  const formData = new FormData(form);
-  postOptimizationForm(
-    getSeedBikeId(formData),
-    optimizationController.postSeedsOptimization(
-      optimizationType,
-      formData.get("seedBike") as string,
-      formData.get("riderImage") as string
-    )
-  );
-}
-
-
-
-function submitValidTextPromptForm(form: HTMLFormElement) {
-  const formData = new FormData(form);
-  postOptimizationForm(
-    getSeedBikeId(formData),
-    optimizationController.postTextPromptOptimization(
-      formData.get("bike-description") as string
-    )
-  )
-}
-
-function submitValidDimensionsForm(
-  optimizationType: string,
-  form: HTMLFormElement
-) {
-  const formData = new FormData(form);
-  postOptimizationForm(
-    getSeedBikeId(formData),
-    optimizationController.postDimensionsOptimization(
-      optimizationType,
-      dimensionsFormToDimensionsRequest(formData)
-    )
-  );
-}
-
-function postCustomRiderOptimizationForm(
-  optimizationType: string,
-  formData: FormData,
-  base64File: string
-) {
-  postOptimizationForm(
-    getSeedBikeId(formData),
-    optimizationController.postImageOptimization(
-      optimizationType,
-      formData.get("seedBike") as string,
-      base64File,
-      Number(formData.get("user-height") as string)
-    )
-  );
-}
-
-function postOptimizationForm(
-  seedBikeId: string,
-  responsePromise: Promise<Response>,
-) {
-  responsePromise
-    .then((response) => {
-      handleOptimizationResponse(response, seedBikeId);
-    })
-    .catch((exception) => {
-      showGenericError();
-    });
-}
-
-function getSeedBikeId(formData: FormData): string {
-  return formData.get("seedBike") as string;
-}
-
-function handleOptimizationResponse(response: Response, seedBikeId: string) {
-  if (response.status == 200) {
-    handleSuccessfulOptimizationResponse(response, seedBikeId);
-  } else {
-    handleFailedResponse(response);
+    downloadButton.disabled = true;
   }
-}
-
-function handleSuccessfulOptimizationResponse(
-  response: Response,
-  seedBikeId: string
-) {
-  response.text().then((responseText) => {
-    const responseJson: object = JSON.parse(responseText);
-    if (responseJson["bikes"].length == 0) {
-      resultDivElements.showElement(NO_BIKES_FOUND_DIV);
+  
+  renderBikeById(bikeId: string) {
+    this.hideRenderButton(bikeId);
+    this.setBikeLoading(bikeId, "flex");
+    renderingController
+      .postRenderBikeRequest(bikeStore.get(bikeId))
+      .then((response) => {
+        if (response.status == 200) {
+          this.handleSuccessfulRenderResponse(response, bikeId);
+        } else {
+          this.showRenderError(bikeId);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        this.showRenderError(bikeId);
+      })
+      .finally(() => this.setBikeLoading(bikeId, "none"));
+  }
+  
+  showRenderError(bikeId: string) {
+    getElementById(renderingFailedElementId(bikeId)).setAttribute(
+      "style",
+      "display: flex"
+    );
+  }
+  
+  handleSuccessfulRenderResponse(response: Response, bikeId: string) {
+    response.blob().then((responseBlob) => {
+      this.handleRenderedBikeImage(bikeId, responseBlob);
+    });
+  }
+  
+  setBikeLoading(bikeId: string, display: string): void {
+    document
+      .getElementById(bikeLoadingId(bikeId))!
+      .setAttribute("style", `display: ${display}`);
+  }
+  
+  handleRenderedBikeImage(bikeId: string, responseBlob: Blob) {
+    const outputImg = getElementById(getBikeImgId(bikeId)) as HTMLImageElement;
+    outputImg.src = urlCreator.createObjectURL(responseBlob);
+    getElementById(getBikeImagesDivId(bikeId)).setAttribute(
+      "style",
+      "display: flex"
+    );
+  }
+  
+  submitCustomRiderForm(optimizationType: string): void {
+    this.resetBikeStore();
+    this.throwIfInvalidType(optimizationType);
+    this.submitProblemForm(UPLOAD_RIDER_IMAGE_FORM_ID, (form: HTMLFormElement) =>
+      this.submitValidCustomRiderForm(optimizationType, form)
+    );
+  }
+  
+  submitTextPromptForm(): void {
+    this.resetBikeStore();
+    this.submitProblemForm(TEXT_PROMPT_FORM_ID, (form: HTMLFormElement) => {
+      this.submitValidTextPromptForm(form)
+    })
+  }
+  
+  submitRiderDimensionsForm(optimizationType: string): void {
+    this.resetBikeStore();
+    this.throwIfInvalidType(optimizationType);
+    this.submitProblemForm(SPECIFY_DIMENSIONS_FORM_ID, (form: HTMLFormElement) =>
+      this.submitValidDimensionsForm(optimizationType, form)
+    );
+  }
+  
+  submitSeedsForm(optimizationType: string): void {
+    this.resetBikeStore();
+    this.throwIfInvalidType(optimizationType);
+    this.submitProblemForm(SEEDS_FORM_ID, (form: HTMLFormElement) =>
+      this.submitValidSeedsForm(optimizationType, form)
+    );
+  }
+  
+  resetBikeStore() {
+    bikeStore = new Map();
+  }
+  
+  submitProblemForm(
+    formId: string,
+    validSubmissionFunction: CallableFunction
+  ): void {
+    const form: HTMLFormElement = getElementById(formId) as HTMLFormElement;
+    if (form.checkValidity()) {
+      this.showResponseDiv();
+      validSubmissionFunction(form);
     } else {
-      showGeneratedBikes(responseJson, seedBikeId);
-      renderFirstBike();
+      this.showFormErrors(form);
     }
-  });
-}
-
-function renderFirstBike() {
-  const firstBikeId = bikeStore.keys().next().value;
-  (
-    getElementById(
-      getRenderBikeBtnId(firstBikeId)
-    ) as HTMLButtonElement
-  ).click();
-}
-
-function showGeneratedBikes(responseJson: object, seedBikeId: string) {
-  resultDivElements.showElement(RESPONSE_RECEIVED_DIV);
-  getElementById(GENERATED_DESIGNS_CONSUMER_CAROUSEL).innerHTML =
-    persistAndBuildCarouselItems(responseJson["bikes"], seedBikeId).innerHTML;
-}
-
-function setLoading() {
-  resultDivElements.showElement(RESPONSE_LOADING_DIV);
-}
-
-
-function arrayBufferToBase64(arrayBuffer: ArrayBuffer) {
-  let binary = "";
-  const bytes = new Uint8Array(arrayBuffer);
-  for (let i = 0; i < bytes.byteLength; i++) {
-    binary += String.fromCharCode(bytes[i]);
   }
-  return btoa(binary);
-}
-
-function persistAndBuildCarouselItems(
-  bikes: Array<object>,
-  seedBikeId: string
-): HTMLDivElement {
-  const bikesHtml = document.createElement("div");
-  for (let index = 0; index < bikes.length; index++) {
-    const bikeId = persistBike(bikes[index], seedBikeId);
-    const bikeItem = bikeToCarouselItem(
-      index,
-      bikeId,
-      bikes[index],
-      bikes.length
+  
+  showResponseDiv() {
+    const responseDiv = getElementById(RESPONSE_DIV_ID);
+    this.setLoading();
+    responseDiv.setAttribute("style", "display: block;");
+    responseDiv.scrollIntoView();
+  }
+  
+  showFormErrors(form: HTMLFormElement) {
+    form.reportValidity();
+  }
+  
+  submitValidCustomRiderForm(
+    optimizationType: string,
+    form: HTMLFormElement
+  ) {
+    readFile(USER_IMAGE_UPLOAD, (reader) => {
+      const base64File: string = this.arrayBufferToBase64(
+        reader.result as ArrayBuffer
+      );
+      const formData: FormData = new FormData(form);
+      this.postCustomRiderOptimizationForm(optimizationType, formData, base64File);
+    });
+  }
+  
+  submitValidSeedsForm(optimizationType: string, form: HTMLFormElement) {
+    const formData = new FormData(form);
+    this.postOptimizationForm(
+      this.getSeedBikeId(formData),
+      optimizationController.postSeedsOptimization(
+        optimizationType,
+        formData.get("seedBike") as string,
+        formData.get("riderImage") as string
+      )
     );
-    activateFirst(index, bikeItem);
-    bikesHtml.appendChild(bikeItem);
   }
-  return bikesHtml;
-}
-
-function activateFirst(index: number, bikeItem: HTMLDivElement) {
-  if (index == 0) {
-    bikeItem.setAttribute("class", bikeItem.getAttribute("class") + " active");
+  
+  
+  
+  submitValidTextPromptForm(form: HTMLFormElement) {
+    const formData = new FormData(form);
+    this.postOptimizationForm(
+      this.getSeedBikeId(formData),
+      optimizationController.postTextPromptOptimization(
+        formData.get("bike-description") as string
+      )
+    )
   }
-}
-
-function bikeToCarouselItem(
-  index: number,
-  bikeId: string,
-  bike: object,
-  totalBikes: number
-) {
-  const optimizedBikeDiv = document.createElement("div");
-  optimizedBikeDiv.setAttribute(
-    "class",
-    "container text-center border rounded carousel-item mb-1 p-5 optimized-bike-div"
-  );
-  optimizedBikeDiv.appendChild(
-    generateBikeDescription(index, bike, totalBikes)
-  );
-  optimizedBikeDiv.appendChild(
-    generatePerformanceElement(bike["bikePerformance"])
-  );
-  optimizedBikeDiv.appendChild(document.createElement("br"));
-  optimizedBikeDiv.appendChild(createBikeLoadingElement(bikeId));
-  optimizedBikeDiv.appendChild(createRenderingFailedElement(bikeId));
-  optimizedBikeDiv.appendChild(generateRenderButton(bikeId));
-  optimizedBikeDiv.appendChild(generateRenderedImgElement(bikeId));
-  optimizedBikeDiv.appendChild(createSpaceDiv());
-  optimizedBikeDiv.appendChild(generateDownloadCadButton(bikeId));
-  return optimizedBikeDiv;
-}
-
-function generateBikeDescription(
-  index: number,
-  bike: object,
-  totalBikes: number
-): HTMLElement {
-  const element = document.createElement("h4");
-  element.textContent = `Generated Bike ${index + 1}/${totalBikes}`;
-  return element;
-}
-
-function generateRenderedImgElement(bikeId: string): HTMLDivElement {
-  const imagesDiv = document.createElement("div");
-  const renderedImgDiv = createResultImgDiv();
-  const originalImgDiv = createResultImgDiv();
-
-  imagesDiv.setAttribute("class", "text-center p-5 row");
-  imagesDiv.setAttribute("id", getBikeImagesDivId(bikeId));
-  imagesDiv.setAttribute("style", "display: none");
-  const renderedImg = document.createElement("img");
-
-  const originalImg = document.createElement("img");
-  originalImg.src = `../assets/bike${bikeStore.get(bikeId).seedImageId
-    }.png`;
-  originalImg.setAttribute("class", "original-bike-img-in-result");
-  originalImg.setAttribute("id", getOriginalImageInResultId(bikeId));
-
-  renderedImg.setAttribute("class", "rendered-bike-img");
-  renderedImg.setAttribute("id", getBikeImgId(bikeId));
-  renderedImg.setAttribute("alt", "rendered bike image");
-
-  renderedImgDiv.appendChild(renderedImg);
-  renderedImgDiv.appendChild(getImageLabel("Generated", getBikeImgId(bikeId)));
-
-  originalImgDiv.appendChild(originalImg);
-  originalImgDiv.appendChild(
-    getImageLabel("Original", getOriginalImageInResultId(bikeId))
-  );
-
-  imagesDiv.appendChild(originalImgDiv);
-  imagesDiv.appendChild(renderedImgDiv);
-  return imagesDiv;
-}
-
-function getImageLabel(textContent: string, htmlFor: string) {
-  const label = document.createElement("label");
-  label.textContent = textContent;
-  label.htmlFor = htmlFor;
-  label.setAttribute("style", "display: block");
-  return label;
-}
-
-function createResultImgDiv() {
-  const renderedImgDiv = document.createElement("div");
-  renderedImgDiv.setAttribute("class", "col bike-img-div-in-result");
-  return renderedImgDiv;
-}
-
-function generateRenderButton(bikeId: string): HTMLElement {
-  return generateBikeActionButton(
-    bikeId,
-    getRenderBikeBtnId,
-    "Render bike",
-    renderBikeById.name
-  );
-}
-
-function showForm(formId: string, hasSelectSeedBikeDiv: boolean) {
-  problemFormElements.showElement(formId);
-  fillInSelectSeedBikePlaceholder(formId);
-}
-
-function fillInSelectSeedBikePlaceholder(formId: string) {
-  const selectSeedBikeDiv = document.getElementById(formId.concat(SELECT_SEED_BIKE_PLACEHOLDER_SUFFIX));
-  if (selectSeedBikeDiv !== null) {
-    const notAlreadyCreated = selectSeedBikeDiv.innerHTML.trim() === "";
-    if (notAlreadyCreated) {
-      selectSeedBikeDiv.innerHTML = getSeedBikeSelectionHtml(formId);
+  
+  submitValidDimensionsForm(
+    optimizationType: string,
+    form: HTMLFormElement
+  ) {
+    const formData = new FormData(form);
+    this.postOptimizationForm(
+      this.getSeedBikeId(formData),
+      optimizationController.postDimensionsOptimization(
+        optimizationType,
+        dimensionsFormToDimensionsRequest(formData)
+      )
+    );
+  }
+  
+  postCustomRiderOptimizationForm(
+    optimizationType: string,
+    formData: FormData,
+    base64File: string
+  ) {
+    this.postOptimizationForm(
+      this.getSeedBikeId(formData),
+      optimizationController.postImageOptimization(
+        optimizationType,
+        formData.get("seedBike") as string,
+        base64File,
+        Number(formData.get("user-height") as string)
+      )
+    );
+  }
+  
+  postOptimizationForm(
+    seedBikeId: string,
+    responsePromise: Promise<Response>,
+  ) {
+    responsePromise
+      .then((response) => {
+        this.handleOptimizationResponse(response, seedBikeId);
+      })
+      .catch((exception) => {
+        this.showGenericError();
+      });
+  }
+  
+  getSeedBikeId(formData: FormData): string {
+    return formData.get("seedBike") as string;
+  }
+  
+  handleOptimizationResponse(response: Response, seedBikeId: string) {
+    if (response.status == 200) {
+      this.handleSuccessfulOptimizationResponse(response, seedBikeId);
+    } else {
+      this.handleFailedResponse(response);
     }
   }
-}
-
-function generateDownloadCadButton(bikeId: string): HTMLElement {
-  return generateBikeActionButton(
-    bikeId,
-    getDownloadBikeCadBtnId,
-    "Download CAD",
-    downloadBikeById.name
-  );
-}
-
-function generateBikeActionButton(
-  bikeId: string,
-  idGenerator: CallableFunction,
-  textContent: string,
-  onClickFunctionName: string
-): HTMLElement {
-  const buttonCssClasses = "btn btn-outline-danger btn-lg";
-  const button = document.createElement("button");
-  button.setAttribute("class", buttonCssClasses);
-  button.setAttribute("id", idGenerator(bikeId));
-  button.setAttribute("onClick", `${onClickFunctionName}("${bikeId}")`);
-  button.textContent = textContent;
-  return button;
-}
-
-function persistBike(bike: object, seedBikeId: string): string {
-  const bikeId = generateUuid();
-  const generatedBike = new GeneratedBike();
-  generatedBike.bikeObject = bike["bike"];
-  generatedBike.bikePerformance = bike["bikePerformance"];
-  generatedBike.seedImageId = seedBikeId;
-  bikeStore.set(bikeId, generatedBike);
-  return bikeId;
-}
-
-function hideRenderButton(bikeId: string) {
-  const buttonElement = getElementById(getRenderBikeBtnId(bikeId));
-  buttonElement?.setAttribute("style", "display: none");
-}
-
-function handleFailedResponse(response: Response) {
-  response.text().then((responseText) => {
-    try {
-      handleJsonFailedResponse(responseText);
-    } catch {
-      showGenericError();
-    }
-  });
-}
-
-function showGenericError() {
-
-  const errorResponseDiv = getElementById(ERROR_RESPONSE_DIV);
-  errorResponseDiv.innerHTML = "";
-
-  resultDivElements.showElement(ERROR_RESPONSE_DIV);
-
-  const errorHeader = document.createElement("h3")
-  errorHeader.textContent = "Something went wrong."
-
-  errorResponseDiv.appendChild(errorHeader);
-}
-
-function handleJsonFailedResponse(responseText: string) {
-  const errorResponse = JSON.parse(responseText);
-  resultDivElements.showElement(ERROR_RESPONSE_DIV);
-  getElementById(
-    ERROR_RESPONSE_DIV
-  ).innerHTML = `<h3> Operation failed. Server responded with: ${errorResponse["message"]} </h3>`;
-}
-
-function createBikeLoadingElement(bikeId: string): HTMLDivElement {
-  const bikeLoadingDiv = document.createElement("div");
-  bikeLoadingDiv.setAttribute("id", bikeLoadingId(bikeId));
-  bikeLoadingDiv.setAttribute(
-    "class",
-    "text-center bike-render-inner-element-div flex-column"
-  );
-  bikeLoadingDiv.setAttribute("style", "display: none;");
-
-  const innerDiv = document.createElement("div");
-  innerDiv.setAttribute("class", "spinner-border loading-element");
-  const labelDiv = document.createElement("div");
-  labelDiv.textContent = "Rendering bike...";
-
-  bikeLoadingDiv.appendChild(innerDiv);
-  bikeLoadingDiv.appendChild(labelDiv);
-  return bikeLoadingDiv;
-}
-
-function createRenderingFailedElement(bikeId: string): HTMLElement {
-  const div = document.createElement("div");
-  div.setAttribute("class", "bike-render-inner-element-div");
-  div.setAttribute("id", renderingFailedElementId(bikeId));
-  div.setAttribute("style", "display: none");
-  div.innerHTML = "<h4> Rendering failed... </h4>";
-  return div;
-}
-
-function generatePerformanceElement(bikePerformance: object): HTMLElement {
-  const div = document.createElement("h5");
-  div.textContent = JSON.stringify(bikePerformance)
-    .replace('"', "")
-    .replace('"', "");
-  return div;
-}
-
-function throwIfInvalidType(optimizationType: string) {
-  if (!["aerodynamics", "ergonomics"].includes(optimizationType)) {
-    throw Error(`Invalid optimization type ${optimizationType}`);
+  
+  handleSuccessfulOptimizationResponse(
+    response: Response,
+    seedBikeId: string
+  ) {
+    response.text().then((responseText) => {
+      const responseJson: object = JSON.parse(responseText);
+      if (responseJson["bikes"].length == 0) {
+        resultDivElements.showElement(NO_BIKES_FOUND_DIV);
+      } else {
+        this.showGeneratedBikes(responseJson, seedBikeId);
+        this.renderFirstBike();
+      }
+    });
   }
+  
+  renderFirstBike() {
+    const firstBikeId = bikeStore.keys().next().value;
+    (
+      getElementById(
+        getRenderBikeBtnId(firstBikeId)
+      ) as HTMLButtonElement
+    ).click();
+  }
+  
+  showGeneratedBikes(responseJson: object, seedBikeId: string) {
+    resultDivElements.showElement(RESPONSE_RECEIVED_DIV);
+    getElementById(GENERATED_DESIGNS_CONSUMER_CAROUSEL).innerHTML =
+      this.persistAndBuildCarouselItems(responseJson["bikes"], seedBikeId).innerHTML;
+  }
+  
+  setLoading() {
+    resultDivElements.showElement(RESPONSE_LOADING_DIV);
+  }
+  
+  
+  arrayBufferToBase64(arrayBuffer: ArrayBuffer) {
+    let binary = "";
+    const bytes = new Uint8Array(arrayBuffer);
+    for (let i = 0; i < bytes.byteLength; i++) {
+      binary += String.fromCharCode(bytes[i]);
+    }
+    return btoa(binary);
+  }
+  
+  persistAndBuildCarouselItems(
+    bikes: Array<object>,
+    seedBikeId: string
+  ): HTMLDivElement {
+    const bikesHtml = document.createElement("div");
+    for (let index = 0; index < bikes.length; index++) {
+      const bikeId = this.persistBike(bikes[index], seedBikeId);
+      const bikeItem = this.bikeToCarouselItem(
+        index,
+        bikeId,
+        bikes[index],
+        bikes.length
+      );
+      this.activateFirst(index, bikeItem);
+      bikesHtml.appendChild(bikeItem);
+    }
+    return bikesHtml;
+  }
+  
+  activateFirst(index: number, bikeItem: HTMLDivElement) {
+    if (index == 0) {
+      bikeItem.setAttribute("class", bikeItem.getAttribute("class") + " active");
+    }
+  }
+  
+  bikeToCarouselItem(
+    index: number,
+    bikeId: string,
+    bike: object,
+    totalBikes: number
+  ) {
+    const optimizedBikeDiv = document.createElement("div");
+    optimizedBikeDiv.setAttribute(
+      "class",
+      "container text-center border rounded carousel-item mb-1 p-5 optimized-bike-div"
+    );
+    optimizedBikeDiv.appendChild(
+      this.generateBikeDescription(index, bike, totalBikes)
+    );
+    optimizedBikeDiv.appendChild(
+      this.generatePerformanceElement(bike["bikePerformance"])
+    );
+    optimizedBikeDiv.appendChild(document.createElement("br"));
+    optimizedBikeDiv.appendChild(this.createBikeLoadingElement(bikeId));
+    optimizedBikeDiv.appendChild(this.createRenderingFailedElement(bikeId));
+    optimizedBikeDiv.appendChild(this.generateRenderButton(bikeId));
+    optimizedBikeDiv.appendChild(this.generateRenderedImgElement(bikeId));
+    optimizedBikeDiv.appendChild(createSpaceDiv());
+    optimizedBikeDiv.appendChild(this.generateDownloadCadButton(bikeId));
+    return optimizedBikeDiv;
+  }
+  
+  generateBikeDescription(
+    index: number,
+    bike: object,
+    totalBikes: number
+  ): HTMLElement {
+    const element = document.createElement("h4");
+    element.textContent = `Generated Bike ${index + 1}/${totalBikes}`;
+    return element;
+  }
+  
+  generateRenderedImgElement(bikeId: string): HTMLDivElement {
+    const imagesDiv = document.createElement("div");
+    const renderedImgDiv = this.createResultImgDiv();
+    const originalImgDiv = this.createResultImgDiv();
+  
+    imagesDiv.setAttribute("class", "text-center p-5 row");
+    imagesDiv.setAttribute("id", getBikeImagesDivId(bikeId));
+    imagesDiv.setAttribute("style", "display: none");
+    const renderedImg = document.createElement("img");
+  
+    const originalImg = document.createElement("img");
+    originalImg.src = `../assets/bike${bikeStore.get(bikeId).seedImageId
+      }.png`;
+    originalImg.setAttribute("class", "original-bike-img-in-result");
+    originalImg.setAttribute("id", getOriginalImageInResultId(bikeId));
+  
+    renderedImg.setAttribute("class", "rendered-bike-img");
+    renderedImg.setAttribute("id", getBikeImgId(bikeId));
+    renderedImg.setAttribute("alt", "rendered bike image");
+  
+    renderedImgDiv.appendChild(renderedImg);
+    renderedImgDiv.appendChild(this.getImageLabel("Generated", getBikeImgId(bikeId)));
+  
+    originalImgDiv.appendChild(originalImg);
+    originalImgDiv.appendChild(
+      this.getImageLabel("Original", getOriginalImageInResultId(bikeId))
+    );
+  
+    imagesDiv.appendChild(originalImgDiv);
+    imagesDiv.appendChild(renderedImgDiv);
+    return imagesDiv;
+  }
+  
+  getImageLabel(textContent: string, htmlFor: string) {
+    const label = document.createElement("label");
+    label.textContent = textContent;
+    label.htmlFor = htmlFor;
+    label.setAttribute("style", "display: block");
+    return label;
+  }
+  
+  createResultImgDiv() {
+    const renderedImgDiv = document.createElement("div");
+    renderedImgDiv.setAttribute("class", "col bike-img-div-in-result");
+    return renderedImgDiv;
+  }
+  
+  generateRenderButton(bikeId: string): HTMLElement {
+    return this.generateBikeActionButton(
+      bikeId,
+      getRenderBikeBtnId,
+      "Render bike",
+      this.renderBikeById
+    );
+  }
+  
+  showForm(formId: string, hasSelectSeedBikeDiv: boolean) {
+    problemFormElements.showElement(formId);
+    this.fillInSelectSeedBikePlaceholder(formId);
+  }
+  
+  fillInSelectSeedBikePlaceholder(formId: string) {
+    const selectSeedBikeDiv = document.getElementById(formId.concat(SELECT_SEED_BIKE_PLACEHOLDER_SUFFIX));
+    if (selectSeedBikeDiv !== null) {
+      const notAlreadyCreated = selectSeedBikeDiv.innerHTML.trim() === "";
+      if (notAlreadyCreated) {
+        selectSeedBikeDiv.innerHTML = getSeedBikeSelectionHtml(formId);
+      }
+    }
+  }
+  
+  generateDownloadCadButton(bikeId: string): HTMLElement {
+    return this.generateBikeActionButton(
+      bikeId,
+      getDownloadBikeCadBtnId,
+      "Download CAD",
+      this.downloadBikeById
+    );
+  }
+  
+  generateBikeActionButton(
+    bikeId: string,
+    idGenerator: CallableFunction,
+    textContent: string,
+    onClickFunction: (bikeId: string) => void
+  ): HTMLElement {
+    const buttonCssClasses = "btn btn-outline-danger btn-lg";
+    const button = document.createElement("button");
+    button.setAttribute("class", buttonCssClasses);
+    button.setAttribute("id", idGenerator(bikeId));
+    button.textContent = textContent;
+
+    button.onclick = function () {
+      // this does nothing
+    }
+    return button;
+  }
+  
+  persistBike(bike: object, seedBikeId: string): string {
+    const bikeId = generateUuid();
+    const generatedBike = new GeneratedBike();
+    generatedBike.bikeObject = bike["bike"];
+    generatedBike.bikePerformance = bike["bikePerformance"];
+    generatedBike.seedImageId = seedBikeId;
+    bikeStore.set(bikeId, generatedBike);
+    return bikeId;
+  }
+  
+  hideRenderButton(bikeId: string) {
+    const buttonElement = getElementById(getRenderBikeBtnId(bikeId));
+    buttonElement?.setAttribute("style", "display: none");
+  }
+  
+  handleFailedResponse(response: Response) {
+    response.text().then((responseText) => {
+      try {
+        this.handleJsonFailedResponse(responseText);
+      } catch {
+        this.showGenericError();
+      }
+    });
+  }
+  
+  showGenericError() {
+  
+    const errorResponseDiv = getElementById(ERROR_RESPONSE_DIV);
+    errorResponseDiv.innerHTML = "";
+  
+    resultDivElements.showElement(ERROR_RESPONSE_DIV);
+  
+    const errorHeader = document.createElement("h3")
+    errorHeader.textContent = "Something went wrong."
+  
+    errorResponseDiv.appendChild(errorHeader);
+  }
+  
+  handleJsonFailedResponse(responseText: string) {
+    const errorResponse = JSON.parse(responseText);
+    resultDivElements.showElement(ERROR_RESPONSE_DIV);
+    getElementById(
+      ERROR_RESPONSE_DIV
+    ).innerHTML = `<h3> Operation failed. Server responded with: ${errorResponse["message"]} </h3>`;
+  }
+  
+  createBikeLoadingElement(bikeId: string): HTMLDivElement {
+    const bikeLoadingDiv = document.createElement("div");
+    bikeLoadingDiv.setAttribute("id", bikeLoadingId(bikeId));
+    bikeLoadingDiv.setAttribute(
+      "class",
+      "text-center bike-render-inner-element-div flex-column"
+    );
+    bikeLoadingDiv.setAttribute("style", "display: none;");
+  
+    const innerDiv = document.createElement("div");
+    innerDiv.setAttribute("class", "spinner-border loading-element");
+    const labelDiv = document.createElement("div");
+    labelDiv.textContent = "Rendering bike...";
+  
+    bikeLoadingDiv.appendChild(innerDiv);
+    bikeLoadingDiv.appendChild(labelDiv);
+    return bikeLoadingDiv;
+  }
+  
+  createRenderingFailedElement(bikeId: string): HTMLElement {
+    const div = document.createElement("div");
+    div.setAttribute("class", "bike-render-inner-element-div");
+    div.setAttribute("id", renderingFailedElementId(bikeId));
+    div.setAttribute("style", "display: none");
+    div.innerHTML = "<h4> Rendering failed... </h4>";
+    return div;
+  }
+  
+  generatePerformanceElement(bikePerformance: object): HTMLElement {
+    const div = document.createElement("h5");
+    div.textContent = JSON.stringify(bikePerformance)
+      .replace('"', "")
+      .replace('"', "");
+    return div;
+  }
+  
+  throwIfInvalidType(optimizationType: string) {
+    if (!["aerodynamics", "ergonomics"].includes(optimizationType)) {
+      throw Error(`Invalid optimization type ${optimizationType}`);
+    }
+  }
+
+}
+
+
+const submitter = new BikeOptimizationSubmitter();
+
+function showForm(arg1, arg2) {
+  submitter.showForm(arg1, arg2);
+}
+
+function submitSeedsForm(arg1) {
+  submitter.submitSeedsForm(arg1);
+}
+
+function submitTextPromptForm() {
+  submitter.submitTextPromptForm();
+}
+
+function submitCustomRiderForm(arg1) {
+  submitter.submitCustomRiderForm(arg1);
+}
+
+function submitRiderDimensionsForm(arg1) {
+  submitter.submitRiderDimensionsForm(arg1);
+}
+
+function renderBikeById(arg1) {
+  submitter.renderBikeById(arg1);
+}
+
+function downloadBikeById(arg1) {
+  submitter.downloadBikeById(arg1);
 }
 
 export {
