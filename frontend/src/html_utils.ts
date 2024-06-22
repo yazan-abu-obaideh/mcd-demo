@@ -31,4 +31,3 @@ export function createSpaceDiv(): HTMLDivElement {
   spaceDiv.setAttribute("style", "height: 5px");
   return spaceDiv;
 }
-

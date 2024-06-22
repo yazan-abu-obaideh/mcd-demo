@@ -14,10 +14,10 @@ export function getDownloadBikeCadBtnId(bikeId: string) {
 }
 export function getOriginalImageInResultId(bikeId: string): string {
   return `original-img-in-result-${bikeId}`;
-}export function renderingFailedElementId(bikeId: string): string {
+}
+export function renderingFailedElementId(bikeId: string): string {
   return `bike-rendering-failed-${bikeId}`;
 }
 export function bikeLoadingId(bikeId: string): string {
   return `bike-loading-element-${bikeId}`;
 }
-

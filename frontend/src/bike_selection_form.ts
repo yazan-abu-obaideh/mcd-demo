@@ -1,5 +1,5 @@
 export function getSeedBikeSelectionHtml(idSuffix: string) {
-    return `<div id="seed-bike-selection-container${idSuffix}" class="m-3">
+  return `<div id="seed-bike-selection-container${idSuffix}" class="m-3">
     <h3>Select Seed Bike</h3>
     <div id="bikes-container${idSuffix}" class="m-3"></div>
     <div id="all-bikes-helper-div${idSuffix}">
@@ -188,5 +188,5 @@ export function getSeedBikeSelectionHtml(idSuffix: string) {
             </div>
         </div>
     </div>
-    </div>`
+    </div>`;
 }

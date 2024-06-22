@@ -43,27 +43,20 @@ class OptimizationController {
     this.optimizationApiUrl = optimizationApiUrl;
   }
 
-  async postTextPromptOptimization(
-    textPrompt: string
-  ): Promise<Response> {
-    return await fetch(
-      this.optimizationApiUrl.concat("/text-prompt"),
-      {
-        headers: { "Content-Type": "application/json" },
-        method: "POST",
-        body: JSON.stringify({
-          textPrompt: textPrompt,
-        }),
-      }
-    );
-
+  async postTextPromptOptimization(textPrompt: string): Promise<Response> {
+    return await fetch(this.optimizationApiUrl.concat("/text-prompt"), {
+      headers: { "Content-Type": "application/json" },
+      method: "POST",
+      body: JSON.stringify({
+        textPrompt: textPrompt,
+      }),
+    });
   }
 
   async postDimensionsOptimization(
     optimizationType: string,
     dimensionsRequestInches: FrontendDimensionsOptimizationRequest
   ) {
-
     const seedId = dimensionsRequestInches.seedBikeId;
     delete dimensionsRequestInches.seedBikeId;
 
