@@ -49,6 +49,8 @@ let bikeStore: Map<string, GeneratedBike> = new Map();
 
 const urlCreator = window.URL || window.webkitURL;
 
+const STANDARD_BIKE_INDEX = "10";
+
 const resultDivElements = new ExclusivelyVisibleElements([
   RESPONSE_RECEIVED_DIV,
   NO_BIKES_FOUND_DIV,
@@ -212,7 +214,7 @@ abstract class GenericBikeOptimizationSubmitter {
   submitValidTextPromptForm(form: HTMLFormElement) {
     const formData = new FormData(form);
     this.postOptimizationForm(
-      "1",
+      STANDARD_BIKE_INDEX,
       optimizationController.postTextPromptOptimization(
         formData.get("bike-description") as string
       ),
