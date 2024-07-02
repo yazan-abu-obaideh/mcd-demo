@@ -66,9 +66,6 @@
     </div>
     <div class="container border problem-form-tabs-div p-3">
       <ul class="nav">
-        <li class="nav-item" onclick="showForm('generate-from-text-form')">
-          <button type="button" class="nav-link">Generate from Text Prompt</button>
-        </li>
         <li class="nav-item" onclick="showForm('seeds-form-form')">
           <button type="button" class="nav-link">Select rider</button>
         </li>
@@ -80,10 +77,13 @@
         <li class="nav-item" onclick="showForm('upload-rider-image-form')">
           <button type="button" class="nav-link">Upload rider image</button>
         </li>
+        <li class="nav-item" onclick="showForm('generate-from-text-form')">
+          <button type="button" class="nav-link">Generate from Text Prompt <span class="text-warning">[BETA]</span> </button>
+        </li>
       </ul>
     </div>
     <div id="generation-forms" class="container border rounded p-3 mb-3">
-      <form id="generate-from-text-form" class="m-3">
+      <form id="generate-from-text-form" class="m-3" style="display: none;">
         <h3>Generate from Text Prompt</h3>
         <div class="row flex-cont">
           <div class="col-6">
@@ -102,7 +102,7 @@
           </div>
         </div>
       </form>
-      <form id="seeds-form-form" style="display: none;">
+      <form id="seeds-form-form" >
         <div id="person-image-container" class="m-3">
           <h3>Select Rider</h3>
           <div class="row p-5">

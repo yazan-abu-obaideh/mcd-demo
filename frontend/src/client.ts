@@ -59,10 +59,10 @@ const resultDivElements = new ExclusivelyVisibleElements([
 ]);
 
 const problemFormElements = new ExclusivelyVisibleElements([
-  GENERATE_FROM_TEXT_PROMPT_ID,
   SEEDS_FORM_ID,
   UPLOAD_RIDER_IMAGE_FORM_ID,
   SPECIFY_DIMENSIONS_FORM_ID,
+  GENERATE_FROM_TEXT_PROMPT_ID,
 ]);
 
 abstract class GenericBikeOptimizationSubmitter {
