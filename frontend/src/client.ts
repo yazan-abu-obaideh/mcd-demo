@@ -124,29 +124,21 @@ abstract class GenericBikeOptimizationSubmitter {
   }
 
   renderBikeById(bikeId: string) {
-    this.hideRenderButton(bikeId);
-    this.setBikeLoading(bikeId, "flex");
-    renderingController
-      .postRenderBikeRequest(bikeStore.get(bikeId))
-      .then((response) => {
-        if (response.status == 200) {
-          this.handleSuccessfulRenderResponse(response, bikeId);
-        } else {
-          this.showRenderError(bikeId);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-        this.showRenderError(bikeId);
-      })
-      .finally(() => this.setBikeLoading(bikeId, "none"));
+    this.renderBike(
+      bikeId,  (bike: GeneratedBike) => renderingController.postRenderBikeRequest(bike)
+    )
   }  
   
   renderClipsBike(bikeId: string) {
+    this.renderBike(
+      bikeId, (bike: GeneratedBike) => renderingController.postRenderClipsBikeRequest(bike)
+    )
+  }
+
+  renderBike(bikeId: string, renderingCall: (bike: GeneratedBike) => Promise<Response>) {
     this.hideRenderButton(bikeId);
     this.setBikeLoading(bikeId, "flex");
-    renderingController
-      .postRenderBikeRequest(bikeStore.get(bikeId))
+    renderingCall(bikeStore.get(bikeId))
       .then((response) => {
         if (response.status == 200) {
           this.handleSuccessfulRenderResponse(response, bikeId);
@@ -220,10 +212,11 @@ abstract class GenericBikeOptimizationSubmitter {
   submitValidTextPromptForm(form: HTMLFormElement) {
     const formData = new FormData(form);
     this.postOptimizationForm(
-      this.getSeedBikeId(formData),
+      "1",
       optimizationController.postTextPromptOptimization(
         formData.get("bike-description") as string
-      )
+      ),
+      "submitter.renderClipsBike"
     );
   }
 

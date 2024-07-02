@@ -1,5 +1,4 @@
 import __main__
-import os.path
 
 import dill
 import numpy as np

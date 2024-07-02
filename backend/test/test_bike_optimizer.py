@@ -10,6 +10,10 @@ class BikeOptimizerTest(McdDemoTestCase):
         self.ergo_optimizer = ErgonomicsOptimizer(PoserAnalyzer())
         self.aero_optimizer = AerodynamicsOptimizer(PoserAnalyzer())
 
+    def test_optimize_from_text_prompt(self):
+        result = self.aero_optimizer.optimize_text_prompt("Cool green bike")
+        print(len(result))
+
     def test_get_performances(self):
         pass
 

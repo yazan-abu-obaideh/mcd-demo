@@ -9,5 +9,5 @@ def get_cosine_similarity(matrix_2d: np.ndarray, reference_1d_array: np.ndarray)
     return dot(matrix_2d, reference_1d_array) / (norm(matrix_2d, axis=1) * norm(reference_1d_array))
 
 
-def get_cosine_distance(matrix_2d: np.ndarray, reference_1d_array: np.ndarray):
+def get_cosine_distance(matrix_2d: np.ndarray, reference_1d_array: np.ndarray) -> np.ndarray:
     return 1 - get_cosine_similarity(matrix_2d, reference_1d_array)
