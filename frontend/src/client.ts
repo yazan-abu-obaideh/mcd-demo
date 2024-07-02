@@ -140,6 +140,25 @@ abstract class GenericBikeOptimizationSubmitter {
         this.showRenderError(bikeId);
       })
       .finally(() => this.setBikeLoading(bikeId, "none"));
+  }  
+  
+  renderClipsBike(bikeId: string) {
+    this.hideRenderButton(bikeId);
+    this.setBikeLoading(bikeId, "flex");
+    renderingController
+      .postRenderBikeRequest(bikeStore.get(bikeId))
+      .then((response) => {
+        if (response.status == 200) {
+          this.handleSuccessfulRenderResponse(response, bikeId);
+        } else {
+          this.showRenderError(bikeId);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        this.showRenderError(bikeId);
+      })
+      .finally(() => this.setBikeLoading(bikeId, "none"));
   }
 
   showRenderError(bikeId: string) {
@@ -224,10 +243,12 @@ abstract class GenericBikeOptimizationSubmitter {
     );
   }
 
-  postOptimizationForm(seedBikeId: string, responsePromise: Promise<Response>) {
+  postOptimizationForm(seedBikeId: string, 
+    responsePromise: Promise<Response>, 
+    renderingFunction = "submitter.renderBikeById") {
     responsePromise
       .then((response) => {
-        this.handleOptimizationResponse(response, seedBikeId);
+        this.handleOptimizationResponse(response, seedBikeId, renderingFunction);
       })
       .catch((exception) => {
         this.showGenericError();
@@ -238,21 +259,21 @@ abstract class GenericBikeOptimizationSubmitter {
     return formData.get("seedBike") as string;
   }
 
-  handleOptimizationResponse(response: Response, seedBikeId: string) {
+  handleOptimizationResponse(response: Response, seedBikeId: string, renderingFunction: string) {
     if (response.status == 200) {
-      this.handleSuccessfulOptimizationResponse(response, seedBikeId);
+      this.handleSuccessfulOptimizationResponse(response, seedBikeId, renderingFunction);
     } else {
       this.handleFailedResponse(response);
     }
   }
 
-  handleSuccessfulOptimizationResponse(response: Response, seedBikeId: string) {
+  handleSuccessfulOptimizationResponse(response: Response, seedBikeId: string, renderingFunction: string) {
     response.text().then((responseText) => {
       const responseJson: object = JSON.parse(responseText);
       if (responseJson["bikes"].length == 0) {
         resultDivElements.showElement(NO_BIKES_FOUND_DIV);
       } else {
-        this.showGeneratedBikes(responseJson, seedBikeId);
+        this.showGeneratedBikes(responseJson, seedBikeId, renderingFunction);
         this.renderFirstBike();
       }
     });
@@ -265,12 +286,13 @@ abstract class GenericBikeOptimizationSubmitter {
     ).click();
   }
 
-  showGeneratedBikes(responseJson: object, seedBikeId: string) {
+  showGeneratedBikes(responseJson: object, seedBikeId: string, renderingFunction: string) {
     resultDivElements.showElement(RESPONSE_RECEIVED_DIV);
     getElementById(GENERATED_DESIGNS_CONSUMER_CAROUSEL).innerHTML =
       this.persistAndBuildCarouselItems(
         responseJson["bikes"],
-        seedBikeId
+        seedBikeId,
+        renderingFunction
       ).innerHTML;
   }
 
@@ -289,7 +311,8 @@ abstract class GenericBikeOptimizationSubmitter {
 
   persistAndBuildCarouselItems(
     bikes: Array<object>,
-    seedBikeId: string
+    seedBikeId: string,
+    renderingFunction: string
   ): HTMLDivElement {
     const bikesHtml = document.createElement("div");
     for (let index = 0; index < bikes.length; index++) {
@@ -298,7 +321,8 @@ abstract class GenericBikeOptimizationSubmitter {
         index,
         bikeId,
         bikes[index],
-        bikes.length
+        bikes.length,
+        renderingFunction
       );
       this.activateFirst(index, bikeItem);
       bikesHtml.appendChild(bikeItem);
@@ -319,7 +343,8 @@ abstract class GenericBikeOptimizationSubmitter {
     index: number,
     bikeId: string,
     bike: object,
-    totalBikes: number
+    totalBikes: number,
+    renderingFunction: string
   ) {
     const optimizedBikeDiv = document.createElement("div");
     optimizedBikeDiv.setAttribute(
@@ -335,7 +360,7 @@ abstract class GenericBikeOptimizationSubmitter {
     optimizedBikeDiv.appendChild(document.createElement("br"));
     optimizedBikeDiv.appendChild(this.createBikeLoadingElement(bikeId));
     optimizedBikeDiv.appendChild(this.createRenderingFailedElement(bikeId));
-    optimizedBikeDiv.appendChild(this.generateRenderButton(bikeId));
+    optimizedBikeDiv.appendChild(this.generateRenderButton(bikeId, renderingFunction));
     optimizedBikeDiv.appendChild(this.generateRenderedImgElement(bikeId));
     optimizedBikeDiv.appendChild(createSpaceDiv());
     optimizedBikeDiv.appendChild(this.generateDownloadCadButton(bikeId));
@@ -400,12 +425,12 @@ abstract class GenericBikeOptimizationSubmitter {
     return renderedImgDiv;
   }
 
-  generateRenderButton(bikeId: string): HTMLElement {
+  generateRenderButton(bikeId: string, renderingFunction: string): HTMLElement {
     return this.generateBikeActionButton(
       bikeId,
       getRenderBikeBtnId,
       "Render bike",
-      "submitter.renderBikeById"
+      renderingFunction
     );
   }
 

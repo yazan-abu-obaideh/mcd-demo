@@ -1,8 +1,8 @@
-import { DimensionsOptimizationRequest } from "./controller";
+import { FrontendDimensionsOptimizationRequest } from "./controller";
 
 export function dimensionsFormToRiderDimensions(
   formData: FormData
-): DimensionsOptimizationRequest {
+): FrontendDimensionsOptimizationRequest {
   return {
     seedBikeId: formData.get("seedBike") as string,
     height: getNumberFrom(formData, "rider-height"),

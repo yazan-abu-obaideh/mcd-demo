@@ -24,6 +24,16 @@ class RenderingController {
     this.renderingApiUrl = renderingApiUrl;
   }
 
+  async postRenderClipsBikeRequest(bike: GeneratedBike): Promise<Response> {
+    return fetch(this.renderingApiUrl.concat("/render-clips-bike"), {
+      headers: { "Content-Type": "application/json" },
+      method: "POST",
+      body: JSON.stringify({
+        bike: bike.bikeObject
+      }),
+    });
+  }
+
   async postRenderBikeRequest(bike: GeneratedBike): Promise<Response> {
     return fetch(this.renderingApiUrl.concat("/render-bike-object"), {
       headers: { "Content-Type": "application/json" },
@@ -129,7 +139,7 @@ class OptimizationController {
 
 export {
   OptimizationController,
-  FrontendDimensionsOptimizationRequest as DimensionsOptimizationRequest,
+  FrontendDimensionsOptimizationRequest,
   GeneratedBike,
   RenderingController,
 };

@@ -2,7 +2,7 @@ import {
   OptimizationController,
   RenderingController,
   GeneratedBike,
-  DimensionsOptimizationRequest,
+  FrontendDimensionsOptimizationRequest,
 } from "../src/controller";
 
 const testTimeoutMilliseconds = 20000;
@@ -33,7 +33,7 @@ clientTest("Optimize seeds and render...", async () => {
 });
 
 clientTest("Optimize dimensions...", async () => {
-  const dimensionsRequest = new DimensionsOptimizationRequest();
+  const dimensionsRequest = new FrontendDimensionsOptimizationRequest();
   dimensionsRequest.height = 73.5;
   dimensionsRequest.sh_height = 60;
   dimensionsRequest.hip_to_ankle = 34;
