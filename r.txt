@@ -1,0 +1,5 @@
+flask
+pillow
+pandas
+transformers
+decode-mcd
