@@ -1,1 +1,1 @@
-pip freeze > requirements.txt --exclude MCD-Demo
+pip freeze > requirements-lock.txt --exclude MCD-Demo
