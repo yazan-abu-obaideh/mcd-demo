@@ -110,11 +110,8 @@ def register_download_endpoint(_app: Flask):
 
 
 def register_render_from_object_endpoint(_app: Flask, rendering_service: RenderingService):
-    print("I be registered...")
-
     @_app.route(rendering_endpoint("/render-bike-object"), methods=["POST"])
     def render_bike_object():
-        print("I been called...")
         response = make_response(rendering_service.render_object(request.json["bike"],
                                                                  request.json["seedImageId"]))
         response.headers["Content-Type"] = "image/svg+xml"

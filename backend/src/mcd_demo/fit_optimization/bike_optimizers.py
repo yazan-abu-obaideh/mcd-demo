@@ -66,12 +66,14 @@ class BikeOptimizer:
 
         generator = LoggingGenerator(problem=problem, pop_size=OPTIMIZER_GENERATIONS, initialize_from_dataset=False)
         generator.generate(n_generations=OPTIMIZER_GENERATIONS)
-        result_df = generator.sample_with_weights(5, 1, 1, 1, 0.1, include_dataset=False)
+        result_df = generator.sample_with_weights(5, 1,
+                                                  1, 1, 0.1,
+                                                  include_dataset=False)
         records = result_df.to_dict("records")
         return {
             "bikes": [{
                 "bike": bike,
-                "bikePerformance": "great!"
+                "bikePerformance": ""
             } for bike in records]
         }
 
