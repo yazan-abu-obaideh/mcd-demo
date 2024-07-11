@@ -3,3 +3,11 @@ pillow
 pandas
 transformers
 decode-mcd
+opencv-contrib-python-headless
+attrs
+beautifulsoup4
+lxml
+Flask-Cors
+torch
+scikit-learn
+tflite-runtime
