@@ -1,36 +1,28 @@
 version: "3.8"
 services:
-  gateway:
+  nginx:
     deploy:
       restart_policy:
         condition: any
         delay: 10s
-    image: mcd-demo_gateway
-    volumes:
-      - ../nginx/secrets:/secrets/
+    image: mcd-demo_nginx
     ports:
       - "443:443"
-  frontend:
-    hostname: frontend
-    deploy:
-      restart_policy:
-        condition: any
-        delay: 10s
-    image: mcd-demo_frontend
-    ports:
-      - "5000:80"
   optimization:
     hostname: optimization-app
     entrypoint: sh ./run_optimization_service.sh
     environment:
       - APP_HOSTNAME=optimization-app
       - APP_WORKERS=1
-      - APP_ROOT_DIR=backend/src/mcd_demo/
+      - APP_ROOT_DIR=backend/src/
       - APP_PORT=8080
       - APP_THREADS=3
       - RENDERER_POOL_SIZE=0
     deploy:
       replicas: 2
+#      resources:
+#        limits:
+#          memory: 2000M
       restart_policy:
         condition: on-failure
         delay: 5s
@@ -45,7 +37,7 @@ services:
       - APP_HOSTNAME=rendering-app
       - APP_WORKERS=1
       - APP_THREADS=3
-      - APP_ROOT_DIR=backend/src/mcd_demo/
+      - APP_ROOT_DIR=backend/src/
       - APP_PORT=8080
       - RENDERER_POOL_SIZE=1
       - RENDERER_TIMEOUT_GRANULARITY=1
