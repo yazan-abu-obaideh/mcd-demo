@@ -20,6 +20,7 @@ fonttools==4.53.1
 fsspec==2024.6.1
 future==1.0.0
 grapheme==0.6.0
+gunicorn==22.0.0
 huggingface-hub==0.23.4
 idna==3.7
 importlib_metadata==8.0.0

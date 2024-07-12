@@ -11,3 +11,4 @@ Flask-Cors
 torch
 scikit-learn
 tflite-runtime
+gunicorn
