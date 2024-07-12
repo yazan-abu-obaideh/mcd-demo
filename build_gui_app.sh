@@ -1,1 +1,0 @@
-pyinstaller optimization_app_dev.spec

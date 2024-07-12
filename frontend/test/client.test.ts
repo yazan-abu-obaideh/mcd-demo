@@ -1,8 +1,8 @@
 import {
   OptimizationController,
-  RiderDimensions,
   RenderingController,
   GeneratedBike,
+  FrontendDimensionsOptimizationRequest,
 } from "../src/controller";
 
 const testTimeoutMilliseconds = 20000;
@@ -33,22 +33,22 @@ clientTest("Optimize seeds and render...", async () => {
 });
 
 clientTest("Optimize dimensions...", async () => {
-  const riderDimensions = new RiderDimensions();
-  riderDimensions.height = 73.5;
-  riderDimensions.sh_height = 60;
-  riderDimensions.hip_to_ankle = 34;
-  riderDimensions.hip_to_knee = 16.5;
-  riderDimensions.shoulder_to_wrist = 20.5;
-  riderDimensions.arm_length = 23.5;
-  riderDimensions.upper_leg = 16.5;
-  riderDimensions.lower_leg = 20.25;
-  riderDimensions.torso_length = 23;
+  const dimensionsRequest = new FrontendDimensionsOptimizationRequest();
+  dimensionsRequest.height = 73.5;
+  dimensionsRequest.sh_height = 60;
+  dimensionsRequest.hip_to_ankle = 34;
+  dimensionsRequest.hip_to_knee = 16.5;
+  dimensionsRequest.shoulder_to_wrist = 20.5;
+  dimensionsRequest.arm_length = 23.5;
+  dimensionsRequest.upper_leg = 16.5;
+  dimensionsRequest.lower_leg = 20.25;
+  dimensionsRequest.torso_length = 23;
+  dimensionsRequest.seedBikeId = "5";
 
   const response: Response =
     await optimizationController.postDimensionsOptimization(
       "aerodynamics",
-      "5",
-      riderDimensions
+      dimensionsRequest
     );
   expect(
     (JSON.parse(await response.text()) as Object).hasOwnProperty("bikes")

@@ -6,12 +6,21 @@ from decode_mcd import DataPackage, MultiObjectiveProblem, CounterfactualsGenera
 
 from mcd_demo._validation_utils import validate
 from mcd_demo.app_config.optimization_parameters import OPTIMIZER_GENERATIONS, OPTIMIZER_POPULATION
+from mcd_demo.bike_embedding.clip_embedding_calculator import ClipEmbeddingCalculatorImpl
+from mcd_demo.bike_embedding.embedding_comparator import get_cosine_distance
+from mcd_demo.bike_embedding.embedding_predictor import EmbeddingPredictor
+from mcd_demo.datasets.validations_lists import CLIPS_VALIDATION_FUNCTIONS
 from mcd_demo.exceptions import UserInputException
 from mcd_demo.fit_analysis.demoanalysis_wrapped import calculate_angles, to_body_vector, calculate_drag
 from mcd_demo.fit_optimization.const_maps import RIDERS_MAP
+from mcd_demo.fit_optimization.embedding_similarity_optimizer import TRIMMED_FEATURES, \
+    predict_from_partial_dataframe, map_datatypes, PREDICTOR, FEATURES
 from mcd_demo.fit_optimization.optimization_constants import *
-from mcd_demo.fit_optimization.performance_comparators import compare_ergonomic_performance, compare_aerodynamic_performance
+from mcd_demo.fit_optimization.performance_comparators import compare_ergonomic_performance, \
+    compare_aerodynamic_performance
 from mcd_demo.pose_analysis.pose_image_processing import PoserAnalyzer
+
+EMBEDDING_PREDICTOR = EmbeddingPredictor()
 
 
 class LoggingGenerator(CounterfactualsGenerator):
@@ -34,6 +43,39 @@ class LoggingGenerator(CounterfactualsGenerator):
 class BikeOptimizer:
     def __init__(self, image_analysis_service):
         self.image_analysis_service = image_analysis_service
+
+    def optimize_text_prompt(self, text_prompt: str):
+        text_embedding = ClipEmbeddingCalculatorImpl().from_text(text_prompt)
+
+        data_package = DataPackage(features_dataset=TRIMMED_FEATURES,
+                                   predictions_dataset=pd.DataFrame(
+                                       get_cosine_distance(PREDICTOR.predict(FEATURES), text_embedding),
+                                       columns=["cosine_distance"],
+                                       index=TRIMMED_FEATURES.index),
+                                   query_x=TRIMMED_FEATURES.iloc[0:1],
+                                   design_targets=DesignTargets([ContinuousTarget(label="cosine_distance",
+                                                                                  lower_bound=0,
+                                                                                  upper_bound=0.8)]),
+                                   datatypes=map_datatypes(),
+                                   bonus_objectives=["cosine_distance"])
+
+        problem = MultiObjectiveProblem(data_package=data_package,
+                                        prediction_function=lambda design:
+                                        predict_from_partial_dataframe(design, text_embedding),
+                                        constraint_functions=CLIPS_VALIDATION_FUNCTIONS)
+
+        generator = LoggingGenerator(problem=problem, pop_size=OPTIMIZER_GENERATIONS, initialize_from_dataset=False)
+        generator.generate(n_generations=OPTIMIZER_GENERATIONS)
+        result_df = generator.sample_with_weights(5, 1,
+                                                  1, 1, 0.1,
+                                                  include_dataset=False)
+        records = result_df.to_dict("records")
+        return {
+            "bikes": [{
+                "bike": bike,
+                "bikePerformance": ""
+            } for bike in records]
+        }
 
     @abstractmethod
     def optimize_for_dimensions(self, seed_bike_id: str, rider_dimensions_inches: dict):

@@ -59,9 +59,9 @@ def register_health_endpoint(_app: Flask):
         return make_response({"status": "UP"})
 
 
-def register_optimization_endpoints(_app: Flask,
-                                    optimization_type: str,
-                                    _optimizer: BikeOptimizer):
+def register_typed_optimization_endpoints(_app: Flask,
+                                          optimization_type: str,
+                                          _optimizer: BikeOptimizer):
     class OptimizeDimensions(View):
         def dispatch_request(self):
             _request = _get_json(request)
@@ -118,18 +118,37 @@ def register_render_from_object_endpoint(_app: Flask, rendering_service: Renderi
         return response
 
 
-def register_all_optimization_endpoints(_app):
+def register_text_prompt_optimization_endpoint(_app: Flask, _any_bike_optimizer: BikeOptimizer):
+    @_app.route(optimization_endpoint("/text-prompt"), methods=[POST])
+    def optimize_text_prompt():
+        _request = _get_json(request)
+        return make_response(
+            _any_bike_optimizer.optimize_text_prompt(_request["textPrompt"])
+        )
+
+
+def register_all_optimization_endpoints(_app: Flask):
     image_analyzer = PoserAnalyzer()
     ergonomics_optimizer = ErgonomicsOptimizer(image_analyzer)
     aerodynamics_optimizer = AerodynamicsOptimizer(image_analyzer)
-    register_optimization_endpoints(_app, "ergonomics", ergonomics_optimizer)
-    register_optimization_endpoints(_app, "aerodynamics", aerodynamics_optimizer)
+    register_typed_optimization_endpoints(_app, "ergonomics", ergonomics_optimizer)
+    register_typed_optimization_endpoints(_app, "aerodynamics", aerodynamics_optimizer)
+    register_text_prompt_optimization_endpoint(_app, ergonomics_optimizer)
     register_download_endpoint(_app)
+
+
+def register_render_clips_endpoint(_app: Flask, rendering_service: RenderingService):
+    @_app.route(rendering_endpoint("/render-clips-bike"), methods=["POST"])
+    def render_clips_bike():
+        response = make_response(rendering_service.render_clips(request.json["bike"]))
+        response.headers["Content-Type"] = "image/svg+xml"
+        return response
 
 
 def register_all_rendering_endpoints(_app: Flask):
     rendering_service = RenderingService(RENDERER_POOL_SIZE, cad_builder=CAD_BUILDER)
     register_render_from_object_endpoint(_app, rendering_service)
+    register_render_clips_endpoint(_app, rendering_service)
 
 
 def build_base_app() -> Flask:

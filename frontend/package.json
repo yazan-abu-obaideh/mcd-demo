@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest",
     "build": "npx webpack",
-    "live-server": "npx webpack serve --mode development"
+    "live-server": "npx webpack serve --mode development --port 9000"
   },
   "directories": {
     "test": "test"

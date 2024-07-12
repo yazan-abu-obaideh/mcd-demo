@@ -1,3 +1,4 @@
+**/__pycache__
 **/venv/
 **/__pycache__/
 **/.idea/
@@ -12,7 +13,8 @@ nginx/secrets/
 **/dist/
 /frontend/gui/src/bin/
 **/*.log
-/build/
+**/build/
 **/web-target/
 **/gui-target/
 **/.tmp/
+**/MCD_demo.egg-info/

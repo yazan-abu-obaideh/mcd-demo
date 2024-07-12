@@ -1,4 +1,5 @@
-class RiderDimensions {
+class FrontendDimensionsOptimizationRequest {
+  seedBikeId: string;
   height: number;
   sh_height: number;
   hip_to_ankle: number;
@@ -23,6 +24,16 @@ class RenderingController {
     this.renderingApiUrl = renderingApiUrl;
   }
 
+  async postRenderClipsBikeRequest(bike: GeneratedBike): Promise<Response> {
+    return fetch(this.renderingApiUrl.concat("/render-clips-bike"), {
+      headers: { "Content-Type": "application/json" },
+      method: "POST",
+      body: JSON.stringify({
+        bike: bike.bikeObject
+      }),
+    });
+  }
+
   async postRenderBikeRequest(bike: GeneratedBike): Promise<Response> {
     return fetch(this.renderingApiUrl.concat("/render-bike-object"), {
       headers: { "Content-Type": "application/json" },
@@ -42,11 +53,23 @@ class OptimizationController {
     this.optimizationApiUrl = optimizationApiUrl;
   }
 
+  async postTextPromptOptimization(textPrompt: string): Promise<Response> {
+    return await fetch(this.optimizationApiUrl.concat("/text-prompt"), {
+      headers: { "Content-Type": "application/json" },
+      method: "POST",
+      body: JSON.stringify({
+        textPrompt: textPrompt,
+      }),
+    });
+  }
+
   async postDimensionsOptimization(
     optimizationType: string,
-    seedBikeId: string,
-    riderDimensionsInches: RiderDimensions
+    dimensionsRequestInches: FrontendDimensionsOptimizationRequest
   ) {
+    const seedId = dimensionsRequestInches.seedBikeId;
+    delete dimensionsRequestInches.seedBikeId;
+
     return await fetch(
       this.optimizationApiUrl.concat(
         `/${optimizationType}/optimize-dimensions`
@@ -55,8 +78,8 @@ class OptimizationController {
         headers: { "Content-Type": "application/json" },
         method: "POST",
         body: JSON.stringify({
-          seedBikeId: seedBikeId,
-          riderDimensionsInches: riderDimensionsInches,
+          seedBikeId: seedId,
+          riderDimensionsInches: dimensionsRequestInches,
         }),
       }
     );
@@ -116,7 +139,7 @@ class OptimizationController {
 
 export {
   OptimizationController,
-  RiderDimensions,
+  FrontendDimensionsOptimizationRequest,
   GeneratedBike,
   RenderingController,
 };
