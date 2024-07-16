@@ -1,4 +1,4 @@
-FROM python:3.9-slim-buster
+FROM python:3.9.19-slim
 WORKDIR /app
 
 RUN apt-get update && apt install curl python3-opencv openjdk-11-jre xvfb -y
