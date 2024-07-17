@@ -5,7 +5,7 @@ services:
       restart_policy:
         condition: any
         delay: 10s
-    image: jyguru/mcd-demo-gateway:2024.jul.12
+    image: jyguru/mcd-demo-gateway:2024.jul.17
     volumes:
       - ../nginx/secrets:/secrets/
     ports:
