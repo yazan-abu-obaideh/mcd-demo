@@ -1,7 +1,7 @@
 FROM python:3.9.19-slim
 WORKDIR /app
 
-RUN apt-get update && apt install curl python3-opencv openjdk-11-jre xvfb -y
+RUN apt-get update && apt install curl python3-opencv default-jre xvfb -y
 COPY requirements-lock.txt requirements-lock.txt
 RUN pip install --no-cache-dir -r requirements-lock.txt
 
