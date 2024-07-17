@@ -24,7 +24,7 @@ def get_features():
     return pd.read_csv(resource_path(os.path.join("clips", "clip_sBIKED_processed.csv")), index_col=0)
 
 
-FEATURES = get_features()
+FEATURES = get_features().sample(500)
 TRIMMED_FEATURES = FEATURES.drop(columns=CONSTANT_COLUMNS)
 
 

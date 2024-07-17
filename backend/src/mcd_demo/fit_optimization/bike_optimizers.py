@@ -64,11 +64,11 @@ class BikeOptimizer:
                                         predict_from_partial_dataframe(design, text_embedding),
                                         constraint_functions=CLIPS_VALIDATION_FUNCTIONS)
 
-        generator = LoggingGenerator(problem=problem, pop_size=OPTIMIZER_GENERATIONS, initialize_from_dataset=False)
+        generator = LoggingGenerator(problem=problem, pop_size=OPTIMIZER_GENERATIONS, initialize_from_dataset=True)
         generator.generate(n_generations=OPTIMIZER_GENERATIONS)
         result_df = generator.sample_with_weights(5, 1,
                                                   1, 1, 0.1,
-                                                  include_dataset=False)
+                                                  include_dataset=True)
         records = result_df.to_dict("records")
         return {
             "bikes": [{
