@@ -1,18 +1,17 @@
 version: "3.8"
 services:
   gateway:
+    image: jyguru/mcd-demo-gateway:${RELEASE_TAG}
     build:
       context: ./
       dockerfile: deployment/gateway.dockerfile
   frontend:
+    image: jyguru/mcd-demo-frontend:${RELEASE_TAG}
     build:
       context: ./
       dockerfile: deployment/frontend.dockerfile
-  optimization:
-    build:
-      context: ./
-      dockerfile: deployment/app.dockerfile
-  rendering:
+  backend:
+    image: jyguru/mcd-demo-backend:${RELEASE_TAG}
     build:
       context: ./
       dockerfile: deployment/app.dockerfile
