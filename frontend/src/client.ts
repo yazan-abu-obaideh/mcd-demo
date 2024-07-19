@@ -126,18 +126,21 @@ abstract class GenericBikeOptimizationSubmitter {
   }
 
   renderBikeById(bikeId: string) {
-    this.renderBike(
-      bikeId,  (bike: GeneratedBike) => renderingController.postRenderBikeRequest(bike)
-    )
-  }  
-  
-  renderClipsBike(bikeId: string) {
-    this.renderBike(
-      bikeId, (bike: GeneratedBike) => renderingController.postRenderClipsBikeRequest(bike)
-    )
+    this.renderBike(bikeId, (bike: GeneratedBike) =>
+      renderingController.postRenderBikeRequest(bike)
+    );
   }
 
-  renderBike(bikeId: string, renderingCall: (bike: GeneratedBike) => Promise<Response>) {
+  renderClipsBike(bikeId: string) {
+    this.renderBike(bikeId, (bike: GeneratedBike) =>
+      renderingController.postRenderClipsBikeRequest(bike)
+    );
+  }
+
+  renderBike(
+    bikeId: string,
+    renderingCall: (bike: GeneratedBike) => Promise<Response>
+  ) {
     this.hideRenderButton(bikeId);
     this.setBikeLoading(bikeId, "flex");
     renderingCall(bikeStore.get(bikeId))
@@ -238,12 +241,18 @@ abstract class GenericBikeOptimizationSubmitter {
     );
   }
 
-  postOptimizationForm(seedBikeId: string, 
-    responsePromise: Promise<Response>, 
-    renderingFunction = "submitter.renderBikeById") {
+  postOptimizationForm(
+    seedBikeId: string,
+    responsePromise: Promise<Response>,
+    renderingFunction = "submitter.renderBikeById"
+  ) {
     responsePromise
       .then((response) => {
-        this.handleOptimizationResponse(response, seedBikeId, renderingFunction);
+        this.handleOptimizationResponse(
+          response,
+          seedBikeId,
+          renderingFunction
+        );
       })
       .catch((exception) => {
         this.showGenericError();
@@ -254,15 +263,27 @@ abstract class GenericBikeOptimizationSubmitter {
     return formData.get("seedBike") as string;
   }
 
-  handleOptimizationResponse(response: Response, seedBikeId: string, renderingFunction: string) {
+  handleOptimizationResponse(
+    response: Response,
+    seedBikeId: string,
+    renderingFunction: string
+  ) {
     if (response.status == 200) {
-      this.handleSuccessfulOptimizationResponse(response, seedBikeId, renderingFunction);
+      this.handleSuccessfulOptimizationResponse(
+        response,
+        seedBikeId,
+        renderingFunction
+      );
     } else {
       this.handleFailedResponse(response);
     }
   }
 
-  handleSuccessfulOptimizationResponse(response: Response, seedBikeId: string, renderingFunction: string) {
+  handleSuccessfulOptimizationResponse(
+    response: Response,
+    seedBikeId: string,
+    renderingFunction: string
+  ) {
     response.text().then((responseText) => {
       const responseJson: object = JSON.parse(responseText);
       if (responseJson["bikes"].length == 0) {
@@ -281,7 +302,11 @@ abstract class GenericBikeOptimizationSubmitter {
     ).click();
   }
 
-  showGeneratedBikes(responseJson: object, seedBikeId: string, renderingFunction: string) {
+  showGeneratedBikes(
+    responseJson: object,
+    seedBikeId: string,
+    renderingFunction: string
+  ) {
     resultDivElements.showElement(RESPONSE_RECEIVED_DIV);
     getElementById(GENERATED_DESIGNS_CONSUMER_CAROUSEL).innerHTML =
       this.persistAndBuildCarouselItems(
@@ -355,7 +380,9 @@ abstract class GenericBikeOptimizationSubmitter {
     optimizedBikeDiv.appendChild(document.createElement("br"));
     optimizedBikeDiv.appendChild(this.createBikeLoadingElement(bikeId));
     optimizedBikeDiv.appendChild(this.createRenderingFailedElement(bikeId));
-    optimizedBikeDiv.appendChild(this.generateRenderButton(bikeId, renderingFunction));
+    optimizedBikeDiv.appendChild(
+      this.generateRenderButton(bikeId, renderingFunction)
+    );
     optimizedBikeDiv.appendChild(this.generateRenderedImgElement(bikeId));
     optimizedBikeDiv.appendChild(createSpaceDiv());
     optimizedBikeDiv.appendChild(this.generateDownloadCadButton(bikeId));
@@ -429,7 +456,7 @@ abstract class GenericBikeOptimizationSubmitter {
     );
   }
 
-  showForm(formId: string, hasSelectSeedBikeDiv: boolean) {
+  showForm(formId: string) {
     problemFormElements.showElement(formId);
     this.fillInSelectSeedBikePlaceholder(formId);
   }
@@ -635,8 +662,8 @@ const seedsSubmitter = new SeedsSubmitter();
 const customerRidersSubmitter = new CustomerRidersSubmitter();
 const dimensionsSubmitter = new DimensionsSubmitter();
 
-function showForm(arg1, arg2) {
-  submitter.showForm(arg1, arg2);
+function showForm(arg1) {
+  submitter.showForm(arg1);
 }
 
 function submitSeedsForm(arg1) {
@@ -662,6 +689,10 @@ function renderBikeById(arg1) {
 function downloadBikeById(arg1) {
   submitter.downloadBikeById(arg1);
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  showForm("seeds-form-form");
+});
 
 export {
   submitter,
