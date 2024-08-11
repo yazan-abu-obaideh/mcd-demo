@@ -16,7 +16,7 @@ services:
       restart_policy:
         condition: any
         delay: 10s
-    image: jyguru/mcd-demo-frontend:2024.jul.19
+    image: jyguru/mcd-demo-frontend:2024.aug.11
     ports:
       - "5000:80"
   optimization:
