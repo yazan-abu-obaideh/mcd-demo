@@ -2,6 +2,7 @@ import time
 from abc import abstractmethod
 from typing import Callable
 
+import numpy as np
 from decode_mcd import DataPackage, MultiObjectiveProblem, CounterfactualsGenerator
 
 from mcd_demo._validation_utils import validate
@@ -68,6 +69,7 @@ class BikeOptimizer:
         generator.generate(n_generations=OPTIMIZER_GENERATIONS)
         result_df = generator.sample_with_weights(5, 10,
                                                   10, 10, 0.05,
+                                                  bonus_objectives_weights=np.array([[50]]),
                                                   include_dataset=False)
         records = result_df.to_dict("records")
         return {
