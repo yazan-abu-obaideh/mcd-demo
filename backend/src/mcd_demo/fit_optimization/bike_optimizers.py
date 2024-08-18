@@ -65,7 +65,7 @@ class BikeOptimizer:
                                         constraint_functions=CLIPS_VALIDATION_FUNCTIONS)
 
         generator = LoggingGenerator(problem=problem, pop_size=OPTIMIZER_POPULATION, initialize_from_dataset=True)
-        generator.generate(n_generations=(OPTIMIZER_GENERATIONS // 2))
+        generator.generate(n_generations=OPTIMIZER_GENERATIONS)
         result_df = generator.sample_with_weights(5, 1,
                                                   1, 1, 0.1,
                                                   include_dataset=False)
