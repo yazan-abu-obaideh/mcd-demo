@@ -2,6 +2,7 @@ import time
 from abc import abstractmethod
 from typing import Callable
 
+import numpy as np
 from decode_mcd import DataPackage, MultiObjectiveProblem, CounterfactualsGenerator
 
 from mcd_demo._validation_utils import validate
@@ -55,7 +56,7 @@ class BikeOptimizer:
                                    query_x=TRIMMED_FEATURES.iloc[0:1],
                                    design_targets=DesignTargets([ContinuousTarget(label="cosine_distance",
                                                                                   lower_bound=0,
-                                                                                  upper_bound=0.2)]),
+                                                                                  upper_bound=0.8)]),
                                    datatypes=map_datatypes(),
                                    bonus_objectives=["cosine_distance"])
 
@@ -68,7 +69,8 @@ class BikeOptimizer:
         generator.generate(n_generations=OPTIMIZER_GENERATIONS)
         result_df = generator.sample_with_weights(5, 10,
                                                   10, 10, 0.05,
-                                                  include_dataset=False)
+                                                  bonus_objectives_weights=np.array([[25]]),
+                                                  include_dataset=True)
         records = result_df.to_dict("records")
         return {
             "bikes": [{
