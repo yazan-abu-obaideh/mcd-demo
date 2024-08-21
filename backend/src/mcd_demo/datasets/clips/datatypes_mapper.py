@@ -19,8 +19,8 @@ def map_column(column: pd.Series):
     if column_datatype == "bool":
         print(f"Mapped {column.name} to Choice")
         return Choice(options=(0, 1))
-    lower_bound = column.quantile(0.03)
-    upper_bound = column.quantile(0.97)
+    lower_bound = column.quantile(0.02)
+    upper_bound = column.quantile(0.98)
     if lower_bound == upper_bound:
         print(f"Warning: {column.name} has a range of 0")
     print(f"Mapped {column.name} to numeric with range {(lower_bound, upper_bound)}")
