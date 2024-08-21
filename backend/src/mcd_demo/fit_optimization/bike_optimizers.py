@@ -70,7 +70,7 @@ class BikeOptimizer:
         result_df = generator.sample_with_weights(5, 10,
                                                   10, 10, 0.05,
                                                   bonus_objectives_weights=np.array([[50]]),
-                                                  include_dataset=False)
+                                                  include_dataset=True)
         records = result_df.to_dict("records")
         return {
             "bikes": [{
