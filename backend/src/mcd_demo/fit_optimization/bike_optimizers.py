@@ -56,7 +56,7 @@ class BikeOptimizer:
                                    query_x=TRIMMED_FEATURES.iloc[0:1],
                                    design_targets=DesignTargets([ContinuousTarget(label="cosine_distance",
                                                                                   lower_bound=0,
-                                                                                  upper_bound=0.7)]),
+                                                                                  upper_bound=0.8)]),
                                    datatypes=map_datatypes(),
                                    bonus_objectives=["cosine_distance"])
 
@@ -69,7 +69,7 @@ class BikeOptimizer:
         generator.generate(n_generations=OPTIMIZER_GENERATIONS * 2)
         result_df = generator.sample_with_weights(5, 10,
                                                   10, 10, 0.05,
-                                                  bonus_objectives_weights=np.array([[50]]),
+                                                  bonus_objectives_weights=np.array([[1000]]),
                                                   include_dataset=True)
         records = result_df.to_dict("records")
         return {
