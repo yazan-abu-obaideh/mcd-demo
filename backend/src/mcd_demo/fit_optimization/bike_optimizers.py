@@ -56,7 +56,7 @@ class BikeOptimizer:
                                    query_x=TRIMMED_FEATURES.iloc[0:1],
                                    design_targets=DesignTargets([ContinuousTarget(label="cosine_distance",
                                                                                   lower_bound=0,
-                                                                                  upper_bound=0.8)]),
+                                                                                  upper_bound=0.7)]),
                                    datatypes=map_datatypes(),
                                    bonus_objectives=["cosine_distance"])
 
