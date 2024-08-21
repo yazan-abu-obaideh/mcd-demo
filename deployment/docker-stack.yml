@@ -37,7 +37,7 @@ services:
     healthcheck:
       test: curl --fail optimization-app:8080/api/v1/health || exit 1
       interval: 10s
-    image: jyguru/mcd-demo-backend:2024.aug.18
+    image: jyguru/mcd-demo-backend:2024.aug.21
   rendering:
     hostname: rendering-app
     entrypoint: sh ./run_rendering_service.sh
@@ -58,4 +58,4 @@ services:
     healthcheck:
       test: curl --fail rendering-app:8080/api/v1/health || exit 1
       interval: 10s
-    image: jyguru/mcd-demo-backend:2024.aug.18
+    image: jyguru/mcd-demo-backend:2024.aug.21
