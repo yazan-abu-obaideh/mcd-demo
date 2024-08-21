@@ -76,7 +76,8 @@ class BikeOptimizer:
             "bikes": [{
                 "bike": bike,
                 "bikePerformance": ""
-            } for bike in records]
+            } for bike in records],
+            "logs": generator.logs_list
         }
 
     @abstractmethod
