@@ -8,6 +8,8 @@ services:
     image: jyguru/mcd-demo-gateway:2024.jul.17
     volumes:
       - ../nginx/secrets:/secrets/
+    ports:
+      - "9090:80"
   frontend:
     hostname: frontend
     deploy:
