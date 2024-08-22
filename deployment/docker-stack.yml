@@ -10,6 +10,8 @@ services:
       - ../nginx/secrets:/secrets/
     ports:
       - "443:443"
+    networks:
+      - shared
   frontend:
     hostname: frontend
     deploy:
@@ -19,6 +21,8 @@ services:
     image: jyguru/mcd-demo-frontend:2024.aug.22
     ports:
       - "5000:80"
+    networks:
+      - shared
   optimization:
     hostname: optimization-app
     entrypoint: sh ./run_optimization_service.sh
@@ -38,6 +42,9 @@ services:
       test: curl --fail optimization-app:8080/api/v1/health || exit 1
       interval: 10s
     image: jyguru/mcd-demo-backend:2024.aug.22
+    networks:
+      - shared
+
   rendering:
     hostname: rendering-app
     entrypoint: sh ./run_rendering_service.sh
@@ -59,3 +66,5 @@ services:
       test: curl --fail rendering-app:8080/api/v1/health || exit 1
       interval: 10s
     image: jyguru/mcd-demo-backend:2024.aug.22
+    networks:
+      - shared
