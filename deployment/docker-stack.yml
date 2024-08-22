@@ -11,7 +11,7 @@ services:
     ports:
       - "443:443"
     networks:
-      - mcd-demo_shared
+      - shared
   frontend:
     hostname: frontend
     deploy:
@@ -22,7 +22,7 @@ services:
     ports:
       - "5000:80"
     networks:
-      - mcd-demo_shared
+      - shared
   optimization:
     hostname: optimization-app
     entrypoint: sh ./run_optimization_service.sh
@@ -43,7 +43,7 @@ services:
       interval: 10s
     image: jyguru/mcd-demo-backend:2024.aug.22
     networks:
-      - mcd-demo_shared
+      - shared
 
   rendering:
     hostname: rendering-app
@@ -67,4 +67,4 @@ services:
       interval: 10s
     image: jyguru/mcd-demo-backend:2024.aug.22
     networks:
-      - mcd-demo_shared
+      - shared
