@@ -13,6 +13,13 @@ _NUMERIC_MAPPINGS = {
 _NAME_TO_TYPE = pd.read_csv(resource_path(os.path.join("clips", "clip_sBIKED_processed_datatypes.csv")),
                             index_col=0)
 
+ONE_HOT_ENCODED_CLIPS_COLUMNS = ['MATERIAL', 'Dropout spacing style',
+                                 'Head tube type', 'BELTorCHAIN',
+                                 'bottle SEATTUBE0 show', 'RIM_STYLE front',
+                                 'RIM_STYLE rear', 'Handlebar style',
+                                 'bottle DOWNTUBE0 show', 'Stem kind',
+                                 'Fork type', 'Top tube type']
+
 
 def map_column(column: pd.Series):
     column_datatype = _NAME_TO_TYPE.loc[column.name].values[0]

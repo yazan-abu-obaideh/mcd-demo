@@ -13,6 +13,7 @@ from mcd_demo.app_config.rendering_parameters import RENDERER_TIMEOUT, RENDERER_
 from mcd_demo.cad_services.bike_xml_handler import BikeXmlHandler
 from mcd_demo.cad_services.cad_builder import BikeCadFileBuilder
 from mcd_demo.cad_services.clips_to_bcad import clips_to_cad
+from mcd_demo.datasets.clips.datatypes_mapper import ONE_HOT_ENCODED_CLIPS_COLUMNS
 from mcd_demo.exceptions import InternalError
 from mcd_demo.resource_utils import resource_path, STANDARD_BIKE_RESOURCE
 
@@ -22,13 +23,6 @@ BIKE_CAD_PATH = os.path.join(os.path.dirname(__file__), '..', 'resources', 'Cons
 LOGGER_NAME = "BikeCadLogger"
 
 WINDOWS = "Windows"
-
-ONE_HOT_ENCODED_CLIPS_COLUMNS = ['MATERIAL', 'Dropout spacing style',
-                                 'Head tube type', 'BELTorCHAIN',
-                                 'bottle SEATTUBE0 show', 'RIM_STYLE front',
-                                 'RIM_STYLE rear', 'Handlebar style',
-                                 'bottle DOWNTUBE0 show', 'Stem kind',
-                                 'Fork type', 'Top tube type']
 
 
 def one_hot_decode(bike: pd.Series) -> dict:

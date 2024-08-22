@@ -2,9 +2,9 @@ import os
 
 import pandas as pd
 
-from mcd_demo.cad_services.bikeCad_renderer import ONE_HOT_ENCODED_CLIPS_COLUMNS
 from mcd_demo.cad_services.bike_xml_handler import BikeXmlHandler
 from mcd_demo.cad_services.clips_to_bcad import clips_to_cad
+from mcd_demo.datasets.clips.datatypes_mapper import ONE_HOT_ENCODED_CLIPS_COLUMNS
 from mcd_demo.exceptions import UserInputException
 from mcd_demo.resource_utils import resource_path, STANDARD_BIKE_RESOURCE
 

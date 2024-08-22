@@ -135,6 +135,15 @@ class OptimizationController {
       }),
     });
   }
+  async postDownloadClipsBikeCadRequest(bike: GeneratedBike): Promise<Response> {
+    return fetch(this.optimizationApiUrl.concat("/download-clips-cad"), {
+      headers: { "Content-Type": "application/json" },
+      method: "POST",
+      body: JSON.stringify({
+        bike: bike.bikeObject
+      }),
+    });
+  }
 }
 
 export {
