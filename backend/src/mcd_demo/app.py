@@ -132,7 +132,7 @@ def register_text_prompt_optimization_endpoint(_app: Flask, _any_bike_optimizer:
     def optimize_text_prompt():
         _request = _get_json(request)
         return make_response(
-            _any_bike_optimizer.optimize_text_prompt(_request["textPrompt"])
+            _any_bike_optimizer.optimize_text_prompt(_request)
         )
 
 
