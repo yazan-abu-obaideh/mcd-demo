@@ -1,3 +1,3 @@
-const apiRoot = "https://design-ai.mit.edu/mcd/";
+const apiRoot = "https://design-ai.mit.edu/";
 
 export {apiRoot};
