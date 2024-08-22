@@ -14,7 +14,7 @@ from mcd_demo.cad_services.bike_xml_handler import BikeXmlHandler
 from mcd_demo.cad_services.cad_builder import BikeCadFileBuilder
 from mcd_demo.cad_services.clips_to_bcad import clips_to_cad
 from mcd_demo.exceptions import InternalError
-from mcd_demo.resource_utils import resource_path
+from mcd_demo.resource_utils import resource_path, STANDARD_BIKE_RESOURCE
 
 TEMP_DIR = "bikes"
 BIKE_CAD_PATH = os.path.join(os.path.dirname(__file__), '..', 'resources', 'ConsoleBikeCAD.jar')
@@ -22,8 +22,6 @@ BIKE_CAD_PATH = os.path.join(os.path.dirname(__file__), '..', 'resources', 'Cons
 LOGGER_NAME = "BikeCadLogger"
 
 WINDOWS = "Windows"
-
-STANDARD_BIKE_RESOURCE = "PlainRoadBikeStandardized.txt"
 
 ONE_HOT_ENCODED_CLIPS_COLUMNS = ['MATERIAL', 'Dropout spacing style',
                                  'Head tube type', 'BELTorCHAIN',

@@ -109,6 +109,15 @@ def register_download_endpoint(_app: Flask):
         return response
 
 
+def register_download_clips_endpoint(_app: Flask):
+    @_app.route(optimization_endpoint("/download-clips-cad"), methods=[POST])
+    def download_clips_cad_file():
+        _request = _get_json(request)
+        response = make_response(CAD_BUILDER.build_cad_from_clips_object(_request["bike"]))
+        response.headers["Content-Type"] = "application/xml"
+        return response
+
+
 def register_render_from_object_endpoint(_app: Flask, rendering_service: RenderingService):
     @_app.route(rendering_endpoint("/render-bike-object"), methods=["POST"])
     def render_bike_object():
@@ -135,6 +144,7 @@ def register_all_optimization_endpoints(_app: Flask):
     register_typed_optimization_endpoints(_app, "aerodynamics", aerodynamics_optimizer)
     register_text_prompt_optimization_endpoint(_app, ergonomics_optimizer)
     register_download_endpoint(_app)
+    register_download_clips_endpoint(_app)
 
 
 def register_render_clips_endpoint(_app: Flask, rendering_service: RenderingService):
