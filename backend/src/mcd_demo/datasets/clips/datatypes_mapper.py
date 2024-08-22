@@ -13,14 +13,21 @@ _NUMERIC_MAPPINGS = {
 _NAME_TO_TYPE = pd.read_csv(resource_path(os.path.join("clips", "clip_sBIKED_processed_datatypes.csv")),
                             index_col=0)
 
+ONE_HOT_ENCODED_CLIPS_COLUMNS = ['MATERIAL', 'Dropout spacing style',
+                                 'Head tube type', 'BELTorCHAIN',
+                                 'bottle SEATTUBE0 show', 'RIM_STYLE front',
+                                 'RIM_STYLE rear', 'Handlebar style',
+                                 'bottle DOWNTUBE0 show', 'Stem kind',
+                                 'Fork type', 'Top tube type']
+
 
 def map_column(column: pd.Series):
     column_datatype = _NAME_TO_TYPE.loc[column.name].values[0]
     if column_datatype == "bool":
         print(f"Mapped {column.name} to Choice")
         return Choice(options=(0, 1))
-    lower_bound = column.quantile(0.03)
-    upper_bound = column.quantile(0.97)
+    lower_bound = column.quantile(0.02)
+    upper_bound = column.quantile(0.98)
     if lower_bound == upper_bound:
         print(f"Warning: {column.name} has a range of 0")
     print(f"Mapped {column.name} to numeric with range {(lower_bound, upper_bound)}")

@@ -45,8 +45,11 @@ class BikeOptimizer:
     def __init__(self, image_analysis_service):
         self.image_analysis_service = image_analysis_service
 
-    def optimize_text_prompt(self, text_prompt: str):
-        text_embedding = ClipEmbeddingCalculatorImpl().from_text(text_prompt)
+    def optimize_text_prompt(self, params: dict):
+
+        print(f"Received params: {params}")
+
+        text_embedding = ClipEmbeddingCalculatorImpl().from_text(params["text_prompt"])
 
         data_package = DataPackage(features_dataset=TRIMMED_FEATURES,
                                    predictions_dataset=pd.DataFrame(
@@ -56,7 +59,7 @@ class BikeOptimizer:
                                    query_x=TRIMMED_FEATURES.iloc[0:1],
                                    design_targets=DesignTargets([ContinuousTarget(label="cosine_distance",
                                                                                   lower_bound=0,
-                                                                                  upper_bound=0.8)]),
+                                                                                  upper_bound=params.get("cosine_distance_upper_bound", 0.8))]),
                                    datatypes=map_datatypes(),
                                    bonus_objectives=["cosine_distance"])
 
@@ -65,18 +68,22 @@ class BikeOptimizer:
                                         predict_from_partial_dataframe(design, text_embedding),
                                         constraint_functions=CLIPS_VALIDATION_FUNCTIONS)
 
-        generator = LoggingGenerator(problem=problem, pop_size=OPTIMIZER_POPULATION, initialize_from_dataset=True)
-        generator.generate(n_generations=OPTIMIZER_GENERATIONS)
-        result_df = generator.sample_with_weights(5, 10,
-                                                  10, 10, 0.05,
-                                                  bonus_objectives_weights=np.array([[25]]),
-                                                  include_dataset=True)
+        generator = LoggingGenerator(problem=problem, pop_size=params["optimizer_population"], initialize_from_dataset=True)
+        generator.generate(n_generations=params["optimizer_generations"])
+        result_df = generator.sample_with_weights(5,
+                                                  params.get("avg_gower_weight", 10),
+                                                  params.get("cfc_weight", 10),
+                                                  params.get("gower_weight", 10),
+                                                  params.get("diversity_weight", 0.05),
+                                                  bonus_objectives_weights=np.array([[params.get("bonus_objective_weight", 1_000_000)]]),
+                                                  include_dataset=params.get("include_dataset", True))
         records = result_df.to_dict("records")
         return {
             "bikes": [{
                 "bike": bike,
                 "bikePerformance": ""
-            } for bike in records]
+            } for bike in records],
+            "logs": generator.logs_list
         }
 
     @abstractmethod

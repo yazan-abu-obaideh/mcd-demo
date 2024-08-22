@@ -2,6 +2,7 @@ import {
   OptimizationController,
   RenderingController,
   GeneratedBike,
+  TextPromptOptimizationReqest,
 } from "./controller";
 
 import { apiRoot } from "./config";
@@ -86,15 +87,17 @@ abstract class GenericBikeOptimizationSubmitter {
   ): void;
   abstract formId(): string;
 
-  downloadBikeById(bikeId: string) {
+  downloadBike(
+    bikeId: string,
+    downloadFunction: (bike: GeneratedBike) => Promise<Response>
+  ) {
     const downloadButton = getElementById(
       getDownloadBikeCadBtnId(bikeId)
     ) as HTMLButtonElement;
 
     downloadButton.innerHTML = "Downloading bike...";
 
-    optimizationController
-      .postDownloadBikeCadRequest(bikeStore.get(bikeId))
+    downloadFunction(bikeStore.get(bikeId))
       .then((response) => {
         if (response.status == 200) {
           response.text().then((responseText) => {
@@ -131,9 +134,20 @@ abstract class GenericBikeOptimizationSubmitter {
     );
   }
 
+  downloadBikeById(bikeId: string) {
+    this.downloadBike(bikeId, (bike: GeneratedBike) =>
+      optimizationController.postDownloadBikeCadRequest(bike)
+    );
+  }
+
   renderClipsBike(bikeId: string) {
     this.renderBike(bikeId, (bike: GeneratedBike) =>
       renderingController.postRenderClipsBikeRequest(bike)
+    );
+  }
+  downloadClipsBike(bikeId: string) {
+    this.downloadBike(bikeId, (bike: GeneratedBike) =>
+      optimizationController.postDownloadClipsBikeCadRequest(bike)
     );
   }
 
@@ -216,12 +230,41 @@ abstract class GenericBikeOptimizationSubmitter {
 
   submitValidTextPromptForm(form: HTMLFormElement) {
     const formData = new FormData(form);
+    const request = new TextPromptOptimizationReqest();
+
+    request.text_prompt = formData.get("bike-description") as string;
+    request.optimizer_population = Number.parseInt(
+      formData.get("optimizer_population") as string
+    );
+    request.optimizer_generations = Number.parseInt(
+      formData.get("optimizer_generations") as string
+    );
+    request.avg_gower_weight = Number.parseFloat(
+      formData.get("avg_gower_weight") as string
+    );
+    request.bonus_objective_weight = Number.parseFloat(
+      formData.get("bonus_objective_weight") as string
+    );
+    request.cfc_weight = Number.parseFloat(
+      formData.get("cfc_weight") as string
+    );
+    request.cosine_distance_upper_bound = Number.parseFloat(
+      formData.get("cosine_distance_upper_bound") as string
+    );
+    request.diversity_weight = Number.parseFloat(
+      formData.get("diversity_weight") as string
+    );
+    request.gower_weight = Number.parseFloat(
+      formData.get("gower_weight") as string
+    );
+    request.include_dataset =
+      "true" === (formData.get("include_dataset") as string).toLowerCase();
+
     this.postOptimizationForm(
       STANDARD_BIKE_INDEX,
-      optimizationController.postTextPromptOptimization(
-        formData.get("bike-description") as string
-      ),
-      "submitter.renderClipsBike"
+      optimizationController.postTextPromptOptimization(request),
+      "submitter.renderClipsBike",
+      "submitter.downloadClipsBike"
     );
   }
 
@@ -244,14 +287,16 @@ abstract class GenericBikeOptimizationSubmitter {
   postOptimizationForm(
     seedBikeId: string,
     responsePromise: Promise<Response>,
-    renderingFunction = "submitter.renderBikeById"
+    renderingFunction = "submitter.renderBikeById",
+    downloadFunction = "submitter.downloadBikeById"
   ) {
     responsePromise
       .then((response) => {
         this.handleOptimizationResponse(
           response,
           seedBikeId,
-          renderingFunction
+          renderingFunction,
+          downloadFunction
         );
       })
       .catch((exception) => {
@@ -266,13 +311,15 @@ abstract class GenericBikeOptimizationSubmitter {
   handleOptimizationResponse(
     response: Response,
     seedBikeId: string,
-    renderingFunction: string
+    renderingFunction: string,
+    downloadFunction: string
   ) {
     if (response.status == 200) {
       this.handleSuccessfulOptimizationResponse(
         response,
         seedBikeId,
-        renderingFunction
+        renderingFunction,
+        downloadFunction
       );
     } else {
       this.handleFailedResponse(response);
@@ -282,14 +329,20 @@ abstract class GenericBikeOptimizationSubmitter {
   handleSuccessfulOptimizationResponse(
     response: Response,
     seedBikeId: string,
-    renderingFunction: string
+    renderingFunction: string,
+    downloadFunction: string
   ) {
     response.text().then((responseText) => {
       const responseJson: object = JSON.parse(responseText);
       if (responseJson["bikes"].length == 0) {
         resultDivElements.showElement(NO_BIKES_FOUND_DIV);
       } else {
-        this.showGeneratedBikes(responseJson, seedBikeId, renderingFunction);
+        this.showGeneratedBikes(
+          responseJson,
+          seedBikeId,
+          renderingFunction,
+          downloadFunction
+        );
         this.renderFirstBike();
       }
     });
@@ -305,14 +358,16 @@ abstract class GenericBikeOptimizationSubmitter {
   showGeneratedBikes(
     responseJson: object,
     seedBikeId: string,
-    renderingFunction: string
+    renderingFunction: string,
+    downloadFunction: string
   ) {
     resultDivElements.showElement(RESPONSE_RECEIVED_DIV);
     getElementById(GENERATED_DESIGNS_CONSUMER_CAROUSEL).innerHTML =
       this.persistAndBuildCarouselItems(
         responseJson["bikes"],
         seedBikeId,
-        renderingFunction
+        renderingFunction,
+        downloadFunction
       ).innerHTML;
   }
 
@@ -332,7 +387,8 @@ abstract class GenericBikeOptimizationSubmitter {
   persistAndBuildCarouselItems(
     bikes: Array<object>,
     seedBikeId: string,
-    renderingFunction: string
+    renderingFunction: string,
+    downloadFunction: string
   ): HTMLDivElement {
     const bikesHtml = document.createElement("div");
     for (let index = 0; index < bikes.length; index++) {
@@ -342,7 +398,8 @@ abstract class GenericBikeOptimizationSubmitter {
         bikeId,
         bikes[index],
         bikes.length,
-        renderingFunction
+        renderingFunction,
+        downloadFunction
       );
       this.activateFirst(index, bikeItem);
       bikesHtml.appendChild(bikeItem);
@@ -364,7 +421,8 @@ abstract class GenericBikeOptimizationSubmitter {
     bikeId: string,
     bike: object,
     totalBikes: number,
-    renderingFunction: string
+    renderingFunction: string,
+    downloadFunction: string
   ) {
     const optimizedBikeDiv = document.createElement("div");
     optimizedBikeDiv.setAttribute(
@@ -385,7 +443,9 @@ abstract class GenericBikeOptimizationSubmitter {
     );
     optimizedBikeDiv.appendChild(this.generateRenderedImgElement(bikeId));
     optimizedBikeDiv.appendChild(createSpaceDiv());
-    optimizedBikeDiv.appendChild(this.generateDownloadCadButton(bikeId));
+    optimizedBikeDiv.appendChild(
+      this.generateDownloadCadButton(bikeId, downloadFunction)
+    );
     return optimizedBikeDiv;
   }
 
@@ -473,12 +533,15 @@ abstract class GenericBikeOptimizationSubmitter {
     }
   }
 
-  generateDownloadCadButton(bikeId: string): HTMLElement {
+  generateDownloadCadButton(
+    bikeId: string,
+    downloadFunction: string
+  ): HTMLElement {
     return this.generateBikeActionButton(
       bikeId,
       getDownloadBikeCadBtnId,
       "Download CAD",
-      "submitter.downloadBikeById"
+      downloadFunction
     );
   }
 

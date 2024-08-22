@@ -17,6 +17,19 @@ class GeneratedBike {
   bikePerformance: string;
 }
 
+class TextPromptOptimizationReqest {
+  text_prompt: string;
+  cosine_distance_upper_bound: number;
+  optimizer_population: number;
+  optimizer_generations: number;
+  avg_gower_weight: number;
+  cfc_weight: number;
+  gower_weight: number;
+  diversity_weight: number;
+  bonus_objective_weight: number;
+  include_dataset: boolean
+}
+
 class RenderingController {
   renderingApiUrl: string;
 
@@ -53,13 +66,11 @@ class OptimizationController {
     this.optimizationApiUrl = optimizationApiUrl;
   }
 
-  async postTextPromptOptimization(textPrompt: string): Promise<Response> {
+  async postTextPromptOptimization(request: TextPromptOptimizationReqest): Promise<Response> {
     return await fetch(this.optimizationApiUrl.concat("/text-prompt"), {
       headers: { "Content-Type": "application/json" },
       method: "POST",
-      body: JSON.stringify({
-        textPrompt: textPrompt,
-      }),
+      body: JSON.stringify(request),
     });
   }
 
@@ -135,6 +146,15 @@ class OptimizationController {
       }),
     });
   }
+  async postDownloadClipsBikeCadRequest(bike: GeneratedBike): Promise<Response> {
+    return fetch(this.optimizationApiUrl.concat("/download-clips-cad"), {
+      headers: { "Content-Type": "application/json" },
+      method: "POST",
+      body: JSON.stringify({
+        bike: bike.bikeObject
+      }),
+    });
+  }
 }
 
 export {
@@ -142,4 +162,5 @@ export {
   FrontendDimensionsOptimizationRequest,
   GeneratedBike,
   RenderingController,
+  TextPromptOptimizationReqest
 };
