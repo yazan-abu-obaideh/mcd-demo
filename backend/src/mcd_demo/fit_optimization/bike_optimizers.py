@@ -59,7 +59,7 @@ class BikeOptimizer:
                                    query_x=TRIMMED_FEATURES.iloc[0:1],
                                    design_targets=DesignTargets([ContinuousTarget(label="cosine_distance",
                                                                                   lower_bound=0,
-                                                                                  upper_bound=params["cosine_distance_upper_bound"])]),
+                                                                                  upper_bound=params.get("cosine_distance_upper_bound", 0.8))]),
                                    datatypes=map_datatypes(),
                                    bonus_objectives=["cosine_distance"])
 
@@ -71,12 +71,12 @@ class BikeOptimizer:
         generator = LoggingGenerator(problem=problem, pop_size=params["optimizer_population"], initialize_from_dataset=True)
         generator.generate(n_generations=params["optimizer_generations"])
         result_df = generator.sample_with_weights(5,
-                                                  params["avg_gower_weight"],
-                                                  params["cfc_weight"],
-                                                  params["gower_weight"],
-                                                  params["diversity_weight"],
-                                                  bonus_objectives_weights=np.array([[params["bonus_objective_weight"]]]),
-                                                  include_dataset=params["include_dataset"])
+                                                  params.get("avg_gower_weight", 10),
+                                                  params.get("cfc_weight", 10),
+                                                  params.get("gower_weight", 10),
+                                                  params.get("diversity_weight", 0.05),
+                                                  bonus_objectives_weights=np.array([[params.get("bonus_objective_weight", 1_000_000)]]),
+                                                  include_dataset=params.get("include_dataset", True))
         records = result_df.to_dict("records")
         return {
             "bikes": [{
