@@ -7,7 +7,7 @@ export function getSeedBikeSelectionHtml(idSuffix: string) {
             <div class="col seed-bike-div">
                 <img
                         class="seed-bike-img"
-                        src="../assets/bike1.png"
+                        src="../mcd/assets/bike1.png"
                         alt="seed-bike-1"
                 />
                 <br/>
@@ -27,7 +27,7 @@ export function getSeedBikeSelectionHtml(idSuffix: string) {
             <div class="col seed-bike-div">
                 <img
                         class="seed-bike-img"
-                        src="../assets/bike2.png"
+                        src="../mcd/assets/bike2.png"
                         alt="seed-bike-2"
                 />
                 <br/>
@@ -47,7 +47,7 @@ export function getSeedBikeSelectionHtml(idSuffix: string) {
             <div class="col seed-bike-div">
                 <img
                         class="seed-bike-img"
-                        src="../assets/bike3.png"
+                        src="../mcd/assets/bike3.png"
                         alt="seed-bike-3"
                 />
                 <br/>
@@ -69,7 +69,7 @@ export function getSeedBikeSelectionHtml(idSuffix: string) {
             <div class="col seed-bike-div">
                 <img
                         class="seed-bike-img"
-                        src="../assets/bike11.png"
+                        src="../mcd/assets/bike11.png"
                         alt="seed-bike-11"
                 />
                 <br/>
@@ -89,7 +89,7 @@ export function getSeedBikeSelectionHtml(idSuffix: string) {
             <div class="col seed-bike-div">
                 <img
                         class="seed-bike-img"
-                        src="../assets/bike5.png"
+                        src="../mcd/assets/bike5.png"
                         alt="seed-bike-5"
                 />
                 <br/>
@@ -109,7 +109,7 @@ export function getSeedBikeSelectionHtml(idSuffix: string) {
             <div class="col seed-bike-div">
                 <img
                         class="seed-bike-img"
-                        src="../assets/bike6.png"
+                        src="../mcd/assets/bike6.png"
                         alt="seed-bike-6"
                 />
                 <br/>
@@ -130,7 +130,7 @@ export function getSeedBikeSelectionHtml(idSuffix: string) {
             <div class="col seed-bike-div">
                 <img
                         class="seed-bike-img"
-                        src="../assets/bike7.png"
+                        src="../mcd/assets/bike7.png"
                         alt="seed-bike-7"
                 />
                 <br/>
@@ -150,7 +150,7 @@ export function getSeedBikeSelectionHtml(idSuffix: string) {
             <div class="col seed-bike-div">
                 <img
                         class="seed-bike-img"
-                        src="../assets/bike10.png"
+                        src="../mcd/assets/bike10.png"
                         alt="seed-bike-10"
                 />
                 <br/>
@@ -170,7 +170,7 @@ export function getSeedBikeSelectionHtml(idSuffix: string) {
             <div class="col seed-bike-div">
                 <img
                         class="seed-bike-img"
-                        src="../assets/bike12.png"
+                        src="../mcd/assets/bike12.png"
                         alt="seed-bike-12"
                 />
                 <br/>

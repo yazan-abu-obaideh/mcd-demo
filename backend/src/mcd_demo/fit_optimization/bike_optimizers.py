@@ -111,8 +111,6 @@ class BikeOptimizer:
                   prediction_function: Callable[[pd.DataFrame], pd.DataFrame],
                   performance_comparator: Callable[[dict], str]):
         # noinspection PyTypeChecker
-
-        # noinspection PyTypeChecker
         generator.generate(OPTIMIZER_GENERATIONS)
 
         sampling_start = time.time()
@@ -134,7 +132,7 @@ class BikeOptimizer:
 
     def _get_initialize_from_dataset(self, rider_id):
         if str(rider_id) == "3":
-            return True
+            return False
         return False
 
     def _get_full_body_dimensions(self, rider_id):

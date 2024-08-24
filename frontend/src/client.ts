@@ -470,7 +470,7 @@ abstract class GenericBikeOptimizationSubmitter {
     const renderedImg = document.createElement("img");
 
     const originalImg = document.createElement("img");
-    originalImg.src = `../assets/bike${bikeStore.get(bikeId).seedImageId}.png`;
+    originalImg.src = `../mcd/assets/bike${bikeStore.get(bikeId).seedImageId}.png`;
     originalImg.setAttribute("class", "original-bike-img-in-result");
     originalImg.setAttribute("id", getOriginalImageInResultId(bikeId));
 
