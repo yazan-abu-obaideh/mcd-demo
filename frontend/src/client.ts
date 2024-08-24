@@ -232,33 +232,42 @@ abstract class GenericBikeOptimizationSubmitter {
     const formData = new FormData(form);
     const request = new TextPromptOptimizationReqest();
 
+    function getOrDefault<T>(label: string, parser: (string: string) => T) {
+      const value = formData.get(label) as string;
+      return value === undefined || value === null ? null : parser(value);
+    }
+
     request.text_prompt = formData.get("bike-description") as string;
-    request.optimizer_population = Number.parseInt(
-      formData.get("optimizer_population") as string
+    request.optimizer_population = getOrDefault(
+      "optimizer_population",
+      Number.parseInt
     );
-    request.optimizer_generations = Number.parseInt(
-      formData.get("optimizer_generations") as string
+    request.optimizer_generations = getOrDefault(
+      "optimizer_generations",
+      Number.parseInt
     );
-    request.avg_gower_weight = Number.parseFloat(
-      formData.get("avg_gower_weight") as string
+    request.avg_gower_weight = getOrDefault(
+      "avg_gower_weight",
+      Number.parseFloat
     );
-    request.bonus_objective_weight = Number.parseFloat(
-      formData.get("bonus_objective_weight") as string
+    request.bonus_objective_weight = getOrDefault(
+      "bonus_objective_weight",
+      Number.parseFloat
     );
-    request.cfc_weight = Number.parseFloat(
-      formData.get("cfc_weight") as string
+    request.cfc_weight = getOrDefault("cfc_weight", Number.parseFloat);
+    request.cosine_distance_upper_bound = getOrDefault(
+      "cosine_distance_upper_bound",
+      Number.parseFloat
     );
-    request.cosine_distance_upper_bound = Number.parseFloat(
-      formData.get("cosine_distance_upper_bound") as string
+    request.diversity_weight = getOrDefault(
+      "diversity_weight",
+      Number.parseFloat
     );
-    request.diversity_weight = Number.parseFloat(
-      formData.get("diversity_weight") as string
+    request.gower_weight = getOrDefault("gower_weight", Number.parseFloat);
+    request.include_dataset = getOrDefault(
+      "include_dataset",
+      (val) => "true" === val.toLowerCase()
     );
-    request.gower_weight = Number.parseFloat(
-      formData.get("gower_weight") as string
-    );
-    request.include_dataset =
-      "true" === (formData.get("include_dataset") as string).toLowerCase();
 
     this.postOptimizationForm(
       STANDARD_BIKE_INDEX,
@@ -470,7 +479,9 @@ abstract class GenericBikeOptimizationSubmitter {
     const renderedImg = document.createElement("img");
 
     const originalImg = document.createElement("img");
-    originalImg.src = `../mcd/assets/bike${bikeStore.get(bikeId).seedImageId}.png`;
+    originalImg.src = `../mcd/assets/bike${
+      bikeStore.get(bikeId).seedImageId
+    }.png`;
     originalImg.setAttribute("class", "original-bike-img-in-result");
     originalImg.setAttribute("id", getOriginalImageInResultId(bikeId));
 

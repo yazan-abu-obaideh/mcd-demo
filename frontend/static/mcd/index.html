@@ -140,133 +140,139 @@
               </label>
             </div>
           </div>
-          <div class="row flex-cont">
-            <div class="col-6">
-              <input
-                type="number"
-                class="form-control"
-                name="optimizer_population"
-                id="optimizer_population-input"
-                min="1"
-                max="100"
-                required
-              />
-              <label class="form-label" for="optimizer_population-input">
-                optimizer_population
-              </label>
+          <button
+            class="btn btn-outline-danger"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#advancedOptions"
+            aria-expanded="false"
+            aria-controls="advancedOptions"
+          >
+            Show advanced options
+          </button>
+          <div class="collapse p-3" id="advancedOptions">
+            <div class="row flex-cont">
+              <div class="col-6">
+                <input
+                  type="number"
+                  class="form-control"
+                  name="optimizer_population"
+                  id="optimizer_population-input"
+                  min="1"
+                  max="100"
+                />
+                <label class="form-label" for="optimizer_population-input">
+                  Bikes per generation
+                </label>
+              </div>
+              <div class="col-6">
+                <input
+                  type="number"
+                  class="form-control"
+                  name="optimizer_generations"
+                  max="60"
+                  min="1"
+                  id="optimizer_generations-input"
+                />
+                <label class="form-label" for="optimizer_generations-input">
+                  Number of generations
+                </label>
+              </div>
             </div>
-            <div class="col-6">
-              <input
-                type="number"
-                class="form-control"
-                name="optimizer_generations"
-                max="60"
-                min="1"
-                id="optimizer_generations-input"
-                required
-              />
-              <label class="form-label" for="optimizer_generations-input">
-                optimizer_generations
-              </label>
+            <div class="row flex-cont">
+              <div class="col-6">
+                <input
+                  type="number"
+                  class="form-control"
+                  name="cosine_distance_upper_bound"
+                  min="0.1"
+                  max="1"
+                  step="0.01"
+                  id="cosine_distance_upper_bound-input"
+                />
+                <label
+                  class="form-label"
+                  for="cosine_distance_upper_bound-input"
+                >
+                  Cosine distance upper bound
+                </label>
+              </div>
+              <div class="col-6">
+                <input
+                  type="number"
+                  class="form-control"
+                  name="avg_gower_weight"
+                  step="0.01"
+                  id="avg_gower_weight-input"
+                />
+                <label class="form-label" for="avg_gower_weight-input">
+                  Average gower weight
+                </label>
+              </div>
             </div>
-          </div>
-          <div class="row flex-cont">
-            <div class="col-6">
-              <input
-                type="number"
-                class="form-control"
-                name="cosine_distance_upper_bound"
-                min="0.1"
-                max="1"
-                step="0.01"
-                id="cosine_distance_upper_bound-input"
-                required
-              />
-              <label class="form-label" for="cosine_distance_upper_bound-input">
-                cosine_distance_upper_bound
-              </label>
+            <div class="row flex-cont">
+              <div class="col-6">
+                <input
+                  type="number"
+                  class="form-control"
+                  name="cfc_weight"
+                  step="0.01"
+                  id="cfc_weight-input"
+                />
+                <label class="form-label" for="cfc_weight-input">
+                  Counterfactual weight
+                </label>
+              </div>
+              <div class="col-6">
+                <input
+                  type="number"
+                  class="form-control"
+                  name="gower_weight"
+                  step="0.01"
+                  id="gower_weight-input"
+                />
+                <label class="form-label" for="gower_weight-input">
+                  Gower weight
+                </label>
+              </div>
             </div>
-            <div class="col-6">
-              <input
-                type="number"
-                class="form-control"
-                name="avg_gower_weight"
-                step="0.01"
-                id="avg_gower_weight-input"
-                required
-              />
-              <label class="form-label" for="avg_gower_weight-input">
-                avg_gower_weight
-              </label>
+            <div class="row flex-cont">
+              <div class="col-6">
+                <input
+                  type="number"
+                  class="form-control"
+                  name="diversity_weight"
+                  step="0.01"
+                  id="diversity_weight-input"
+                />
+                <label class="form-label" for="diversity_weight-input">
+                  Divsersity weight
+                </label>
+              </div>
+              <div class="col-6">
+                <input
+                  type="number"
+                  class="form-control"
+                  name="bonus_objective_weight"
+                  step="0.01"
+                  id="bonus_objective_weight-input"
+                />
+                <label class="form-label" for="bonus_objective_weight-input">
+                  Bonus objective weight
+                </label>
+              </div>
             </div>
-          </div>
-          <div class="row flex-cont">
-            <div class="col-6">
-              <input
-                type="number"
-                class="form-control"
-                name="cfc_weight"
-                step="0.01"
-                id="cfc_weight-input"
-                required
-              />
-              <label class="form-label" for="cfc_weight-input">
-                cfc_weight
-              </label>
-            </div>
-            <div class="col-6">
-              <input
-                type="number"
-                class="form-control"
-                name="gower_weight"
-                step="0.01"
-                id="gower_weight-input"
-                required
-              />
-              <label class="form-label" for="gower_weight-input">
-                gower_weight
-              </label>
-            </div>
-          </div>
-          <div class="row flex-cont">
-            <div class="col-6">
-              <input
-                type="number"
-                class="form-control"
-                name="diversity_weight"
-                step="0.01"
-                id="diversity_weight-input"
-                required
-              />
-              <label class="form-label" for="diversity_weight-input">
-                diversity_weight
-              </label>
-            </div>
-            <div class="col-6">
-              <input
-                type="number"
-                class="form-control"
-                name="bonus_objective_weight"
-                step="0.01"
-                id="bonus_objective_weight-input"
-                required
-              />
-              <label class="form-label" for="bonus_objective_weight-input">
-                bonus_objective_weight
-              </label>
-            </div>
-          </div>
-          <div class="row flex-cont">
-            <div class="col-6">
-              <input
-                type="checkbox"
-                name="include_dataset"
-                id="include_dataset-input"
-                required
-              />
-              <label class="form-label" for="include_dataset-input">
-                include_dataset
-              </label>
+            <div class="row flex-cont">
+              <div class="col-6">
+                <input
+                  type="checkbox"
+                  name="include_dataset"
+                  id="include_dataset-input"
+                />
+                <label class="form-label" for="include_dataset-input">
+                  Include dataset
+                </label>
+              </div>
             </div>
           </div>
           <div class="row flex-cont"></div>
@@ -324,7 +330,7 @@
                   >5'10"</label
                 >
               </div>
-              <div class="col seed-bike-div">
+              <!-- <div class="col seed-bike-div">
                 <img
                   class="seed-bike-img"
                   src="../mcd/assets/person3.png"
@@ -340,7 +346,7 @@
                   required
                 />
                 <label class="form-check-label" for="rider-image-3">5'1"</label>
-              </div>
+              </div> -->
             </div>
           </div>
           <div id="seeds-form-form-seed-bike-placeholder"></div>

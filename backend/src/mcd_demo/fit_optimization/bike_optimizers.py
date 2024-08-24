@@ -49,6 +49,12 @@ class BikeOptimizer:
 
         print(f"Received params: {params}")
 
+        def _get_or_default(label, default_value):
+            value = params[label]
+            if value is not None:
+                return value
+            return default_value
+
         text_embedding = ClipEmbeddingCalculatorImpl().from_text(params["text_prompt"])
 
         data_package = DataPackage(features_dataset=TRIMMED_FEATURES,
@@ -59,7 +65,9 @@ class BikeOptimizer:
                                    query_x=TRIMMED_FEATURES.iloc[0:1],
                                    design_targets=DesignTargets([ContinuousTarget(label="cosine_distance",
                                                                                   lower_bound=0,
-                                                                                  upper_bound=params.get("cosine_distance_upper_bound", 0.8))]),
+                                                                                  upper_bound=_get_or_default(
+                                                                                      "cosine_distance_upper_bound",
+                                                                                      0.7))]),
                                    datatypes=map_datatypes(),
                                    bonus_objectives=["cosine_distance"])
 
@@ -68,15 +76,17 @@ class BikeOptimizer:
                                         predict_from_partial_dataframe(design, text_embedding),
                                         constraint_functions=CLIPS_VALIDATION_FUNCTIONS)
 
-        generator = LoggingGenerator(problem=problem, pop_size=params.get("optimizer_population", OPTIMIZER_POPULATION), initialize_from_dataset=True)
-        generator.generate(n_generations=params.get("optimizer_generations", OPTIMIZER_GENERATIONS))
+        generator = LoggingGenerator(problem=problem, pop_size=_get_or_default("optimizer_population", OPTIMIZER_POPULATION),
+                                     initialize_from_dataset=True)
+        generator.generate(n_generations=_get_or_default("optimizer_generations", OPTIMIZER_GENERATIONS))
         result_df = generator.sample_with_weights(5,
-                                                  params.get("avg_gower_weight", 10),
-                                                  params.get("cfc_weight", 10),
-                                                  params.get("gower_weight", 10),
-                                                  params.get("diversity_weight", 0.05),
-                                                  bonus_objectives_weights=np.array([[params.get("bonus_objective_weight", 1_000_000)]]),
-                                                  include_dataset=params.get("include_dataset", True))
+                                                  _get_or_default("avg_gower_weight", 10),
+                                                  _get_or_default("cfc_weight", 10),
+                                                  _get_or_default("gower_weight", 10),
+                                                  _get_or_default("diversity_weight", 0.695),
+                                                  bonus_objectives_weights=np.array(
+                                                      [[_get_or_default("bonus_objective_weight", 1_000_000)]]),
+                                                  include_dataset=_get_or_default("include_dataset", True))
         records = result_df.to_dict("records")
         return {
             "bikes": [{
@@ -132,7 +142,7 @@ class BikeOptimizer:
 
     def _get_initialize_from_dataset(self, rider_id):
         if str(rider_id) == "3":
-            return False
+            return True
         return False
 
     def _get_full_body_dimensions(self, rider_id):
