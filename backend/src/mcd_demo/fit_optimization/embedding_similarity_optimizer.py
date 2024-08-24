@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 from decode_mcd import DesignTargets, DataPackage, MultiObjectiveProblem, CounterfactualsGenerator, ContinuousTarget
 
+from mcd_demo.app_config.optimization_parameters import SAMPLE_CLIPS_SUBSET
 from mcd_demo.bike_embedding.embedding_comparator import get_cosine_distance
 from mcd_demo.bike_embedding.embedding_predictor import EmbeddingPredictor
 from mcd_demo.datasets.validations_lists import CLIPS_VALIDATION_FUNCTIONS
@@ -24,7 +25,10 @@ def get_features():
     return pd.read_csv(resource_path(os.path.join("clips", "clip_sBIKED_processed.csv")), index_col=0)
 
 
-FEATURES = get_features()
+if SAMPLE_CLIPS_SUBSET:
+    FEATURES = get_features().sample(500)
+else:
+    FEATURES = get_features()
 TRIMMED_FEATURES = FEATURES.drop(columns=CONSTANT_COLUMNS)
 
 

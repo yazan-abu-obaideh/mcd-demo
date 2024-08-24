@@ -29,6 +29,7 @@ services:
       - APP_PORT=8080
       - APP_THREADS=3
       - RENDERER_POOL_SIZE=0
+      - SAMPLE_CLIPS_SUBSET="False"
     deploy:
       replicas: 3
       restart_policy:

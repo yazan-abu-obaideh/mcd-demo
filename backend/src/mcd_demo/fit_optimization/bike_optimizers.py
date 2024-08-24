@@ -68,8 +68,8 @@ class BikeOptimizer:
                                         predict_from_partial_dataframe(design, text_embedding),
                                         constraint_functions=CLIPS_VALIDATION_FUNCTIONS)
 
-        generator = LoggingGenerator(problem=problem, pop_size=params["optimizer_population"], initialize_from_dataset=True)
-        generator.generate(n_generations=params["optimizer_generations"])
+        generator = LoggingGenerator(problem=problem, pop_size=params.get("optimizer_population", OPTIMIZER_POPULATION), initialize_from_dataset=True)
+        generator.generate(n_generations=params.get("optimizer_generations", OPTIMIZER_GENERATIONS))
         result_df = generator.sample_with_weights(5,
                                                   params.get("avg_gower_weight", 10),
                                                   params.get("cfc_weight", 10),
