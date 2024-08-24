@@ -1,5 +1,5 @@
-from mcd_demo.app_config._config_utils import get_config
+from mcd_demo.app_config._config_utils import get_config, INTEGER_PARSER
 
-RENDERER_POOL_SIZE = int(get_config("RENDERER_POOL_SIZE", 1))
-RENDERER_TIMEOUT = int(get_config("RENDERER_TIMEOUT", 25))
-RENDERER_TIMEOUT_GRANULARITY = int(get_config("RENDERER_TIMEOUT_GRANULARITY", 1))
+RENDERER_POOL_SIZE = get_config("RENDERER_POOL_SIZE", 1, INTEGER_PARSER)
+RENDERER_TIMEOUT = get_config("RENDERER_TIMEOUT", 25, INTEGER_PARSER)
+RENDERER_TIMEOUT_GRANULARITY = get_config("RENDERER_TIMEOUT_GRANULARITY", 1, INTEGER_PARSER)

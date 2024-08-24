@@ -1,5 +1,5 @@
-from mcd_demo.app_config._config_utils import get_config
+from mcd_demo.app_config._config_utils import get_config, INTEGER_PARSER, BOOLEAN_PARSER
 
-OPTIMIZER_GENERATIONS = int(get_config("OPTIMIZER_GENERATIONS", 55))
-OPTIMIZER_POPULATION = int(get_config("OPTIMIZER_POPULATION", 85))
-SAMPLE_CLIPS_SUBSET = bool(get_config("SAMPLE_CLIPS_SUBSET", True))
+OPTIMIZER_GENERATIONS = get_config("OPTIMIZER_GENERATIONS", 55, INTEGER_PARSER)
+OPTIMIZER_POPULATION = get_config("OPTIMIZER_POPULATION", 85, INTEGER_PARSER)
+SAMPLE_CLIPS_SUBSET = get_config("SAMPLE_CLIPS_SUBSET", True, BOOLEAN_PARSER)
