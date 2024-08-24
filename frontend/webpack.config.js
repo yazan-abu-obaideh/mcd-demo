@@ -4,7 +4,7 @@ const CopyPlugin = require("copy-webpack-plugin");
 module.exports = {
   entry: "./src/client.ts",
   output: {
-    filename: "main.js",
+    filename: "./mcd/main.js",
     path: path.resolve(__dirname, "dist"),
     libraryTarget: "window",
   },
