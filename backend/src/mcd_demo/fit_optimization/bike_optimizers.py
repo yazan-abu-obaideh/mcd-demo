@@ -67,7 +67,7 @@ class BikeOptimizer:
                                                                                   lower_bound=0,
                                                                                   upper_bound=_get_or_default(
                                                                                       "cosine_distance_upper_bound",
-                                                                                      0.69))]),
+                                                                                      0.7))]),
                                    datatypes=map_datatypes(),
                                    bonus_objectives=["cosine_distance"])
 
@@ -83,7 +83,7 @@ class BikeOptimizer:
                                                   _get_or_default("avg_gower_weight", 10),
                                                   _get_or_default("cfc_weight", 10),
                                                   _get_or_default("gower_weight", 10),
-                                                  _get_or_default("diversity_weight", 0.025),
+                                                  _get_or_default("diversity_weight", 0.695),
                                                   bonus_objectives_weights=np.array(
                                                       [[_get_or_default("bonus_objective_weight", 1_000_000)]]),
                                                   include_dataset=_get_or_default("include_dataset", True))
