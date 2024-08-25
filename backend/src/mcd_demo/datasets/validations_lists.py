@@ -12,6 +12,7 @@ __CLIPS_VALIDATIONS_RAW = [
     lambda df: ((df["Head tube upper extension2"] + df["Head tube lower extension2"]) >= df[
         'Head tube length textfield']),
     lambda df: df["CS textfield"] <= 0,
+    lambda df: df["Head tube diameter"] >= 50
 ]
 
 
