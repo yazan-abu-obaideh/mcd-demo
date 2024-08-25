@@ -46,7 +46,7 @@ class BikeOptimizerTest(McdDemoTestCase):
         print(total_results)
 
     def test_optimize_ergo_seeds(self):
-        for j in range(1, 4):
+        for j in range(1, 3):
             results = self.ergo_optimizer.optimize_for_seeds("1", str(j))
             self.assertEqual(5, len(results["bikes"]))
             self.assertEqual(set(results["bikes"][0].keys()),

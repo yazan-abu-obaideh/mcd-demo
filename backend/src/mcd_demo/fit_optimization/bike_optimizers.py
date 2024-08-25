@@ -50,7 +50,7 @@ class BikeOptimizer:
         print(f"Received params: {params}")
 
         def _get_or_default(label, default_value):
-            value = params[label]
+            value = params.get(label, None)
             if value is not None:
                 return value
             return default_value
