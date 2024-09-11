@@ -10,7 +10,7 @@ click==8.1.7
 cma==3.2.2
 contourpy==1.2.1
 cycler==0.12.1
-decode-mcd==0.0.1b6
+decode-mcd==0.0.1b7
 Deprecated==1.2.14
 dill==0.3.8
 filelock==3.15.4
