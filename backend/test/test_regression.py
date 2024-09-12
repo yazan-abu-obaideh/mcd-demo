@@ -1,14 +1,27 @@
 import unittest
 from typing import List, Tuple
 
+import pymoo.core.variable
+
 from mcd_demo.fit_optimization.bike_optimizers import ErgonomicsOptimizer
 from mcd_demo.fit_optimization.const_maps import RIDERS_MAP, SEED_BIKES_MAP
+from mcd_demo.fit_optimization.optimization_constants import FEATURES_DATATYPES, DESIGNS
 from mcd_demo.pose_analysis.pose_image_processing import PoserAnalyzer
 
 
 class McdDemoRegressionTest(unittest.TestCase):
     def setUp(self):
         self.optimizer = ErgonomicsOptimizer(PoserAnalyzer())
+
+    @unittest.skip
+    def _test_invalid_boundaries_in_seeds(self):
+        features = DESIGNS.columns
+        for feature, data_type in zip(features, FEATURES_DATATYPES):
+            for bike_key, bike_value in SEED_BIKES_MAP.items():
+                if type(data_type) is pymoo.core.variable.Real:
+                    if not (data_type.bounds[0] <= bike_value[feature] <= data_type.bounds[1]):
+                        print(f"{feature} in {bike_key} has value {bike_value[feature]} "
+                              f"which is out of bounds {data_type.bounds}")
 
     def test_all_riders_pass_all_bikes(self):
         failures = []
