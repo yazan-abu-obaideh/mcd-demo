@@ -1,9 +1,6 @@
 import json
 from http import HTTPStatus
 from multiprocessing import Process
-from time import sleep
-
-import requests
 
 from mcd_demo.app import build_full_app
 from test_utils import McdDemoTestCase

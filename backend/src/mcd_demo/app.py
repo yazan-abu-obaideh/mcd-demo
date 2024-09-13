@@ -1,3 +1,5 @@
+import base64
+import binascii
 import logging
 
 from flask import Flask, make_response, request
@@ -12,11 +14,17 @@ from mcd_demo.cad_services.cad_builder import BikeCadFileBuilder
 from mcd_demo.controller_advice import register_error_handlers
 from mcd_demo.exceptions import UserInputException
 from mcd_demo.fit_optimization.bike_optimizers import ErgonomicsOptimizer, AerodynamicsOptimizer, BikeOptimizer
-from mcd_demo.models.model_scheme_validations import map_base64_image_to_bytes
 from mcd_demo.pose_analysis.pose_image_processing import PoserAnalyzer
 
 POST = "POST"
 CAD_BUILDER = BikeCadFileBuilder()
+
+
+def _map_base64_image_to_bytes(base64str: str):
+    try:
+        return base64.b64decode(base64str)
+    except binascii.Error:
+        raise UserInputException("Invalid image")
 
 
 def _get_json(_request):
@@ -84,7 +92,7 @@ def register_typed_optimization_endpoints(_app: Flask,
             _request = _get_json(request)
             return make_response(
                 _optimizer.optimize_for_image(_request["seedBikeId"],
-                                              map_base64_image_to_bytes(_request["imageBase64"]),
+                                              _map_base64_image_to_bytes(_request["imageBase64"]),
                                               _request["riderHeight"])
             )
 

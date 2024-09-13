@@ -12,7 +12,7 @@ class ImageAnalyzerTest(McdDemoTestCase):
         rider_images = ["person1.jpg", "person2.jpg", "person3.jpg"]
         heights_mm = [1750, 1800, 1500]
         for rider_image, height_mm in zip(rider_images, heights_mm):
-            path = os.path.join(os.path.dirname(__file__), "../src/mcd_demo/resources/rider-images", rider_image)
+            path = os.path.join(os.path.dirname(__file__), "../../src/mcd_demo/resources/rider-images", rider_image)
             with open(path, "rb") as file:
                 print(self.analyzer.analyze_bytes_mm(image_bytes=file.read(),
                                                      camera_height_inches=(height_mm/25.4)))
@@ -24,7 +24,7 @@ class ImageAnalyzerTest(McdDemoTestCase):
         )
 
     def test_analyze_bytes(self):
-        with open(self._get_path("resources/image2.jpeg"), "rb") as file:
+        with open(self._get_path("../resources/image2.jpeg"), "rb") as file:
             self.assertDictAlmostEqual(
                 {'height': 75, 'sh_height': 61.098, 'hip_to_ankle': 31.244,
                  'hip_to_knee': 14.972, 'shoulder_to_wrist': 14.639,
@@ -35,10 +35,10 @@ class ImageAnalyzerTest(McdDemoTestCase):
 
     def test_get_body_dimensions_from_invalid_image(self):
         """How to tell if an image is invalid? No exception is thrown by the predictor"""
-        self.assertIsNotNone(self.analyzer.get_body_dimensions(75, self._get_path("resources/blank.jpeg")))
+        self.assertIsNotNone(self.analyzer.get_body_dimensions(75, self._get_path("../resources/blank.jpeg")))
 
     def test_get_body_dimensions_from_image(self):
-        analysis = self.analyzer.get_body_dimensions(75, self._get_path("resources/image2.jpeg"))
+        analysis = self.analyzer.get_body_dimensions(75, self._get_path("../resources/image2.jpeg"))
         self.assertDictAlmostEqual(
             {'height': 75, 'sh_height': 61.098, 'hip_to_ankle': 31.244,
              'hip_to_knee': 14.972, 'shoulder_to_wrist': 14.639,
