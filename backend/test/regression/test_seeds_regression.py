@@ -36,7 +36,7 @@ class McdDemoRegressionTest(unittest.TestCase):
         failures.append({"rider": rider, "seed_bike": seed_bike})
 
     @unittest.skip
-    def _test_invalid_boundaries_in_seeds(self):
+    def _test_invalid_real_boundaries_in_seeds(self):
         features = DESIGNS.columns
         for feature, data_type in zip(features, FEATURES_DATATYPES):
             for bike_key in USED_SEED_BIKES:
