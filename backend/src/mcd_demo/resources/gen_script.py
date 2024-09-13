@@ -364,4 +364,5 @@ def generate_form_html(form_id, display, seed_bike_id_suffix, dimension_input_di
 
 if __name__ == "__main__":
     modify_seeds()
+    render_seeds()
 
