@@ -13,7 +13,7 @@ from mcd_demo.bike_embedding.embedding_predictor import EmbeddingPredictor
 from mcd_demo.datasets.validations_lists import CLIPS_VALIDATION_FUNCTIONS
 from mcd_demo.exceptions import UserInputException
 from mcd_demo.fit_analysis.demoanalysis_wrapped import calculate_angles, to_body_vector, calculate_drag
-from mcd_demo.fit_optimization.const_maps import RIDERS_MAP
+from mcd_demo.fit_optimization.seeds_constants import RIDERS_MAP
 from mcd_demo.fit_optimization.embedding_similarity_optimizer import TRIMMED_FEATURES, \
     predict_from_partial_dataframe, map_datatypes, PREDICTOR, FEATURES
 from mcd_demo.fit_optimization.optimization_constants import *
