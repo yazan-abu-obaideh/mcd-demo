@@ -1,7 +1,7 @@
 import os.path
 
 from mcd_demo.pose_analysis.pose_image_processing import PoserAnalyzer
-from test_utils import McdDemoTestCase
+from mcd_demo_test_case import McdDemoTestCase
 
 
 class ImageAnalyzerTest(McdDemoTestCase):

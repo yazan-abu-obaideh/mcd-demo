@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 
 from mcd_demo.fit_optimization.optimization_constants import validate_seat_height
-from test_utils import McdDemoTestCase
+from mcd_demo_test_case import McdDemoTestCase
 import numpy.testing as np_test
 
 

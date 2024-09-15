@@ -1,13 +1,11 @@
 import json
 from http import HTTPStatus
-from multiprocessing import Process
 
 from mcd_demo.app import build_full_app
-from test_utils import McdDemoTestCase
+from mcd_demo_test_case import McdDemoTestCase
 
 
 class AppTest(McdDemoTestCase):
-    APP_PROCESS: Process
 
     def setUp(self):
         self.app = build_full_app().test_client()

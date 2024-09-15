@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 
 from mcd_demo.fit_analysis.demoanalysis import bike_body_calculation
-from test_utils import McdDemoTestCase
+from mcd_demo_test_case import McdDemoTestCase
 
 INFINITY = float("inf")
 

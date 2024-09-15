@@ -2,7 +2,7 @@ import random
 
 from mcd_demo.cad_services.bike_xml_handler import BikeXmlHandler
 from mcd_demo.cad_services.cad_builder import BikeCadFileBuilder, OPTIMIZED_TO_CAD
-from test_utils import McdDemoTestCase
+from mcd_demo_test_case import McdDemoTestCase
 
 
 class CadBuilderTest(McdDemoTestCase):

@@ -1,6 +1,6 @@
 from mcd_demo.fit_optimization.performance_comparators import (compare_ergonomic_performance,
                                                                compare_aerodynamic_performance)
-from test_utils import McdDemoTestCase
+from mcd_demo_test_case import McdDemoTestCase
 
 
 class PerformanceComparatorsTest(McdDemoTestCase):

@@ -5,7 +5,7 @@ import pymoo
 from mcd_demo.fit_optimization.bike_optimizers import *
 from mcd_demo.fit_optimization.seeds_constants import USED_SEED_BIKES
 from mcd_demo.pose_analysis.pose_image_processing import PoserAnalyzer
-from test_utils import McdDemoTestCase
+from mcd_demo_test_case import McdDemoTestCase
 
 
 class BikeOptimizerTest(McdDemoTestCase):
