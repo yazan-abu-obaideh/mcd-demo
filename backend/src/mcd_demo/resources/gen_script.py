@@ -334,4 +334,5 @@ def modify_clips_seeds():
 
 
 if __name__ == "__main__":
-    modify_clips_seeds()
+    modify_seeds()
+    render_seeds()

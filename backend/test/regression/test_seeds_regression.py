@@ -34,14 +34,3 @@ class McdDemoRegressionTest(unittest.TestCase):
 
     def _add_failure(self, failures: List, rider: str, seed_bike: str):
         failures.append({"rider": rider, "seed_bike": seed_bike})
-
-    @unittest.skip
-    def _test_invalid_real_boundaries_in_seeds(self):
-        features = DESIGNS.columns
-        for feature, data_type in zip(features, FEATURES_DATATYPES):
-            for bike_key in USED_SEED_BIKES:
-                bike_value = SEED_BIKES_MAP[str(bike_key)]
-                if type(data_type) is pymoo.core.variable.Real:
-                    if not (data_type.bounds[0] <= bike_value[feature] <= data_type.bounds[1]):
-                        print(f"{feature} in {bike_key} has value {bike_value[feature]} "
-                              f"which is out of bounds {data_type.bounds}")

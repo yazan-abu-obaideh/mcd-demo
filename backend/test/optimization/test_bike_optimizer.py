@@ -1,6 +1,9 @@
 import unittest
 
+import pymoo
+
 from mcd_demo.fit_optimization.bike_optimizers import *
+from mcd_demo.fit_optimization.seeds_constants import USED_SEED_BIKES
 from mcd_demo.pose_analysis.pose_image_processing import PoserAnalyzer
 from test_utils import McdDemoTestCase
 
@@ -18,6 +21,19 @@ class BikeOptimizerTest(McdDemoTestCase):
 
     def test_get_performances(self):
         pass
+
+    def test_real_boundaries_in_seeds(self):
+        invalid = []
+        features = DESIGNS.columns
+        for feature, data_type in zip(features, FEATURES_DATATYPES):
+            for bike_key in USED_SEED_BIKES:
+                bike_value = SEED_BIKES_MAP[str(bike_key)]
+                if type(data_type) is pymoo.core.variable.Real:
+                    if not (data_type.bounds[0] <= bike_value[feature] <= data_type.bounds[1]):
+                        invalid.append(f"{feature} in {bike_key} has value {bike_value[feature]} "
+                                       f"which is out of bounds {data_type.bounds}")
+        if len(invalid) != 0:
+            self.fail(f"Found out of bound features: {invalid}")
 
     def _test_rider_reliability(self):
         total_results = {}
