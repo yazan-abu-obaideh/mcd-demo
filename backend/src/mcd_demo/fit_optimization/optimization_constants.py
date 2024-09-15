@@ -40,4 +40,4 @@ FEATURES_DATATYPES = [Real(bounds=(DESIGNS.iloc[:, _].quantile(0.01),
 FEATURES_DATATYPES.append(Choice(options=DESIGNS.iloc[:, 13].unique()))
 CONSTRAINT_FUNCTIONS = [validate_seat_height]
 SEED_BIKES_MAP = build_seed_map()
-CLIP_QUERY_X = TRIMMED_FEATURES.iloc[5:6]
+CLIP_QUERY_X = TRIMMED_FEATURES.iloc[4:5]
