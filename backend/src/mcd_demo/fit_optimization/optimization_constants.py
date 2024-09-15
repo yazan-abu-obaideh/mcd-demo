@@ -5,6 +5,7 @@ from decode_mcd import ContinuousTarget, DesignTargets
 from pymoo.core.variable import Real, Choice, Variable
 
 from mcd_demo.fit_optimization.bike_dataset_builder import build_ergo_performances, get_bikes, build_aero_performances
+from mcd_demo.fit_optimization.embedding_similarity_optimizer import TRIMMED_FEATURES
 
 
 def build_seed_map():
@@ -39,3 +40,4 @@ FEATURES_DATATYPES = [Real(bounds=(DESIGNS.iloc[:, _].quantile(0.01),
 FEATURES_DATATYPES.append(Choice(options=DESIGNS.iloc[:, 13].unique()))
 CONSTRAINT_FUNCTIONS = [validate_seat_height]
 SEED_BIKES_MAP = build_seed_map()
+CLIP_QUERY_X = TRIMMED_FEATURES.iloc[5:6]

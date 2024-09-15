@@ -13,12 +13,12 @@ from mcd_demo.bike_embedding.embedding_predictor import EmbeddingPredictor
 from mcd_demo.datasets.validations_lists import CLIPS_VALIDATION_FUNCTIONS
 from mcd_demo.exceptions import UserInputException
 from mcd_demo.fit_analysis.demoanalysis_wrapped import calculate_angles, to_body_vector, calculate_drag
-from mcd_demo.fit_optimization.seeds_constants import RIDERS_MAP
-from mcd_demo.fit_optimization.embedding_similarity_optimizer import TRIMMED_FEATURES, \
-    predict_from_partial_dataframe, map_datatypes, PREDICTOR, FEATURES
+from mcd_demo.fit_optimization.embedding_similarity_optimizer import predict_from_partial_dataframe, map_datatypes, \
+    PREDICTOR, FEATURES
 from mcd_demo.fit_optimization.optimization_constants import *
 from mcd_demo.fit_optimization.performance_comparators import compare_ergonomic_performance, \
     compare_aerodynamic_performance
+from mcd_demo.fit_optimization.seeds_constants import RIDERS_MAP
 from mcd_demo.pose_analysis.pose_image_processing import PoserAnalyzer
 
 EMBEDDING_PREDICTOR = EmbeddingPredictor()
@@ -62,7 +62,7 @@ class BikeOptimizer:
                                        get_cosine_distance(PREDICTOR.predict(FEATURES), text_embedding),
                                        columns=["cosine_distance"],
                                        index=TRIMMED_FEATURES.index),
-                                   query_x=TRIMMED_FEATURES.iloc[0:1],
+                                   query_x=CLIP_QUERY_X,
                                    design_targets=DesignTargets([ContinuousTarget(label="cosine_distance",
                                                                                   lower_bound=0,
                                                                                   upper_bound=_get_or_default(

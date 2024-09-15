@@ -2,9 +2,10 @@ import os
 import random
 
 from mcd_demo.cad_services.bikeCad_renderer import RenderingService
+
 from mcd_demo.cad_services.bike_xml_handler import BikeXmlHandler
 from mcd_demo.cad_services.cad_builder import BikeCadFileBuilder
-from mcd_demo.fit_optimization.optimization_constants import SEED_BIKES_MAP
+from mcd_demo.fit_optimization.optimization_constants import SEED_BIKES_MAP, CLIP_QUERY_X
 from mcd_demo.pose_analysis.pose_image_processing import PoserAnalyzer
 
 """This just exists so I can retrace my steps and if necessary redo some of the work fast"""
@@ -21,6 +22,8 @@ background_colors = {
     "BACKGROUND color IMAGENAME": "fade_to_black_at_top.png",
     "BACKGROUND color IMAGEFitWidth": "true"
 }
+
+RENDERING_SERVICE = RenderingService(1)
 
 
 def make_backgrounds_white():
@@ -41,11 +44,10 @@ def make_backgrounds_white():
 
 
 def render_seeds():
-    rendering_service = RenderingService(1)
     for i in range(1, 14):
         file_path = f"seed-bikes/bike{i}.bcad"
         with open(file_path, "r") as file:
-            rendered = rendering_service.render(file.read())
+            rendered = RENDERING_SERVICE.render(file.read())
         with open(file_path.replace(".bcad", ".svg"), "wb") as img_file:
             img_file.write(rendered)
 
@@ -325,44 +327,11 @@ def generate_form_html(form_id, display, seed_bike_id_suffix, dimension_input_di
 """
 
 
-# USE THIS APPENDED TO THE END OF BIKE-INTEGRATION.EVALUATION_REQUEST_PROCESSOR TO GENERATE MAP
-# result = {}
-# for i in range(1, 11):
-#     with open(f"seed-bikes/bike{i}.bcad", "r") as file:
-#         # noinspection PyTypeChecker
-#         file_data = file.read()
-#         mapped = EvaluationRequestProcessor(None,
-#                                             DefaultMapperSettings()).map_to_validated_model_input(
-#             file_data)
-#         xml_handler = BikeXmlHandler()
-#         xml_handler.set_xml(file_data)
-#         original = xml_handler.get_entries_dict()
-#         mapped = {
-#             key: value for key, value in mapped.items() if key in ["HT Length",
-#                                                                    "HT Angle",
-#                                                                    "HT LX",
-#                                                                    "ST Length",
-#                                                                    "ST Angle",
-#                                                                    ]
-#         }
-#
-#         original = {key: value for key, value in original.items() if key in ["Stack",
-#                                                                              "Seatpost LENGTH",
-#                                                                              "Saddle height",
-#                                                                              "Stem length",
-#                                                                              "Stem angle",
-#                                                                              "Headset spacers",
-#                                                                              "Crank length",
-#                                                                              "Handlebar style"]}
-#
-#         mapped.update(original)
-#         mapped["DT Length"] = 500
-#         if not ("Stack" in mapped.keys()):
-#             mapped["Stack"] = 565.5
-#         result[str(i)] = {key: float(value) for key, value in mapped.items()}
-# print(result)
+def modify_clips_seeds():
+    img_data = RENDERING_SERVICE.render_clips(target_bike=CLIP_QUERY_X.iloc[0].to_dict())
+    with open("seed-bikes/clips_query.svg", "wb") as file:
+        file.write(img_data)
+
 
 if __name__ == "__main__":
-    modify_seeds()
-    render_seeds()
-
+    modify_clips_seeds()

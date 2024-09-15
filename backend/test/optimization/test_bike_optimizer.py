@@ -19,14 +19,6 @@ class BikeOptimizerTest(McdDemoTestCase):
     def test_get_performances(self):
         pass
 
-    def test_optimize_aero_seeds(self):
-        for j in range(1, 3):
-            self.aero_optimizer.optimize_for_seeds("1", j)
-
-    @unittest.skip
-    def test_rider_3_works(self):
-        optimized = self.aero_optimizer.optimize_for_seeds("1", "3")
-
     def _test_rider_reliability(self):
         total_results = {}
         for rider_id in ["1", "2", "3"]:
