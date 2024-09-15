@@ -7,8 +7,7 @@ from flask.views import View
 from flask_cors import CORS
 
 from mcd_demo.app_config.app_constants import APP_LOGGER
-from mcd_demo.app_config.app_parameters import LOGGING_LEVEL
-from mcd_demo.app_config.rendering_parameters import RENDERER_POOL_SIZE
+from mcd_demo.app_config.app_parameters import LOGGING_LEVEL, RENDERER_POOL_SIZE
 from mcd_demo.cad_services.bikeCad_renderer import RenderingService
 from mcd_demo.cad_services.cad_builder import BikeCadFileBuilder
 from mcd_demo.controller_advice import register_error_handlers

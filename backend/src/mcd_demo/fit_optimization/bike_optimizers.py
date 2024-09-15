@@ -6,7 +6,7 @@ import numpy as np
 from decode_mcd import DataPackage, MultiObjectiveProblem, CounterfactualsGenerator
 
 from mcd_demo._validation_utils import validate
-from mcd_demo.app_config.optimization_parameters import OPTIMIZER_GENERATIONS, OPTIMIZER_POPULATION
+from mcd_demo.app_config.app_parameters import OPTIMIZER_GENERATIONS, OPTIMIZER_POPULATION
 from mcd_demo.bike_embedding.clip_embedding_calculator import ClipEmbeddingCalculatorImpl
 from mcd_demo.bike_embedding.embedding_comparator import get_cosine_distance
 from mcd_demo.bike_embedding.embedding_predictor import EmbeddingPredictor

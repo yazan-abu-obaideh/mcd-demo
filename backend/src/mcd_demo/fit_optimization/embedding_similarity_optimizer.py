@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 from decode_mcd import DesignTargets, DataPackage, MultiObjectiveProblem, CounterfactualsGenerator, ContinuousTarget
 
-from mcd_demo.app_config.optimization_parameters import SAMPLE_CLIPS_SUBSET
+from mcd_demo.app_config.app_parameters import SAMPLE_CLIPS_SUBSET
 from mcd_demo.bike_embedding.embedding_comparator import get_cosine_distance
 from mcd_demo.bike_embedding.embedding_predictor import EmbeddingPredictor
 from mcd_demo.datasets.validations_lists import CLIPS_VALIDATION_FUNCTIONS

@@ -1,10 +1,7 @@
 import unittest
 from typing import List
 
-import pymoo.core.variable
-
 from mcd_demo.fit_optimization.bike_optimizers import ErgonomicsOptimizer
-from mcd_demo.fit_optimization.optimization_constants import DESIGNS, FEATURES_DATATYPES, SEED_BIKES_MAP
 from mcd_demo.fit_optimization.seeds_constants import RIDERS_MAP, USED_SEED_BIKES
 from mcd_demo.pose_analysis.pose_image_processing import PoserAnalyzer
 

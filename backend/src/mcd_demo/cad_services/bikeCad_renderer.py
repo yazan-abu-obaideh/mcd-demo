@@ -9,7 +9,7 @@ from asyncio import subprocess
 
 import pandas as pd
 
-from mcd_demo.app_config.rendering_parameters import RENDERER_TIMEOUT, RENDERER_TIMEOUT_GRANULARITY
+from mcd_demo.app_config.app_parameters import RENDERER_TIMEOUT, RENDERER_TIMEOUT_GRANULARITY
 from mcd_demo.cad_services.bike_xml_handler import BikeXmlHandler
 from mcd_demo.cad_services.cad_builder import BikeCadFileBuilder
 from mcd_demo.cad_services.clips_to_bcad import clips_to_cad
