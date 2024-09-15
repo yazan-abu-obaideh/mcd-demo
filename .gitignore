@@ -17,3 +17,4 @@ nginx/secrets/
 **/gui-target/
 **/.tmp/
 **/MCD_demo.egg-info/
+**/open-api/generated/*

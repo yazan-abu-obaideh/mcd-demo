@@ -1,0 +1,60 @@
+openapi: 3.0.0
+info:
+  title: MCD Demo DTO's
+  version: 1.0.0
+paths:
+  /dummy-path:
+    post:
+      summary: Open API spec requires a path
+      responses:
+        '200':
+          description: success
+components:
+  schemas:
+    GeneratedBikes:
+      type: object
+      properties:
+        bikes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Bike'
+        bikePerformance:
+          type: string
+    Bike:
+      type: object
+      properties:
+        "Crank length":
+          type: number
+        "DT Length":
+          type: number
+        "HT Angle":
+          type: number
+        "HT LX":
+          type: number
+        "HT Length":
+          type: number
+        "Handlebar style":
+          type: number
+        "Headset spacers":
+          type: number
+        "ST Angle":
+          type: number
+        "ST Length":
+          type: number
+        "Saddle height":
+          type: number
+        "Seatpost LENGTH":
+          type: number
+        "Stack":
+          type: number
+        "Stem angle":
+          type: number
+        "Stem length":
+          type: number
+
+
+
+
+
+
+
