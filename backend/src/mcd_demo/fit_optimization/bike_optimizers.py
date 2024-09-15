@@ -22,28 +22,30 @@ from mcd_demo.fit_optimization.seeds_constants import RIDERS_MAP
 from mcd_demo.pose_analysis.pose_image_processing import PoserAnalyzer
 
 EMBEDDING_PREDICTOR = EmbeddingPredictor()
+EMBEDDING_CALCULATOR = ClipEmbeddingCalculatorImpl()
 
 
 class LoggingGenerator(CounterfactualsGenerator):
     """Note that the logs_list is never 'cleaned'... Instances of LoggingGenerator
     are single-use objects and should be garbage-collected ASAP"""
 
-    def __init__(self, problem: MultiObjectiveProblem, pop_size: int, initialize_from_dataset):
+    def __init__(self, problem: MultiObjectiveProblem,
+                 pop_size: int, initialize_from_dataset: bool):
         super().__init__(problem, pop_size, initialize_from_dataset=initialize_from_dataset, verbose=True)
-        self.logs_list = []
+        self.logs_list: List[str] = []
 
-    def _log(self, log_message):
+    def _log(self, log_message: str):
         self.logs_list.append(log_message)
         super()._log(log_message)
 
-    def _verbose_log(self, log_message):
+    def _verbose_log(self, log_message: str):
         self.logs_list.append(log_message)
         super()._verbose_log(log_message)
 
 
 class BikeOptimizer:
-    def __init__(self, image_analysis_service):
-        self.image_analysis_service = image_analysis_service
+    def __init__(self, image_analysis_service: PoserAnalyzer):
+        self.image_analysis_service: PoserAnalyzer = image_analysis_service
 
     def optimize_text_prompt(self, params: dict):
 
@@ -55,7 +57,7 @@ class BikeOptimizer:
                 return value
             return default_value
 
-        text_embedding = ClipEmbeddingCalculatorImpl().from_text(params["text_prompt"])
+        text_embedding = EMBEDDING_CALCULATOR.from_text(params["text_prompt"])
 
         data_package = DataPackage(features_dataset=TRIMMED_FEATURES,
                                    predictions_dataset=pd.DataFrame(
@@ -76,7 +78,8 @@ class BikeOptimizer:
                                         predict_from_partial_dataframe(design, text_embedding),
                                         constraint_functions=CLIPS_VALIDATION_FUNCTIONS)
 
-        generator = LoggingGenerator(problem=problem, pop_size=_get_or_default("optimizer_population", OPTIMIZER_POPULATION),
+        generator = LoggingGenerator(problem=problem,
+                                     pop_size=_get_or_default("optimizer_population", OPTIMIZER_POPULATION),
                                      initialize_from_dataset=True)
         generator.generate(n_generations=_get_or_default("optimizer_generations", OPTIMIZER_GENERATIONS))
         result_df = generator.sample_with_weights(5,
@@ -140,12 +143,12 @@ class BikeOptimizer:
                              zip(optimized_records, performances)]
         return _to_list_of_pairs
 
-    def _get_initialize_from_dataset(self, rider_id):
+    def _get_initialize_from_dataset(self, rider_id: str):
         if str(rider_id) == "3":
             return True
         return False
 
-    def _get_full_body_dimensions(self, rider_id):
+    def _get_full_body_dimensions(self, rider_id: str):
         body_dimensions = self._get_body_dimensions_by_id(rider_id)
         body_dimensions["foot_length"] = 5.5 * 25.4
         body_dimensions["ankle_angle"] = 100
@@ -168,7 +171,7 @@ class BikeOptimizer:
         validate(seed_bike is not None, f"Invalid seed bike ID [{seed_bike_id}]")
         return seed_bike
 
-    def _get_body_dimensions_by_id(self, rider_id):
+    def _get_body_dimensions_by_id(self, rider_id: str):
         rider = RIDERS_MAP.get(str(rider_id))
         if rider is None:
             raise UserInputException(f"Invalid rider ID [{rider_id}]")
@@ -180,7 +183,7 @@ class ErgonomicsOptimizer(BikeOptimizer):
         super().__init__(image_analysis_service)
         self.image_analysis_service = image_analysis_service
 
-    def optimize_for_dimensions(self, seed_bike_id, rider_dimensions_inches):
+    def optimize_for_dimensions(self, seed_bike_id: str, rider_dimensions_inches):
         return self._optimize_ergonomics(seed_bike_id, self._to_full_dimensions_mm(rider_dimensions_inches))
 
     def optimize_for_seeds(self, seed_bike_id, rider_id):
@@ -207,7 +210,7 @@ class ErgonomicsOptimizer(BikeOptimizer):
         generator = LoggingGenerator(problem, OPTIMIZER_POPULATION, initialize_from_dataset)
         return generator
 
-    def _optimize_ergonomics(self, seed_bike_id, body_dimensions, initialize_from_dataset=False):
+    def _optimize_ergonomics(self, seed_bike_id: str, body_dimensions, initialize_from_dataset=False):
         original_bike = self._get_bike_by_id(seed_bike_id)
 
         def ergo_prediction_function(bikes):

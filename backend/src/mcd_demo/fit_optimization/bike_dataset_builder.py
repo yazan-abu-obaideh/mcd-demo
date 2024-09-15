@@ -23,15 +23,15 @@ def build_ergo_performances():
 
 
 def _get_body():
-    LL = 22 * 25.4
-    UL = 22 * 25.4
-    TL = 21 * 25.4
-    AL = 24 * 25.4
-    FL = 5.5 * 25.4
-    AA = 105
-    SW = 12 * 25.4
-    HT = 71 * 25.4
-    body = np.array([[LL, UL, TL, AL, FL, AA, SW, HT]])
+    ll = 22 * 25.4
+    ul = 22 * 25.4
+    tl = 21 * 25.4
+    al = 24 * 25.4
+    fl = 5.5 * 25.4
+    aa = 105
+    sw = 12 * 25.4
+    ht = 71 * 25.4
+    body = np.array([[ll, ul, tl, al, fl, aa, sw, ht]])
     return body
 
 

@@ -1,7 +1,7 @@
 import os.path
 
 import pandas as pd
-from pymoo.core.variable import Real, Integer, Choice
+from pymoo.core.variable import Real, Integer, Choice, Variable
 
 from mcd_demo.resource_utils import resource_path
 
@@ -21,7 +21,7 @@ ONE_HOT_ENCODED_CLIPS_COLUMNS = ['MATERIAL', 'Dropout spacing style',
                                  'Fork type', 'Top tube type']
 
 
-def map_column(column: pd.Series):
+def map_column(column: pd.Series) -> Variable:
     column_datatype = _NAME_TO_TYPE.loc[column.name].values[0]
     if column_datatype == "bool":
         print(f"Mapped {column.name} to Choice")
