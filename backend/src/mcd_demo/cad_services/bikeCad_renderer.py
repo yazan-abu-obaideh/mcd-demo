@@ -35,14 +35,16 @@ def one_hot_decode(bike: pd.Series) -> dict:
 
 
 class RenderingService:
-    def __init__(self, renderer_pool_size, cad_builder=BikeCadFileBuilder()):
+    def __init__(self,
+                 renderer_pool_size: int,
+                 cad_builder: BikeCadFileBuilder = BikeCadFileBuilder()):
         os.makedirs(os.path.join(os.path.dirname(__file__), TEMP_DIR), exist_ok=True)
         self._renderer_pool = queue.Queue(maxsize=renderer_pool_size)
         self.cad_builder = cad_builder
         for i in range(renderer_pool_size):
             self._renderer_pool.put(BikeCad())
 
-    def render_object(self, bike_object, seed_bike_id):
+    def render_object(self, bike_object, seed_bike_id: str):
         return self.render(self.cad_builder.build_cad_from_object(bike_object,
                                                                   seed_bike_id))
 
@@ -53,7 +55,7 @@ class RenderingService:
         updated_xml = xml_handler.get_content_string()
         return self.render(updated_xml)
 
-    def render(self, bike_xml):
+    def render(self, bike_xml: str):
         renderer = self._get_renderer()
         result = renderer.render(bike_xml)
         self._renderer_pool.put(renderer)  # This will never block as is - no new elements
