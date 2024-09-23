@@ -6,13 +6,32 @@ import {
   submitTextPromptForm,
 } from "../declerative/client";
 
+import decodeLogo from "../assets/decode_logo.png"
+import bike1 from "../assets/bike1.png";
+import bike2 from "../assets/bike2.png";
+import bike3 from "../assets/bike3.png";
+import bike4 from "../assets/bike4.png";
+import bike5 from "../assets/bike5.png";
+import bike6 from "../assets/bike6.png";
+import bike7 from "../assets/bike7.png";
+import bike8 from "../assets/bike8.png";
+import bike9 from "../assets/bike9.png";
+import bike10 from "../assets/bike10.png";
+import bike11 from "../assets/bike11.png";
+import bike12 from "../assets/bike12.png";
+import bike13 from "../assets/bike13.png";
+
+import person1 from "../assets/person1.png"
+import person2 from "../assets/person2.png"
+import person3 from "../assets/person3.png"
+
 export default function McdDemoUserForm() {
   return (
     <div className="non-nav-body">
       <div className="text-center m-5">
         <img
           className="d-block mx-auto mb-4"
-          src="../mcd/assets/decode_logo.png"
+          src={decodeLogo}
           alt=""
           width="225"
           height="82"
@@ -271,7 +290,7 @@ export default function McdDemoUserForm() {
               <div className="col seed-bike-div">
                 <img
                   className="seed-bike-img"
-                  src="../mcd/assets/person1.png"
+                  src={person1}
                   alt="rider-image-1"
                 />
                 <br />
@@ -291,7 +310,7 @@ export default function McdDemoUserForm() {
               <div className="col seed-bike-div">
                 <img
                   className="seed-bike-img"
-                  src="../mcd/assets/person2.png"
+                  src={person2}
                   alt="rider-image-2"
                 />
                 <br />
@@ -310,7 +329,7 @@ export default function McdDemoUserForm() {
               <div className="col seed-bike-div">
                 <img
                   className="seed-bike-img"
-                  src="../mcd/assets/person3.png"
+                  src={person3}
                   alt="rider-image-3"
                 />
                 <br />
