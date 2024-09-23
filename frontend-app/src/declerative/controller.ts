@@ -1,33 +1,33 @@
 class FrontendDimensionsOptimizationRequest {
-  seedBikeId: string;
-  height: number;
-  sh_height: number;
-  hip_to_ankle: number;
-  hip_to_knee: number;
-  shoulder_to_wrist: number;
-  arm_length: number;
-  torso_length: number;
-  lower_leg: number;
-  upper_leg: number;
+  seedBikeId: string | undefined;
+  height!: number;
+  sh_height!: number;
+  hip_to_ankle!: number;
+  hip_to_knee!: number;
+  shoulder_to_wrist!: number;
+  arm_length!: number;
+  torso_length!: number;
+  lower_leg!: number;
+  upper_leg!: number;
 }
 
 class GeneratedBike {
-  seedImageId: string;
-  bikeObject: object;
-  bikePerformance: string;
+  seedImageId!: string;
+  bikeObject!: object;
+  bikePerformance!: string;
 }
 
 class TextPromptOptimizationReqest {
-  text_prompt: string;
-  cosine_distance_upper_bound: number;
-  optimizer_population: number;
-  optimizer_generations: number;
-  avg_gower_weight: number;
-  cfc_weight: number;
-  gower_weight: number;
-  diversity_weight: number;
-  bonus_objective_weight: number;
-  include_dataset: boolean
+  text_prompt!: string;
+  cosine_distance_upper_bound!: number;
+  optimizer_population!: number;
+  optimizer_generations!: number;
+  avg_gower_weight!: number;
+  cfc_weight!: number;
+  gower_weight!: number;
+  diversity_weight!: number;
+  bonus_objective_weight!: number;
+  include_dataset!: boolean;
 }
 
 class RenderingController {

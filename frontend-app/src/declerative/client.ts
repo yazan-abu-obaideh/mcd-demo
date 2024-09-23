@@ -159,7 +159,7 @@ abstract class GenericBikeOptimizationSubmitter {
     this.setBikeLoading(bikeId, "flex");
     renderingCall(bikeStore.get(bikeId)!)
       .then((response) => {
-        if (response.status == 200) {
+        if (response.status === 200) {
           this.handleSuccessfulRenderResponse(response, bikeId);
         } else {
           this.showRenderError(bikeId);
@@ -323,7 +323,7 @@ abstract class GenericBikeOptimizationSubmitter {
     renderingFunction: string,
     downloadFunction: string
   ) {
-    if (response.status == 200) {
+    if (response.status === 200) {
       this.handleSuccessfulOptimizationResponse(
         response,
         seedBikeId,
@@ -342,7 +342,7 @@ abstract class GenericBikeOptimizationSubmitter {
     downloadFunction: string
   ) {
     response.text().then((responseText) => {
-      const responseJson: {bikes: Array<object>} = JSON.parse(responseText);
+      const responseJson: {bikes: Array<{bike: GeneratedBike, bikePerformance: string}>} = JSON.parse(responseText);
       if (responseJson["bikes"].length === 0) {
         resultDivElements.showElement(NO_BIKES_FOUND_DIV);
       } else {
@@ -365,7 +365,7 @@ abstract class GenericBikeOptimizationSubmitter {
   }
 
   showGeneratedBikes(
-    responseJson: {bikes: Array<object>},
+    responseJson: {bikes: Array<{bike: GeneratedBike, bikePerformance: string}>},
     seedBikeId: string,
     renderingFunction: string,
     downloadFunction: string
@@ -394,7 +394,7 @@ abstract class GenericBikeOptimizationSubmitter {
   }
 
   persistAndBuildCarouselItems(
-    bikes: Array<object>,
+    bikes: Array<{bike: GeneratedBike, bikePerformance: string}>,
     seedBikeId: string,
     renderingFunction: string,
     downloadFunction: string
@@ -417,7 +417,7 @@ abstract class GenericBikeOptimizationSubmitter {
   }
 
   activateFirst(index: number, bikeItem: HTMLDivElement) {
-    if (index == 0) {
+    if (index === 0) {
       bikeItem.setAttribute(
         "class",
         bikeItem.getAttribute("class") + " active"
@@ -428,7 +428,7 @@ abstract class GenericBikeOptimizationSubmitter {
   bikeToCarouselItem(
     index: number,
     bikeId: string,
-    bike: {bikePerformance: object},
+    bike: {bikePerformance: string},
     totalBikes: number,
     renderingFunction: string,
     downloadFunction: string
@@ -480,7 +480,7 @@ abstract class GenericBikeOptimizationSubmitter {
 
     const originalImg = document.createElement("img");
     originalImg.src = `../mcd/assets/bike${
-      bikeStore.get(bikeId).seedImageId
+      bikeStore.get(bikeId)!.seedImageId
     }.png`;
     originalImg.setAttribute("class", "original-bike-img-in-result");
     originalImg.setAttribute("id", getOriginalImageInResultId(bikeId));
@@ -571,7 +571,7 @@ abstract class GenericBikeOptimizationSubmitter {
     return button;
   }
 
-  persistBike(bike: object, seedBikeId: string): string {
+  persistBike(bike: {bike: GeneratedBike, bikePerformance: string}, seedBikeId: string): string {
     const bikeId = generateUuid();
     const generatedBike = new GeneratedBike();
     generatedBike.bikeObject = bike["bike"];
@@ -644,7 +644,7 @@ abstract class GenericBikeOptimizationSubmitter {
     return div;
   }
 
-  generatePerformanceElement(bikePerformance: object): HTMLElement {
+  generatePerformanceElement(bikePerformance: string): HTMLElement {
     const div = document.createElement("h5");
     div.textContent = JSON.stringify(bikePerformance)
       .replace('"', "")
@@ -736,11 +736,11 @@ const seedsSubmitter = new SeedsSubmitter();
 const customerRidersSubmitter = new CustomerRidersSubmitter();
 const dimensionsSubmitter = new DimensionsSubmitter();
 
-function showForm(arg1) {
+function showForm(arg1: string) {
   submitter.showForm(arg1);
 }
 
-function submitSeedsForm(arg1) {
+function submitSeedsForm(arg1: string) {
   seedsSubmitter.submitForm(arg1);
 }
 
@@ -748,19 +748,19 @@ function submitTextPromptForm() {
   submitter.submitTextPromptForm();
 }
 
-function submitCustomRiderForm(arg1) {
+function submitCustomRiderForm(arg1: string) {
   customerRidersSubmitter.submitForm(arg1);
 }
 
-function submitRiderDimensionsForm(arg1) {
+function submitRiderDimensionsForm(arg1: string) {
   dimensionsSubmitter.submitForm(arg1);
 }
 
-function renderBikeById(arg1) {
+function renderBikeById(arg1: string) {
   submitter.renderBikeById(arg1);
 }
 
-function downloadBikeById(arg1) {
+function downloadBikeById(arg1: string) {
   submitter.downloadBikeById(arg1);
 }
 
