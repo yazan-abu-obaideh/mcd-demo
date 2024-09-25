@@ -6,24 +6,12 @@ import {
   submitTextPromptForm,
 } from "../declerative/client";
 
-import decodeLogo from "../assets/decode_logo.png"
-import bike1 from "../assets/bike1.png";
-import bike2 from "../assets/bike2.png";
-import bike3 from "../assets/bike3.png";
-import bike4 from "../assets/bike4.png";
-import bike5 from "../assets/bike5.png";
-import bike6 from "../assets/bike6.png";
-import bike7 from "../assets/bike7.png";
-import bike8 from "../assets/bike8.png";
-import bike9 from "../assets/bike9.png";
-import bike10 from "../assets/bike10.png";
-import bike11 from "../assets/bike11.png";
-import bike12 from "../assets/bike12.png";
-import bike13 from "../assets/bike13.png";
+import decodeLogo from "../assets/decode_logo.png";
 
-import person1 from "../assets/person1.png"
-import person2 from "../assets/person2.png"
-import person3 from "../assets/person3.png"
+import person1 from "../assets/person1.png";
+import person2 from "../assets/person2.png";
+import person3 from "../assets/person3.png";
+import BikeSelectionForm from "./BikeSelectionForm";
 
 export default function McdDemoUserForm() {
   return (
@@ -347,7 +335,9 @@ export default function McdDemoUserForm() {
               </div>
             </div>
           </div>
-          <div id="seeds-form-form-seed-bike-placeholder"></div>
+          <div id="seeds-form-form-seed-bike-placeholder">
+            < BikeSelectionForm idSuffix="seeds-form-form" />
+          </div>
           <div className="p-3">
             <div className="row flex-cont text-center justify-content-center">
               <div className="dropdown">
@@ -430,7 +420,9 @@ export default function McdDemoUserForm() {
               </div>
             </div>
           </div>
-          <div id="upload-rider-image-form-seed-bike-placeholder"></div>
+          <div id="upload-rider-image-form-seed-bike-placeholder">
+            <BikeSelectionForm idSuffix="upload-rider-image-form" />
+          </div>
           <div className="p-3">
             <div className="row flex-cont text-center justify-content-center">
               <div className="dropdown">
@@ -653,7 +645,9 @@ export default function McdDemoUserForm() {
               </div>
             </div>
           </div>
-          <div id="specify-rider-dimensions-form-seed-bike-placeholder"></div>
+          <div id="specify-rider-dimensions-form-seed-bike-placeholder">
+          <BikeSelectionForm idSuffix="specify-rider-dimensions-form" />
+          </div>
           <div className="p-3">
             <div className="row flex-cont text-center justify-content-center">
               <div className="dropdown">

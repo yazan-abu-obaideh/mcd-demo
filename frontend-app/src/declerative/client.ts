@@ -6,7 +6,6 @@ import {
 } from "./controller";
 
 import { apiRoot } from "./config";
-import { getSeedBikeSelectionHtml } from "./bike_selection_form";
 import { getElementById } from "./html_utils";
 import { ExclusivelyVisibleElements } from "./exclusively_visible_elements";
 import { readFile } from "./html_utils";
@@ -24,7 +23,6 @@ import {
   SPECIFY_DIMENSIONS_FORM_ID,
   TEXT_PROMPT_FORM_ID,
   RESPONSE_DIV_ID,
-  SELECT_SEED_BIKE_PLACEHOLDER_SUFFIX,
 } from "./html_element_constant_ids";
 import {
   RESPONSE_RECEIVED_DIV,
@@ -342,7 +340,9 @@ abstract class GenericBikeOptimizationSubmitter {
     downloadFunction: string
   ) {
     response.text().then((responseText) => {
-      const responseJson: {bikes: Array<{bike: GeneratedBike, bikePerformance: string}>} = JSON.parse(responseText);
+      const responseJson: {
+        bikes: Array<{ bike: GeneratedBike; bikePerformance: string }>;
+      } = JSON.parse(responseText);
       if (responseJson["bikes"].length === 0) {
         resultDivElements.showElement(NO_BIKES_FOUND_DIV);
       } else {
@@ -365,7 +365,9 @@ abstract class GenericBikeOptimizationSubmitter {
   }
 
   showGeneratedBikes(
-    responseJson: {bikes: Array<{bike: GeneratedBike, bikePerformance: string}>},
+    responseJson: {
+      bikes: Array<{ bike: GeneratedBike; bikePerformance: string }>;
+    },
     seedBikeId: string,
     renderingFunction: string,
     downloadFunction: string
@@ -394,7 +396,7 @@ abstract class GenericBikeOptimizationSubmitter {
   }
 
   persistAndBuildCarouselItems(
-    bikes: Array<{bike: GeneratedBike, bikePerformance: string}>,
+    bikes: Array<{ bike: GeneratedBike; bikePerformance: string }>,
     seedBikeId: string,
     renderingFunction: string,
     downloadFunction: string
@@ -428,7 +430,7 @@ abstract class GenericBikeOptimizationSubmitter {
   bikeToCarouselItem(
     index: number,
     bikeId: string,
-    bike: {bikePerformance: string},
+    bike: { bikePerformance: string },
     totalBikes: number,
     renderingFunction: string,
     downloadFunction: string
@@ -529,19 +531,6 @@ abstract class GenericBikeOptimizationSubmitter {
 
   showForm(formId: string) {
     problemFormElements.showElement(formId);
-    this.fillInSelectSeedBikePlaceholder(formId);
-  }
-
-  fillInSelectSeedBikePlaceholder(formId: string) {
-    const selectSeedBikeDiv = document.getElementById(
-      formId.concat(SELECT_SEED_BIKE_PLACEHOLDER_SUFFIX)
-    );
-    if (selectSeedBikeDiv !== null) {
-      const notAlreadyCreated = selectSeedBikeDiv.innerHTML.trim() === "";
-      if (notAlreadyCreated) {
-        selectSeedBikeDiv.innerHTML = getSeedBikeSelectionHtml(formId);
-      }
-    }
   }
 
   generateDownloadCadButton(
@@ -571,7 +560,10 @@ abstract class GenericBikeOptimizationSubmitter {
     return button;
   }
 
-  persistBike(bike: {bike: GeneratedBike, bikePerformance: string}, seedBikeId: string): string {
+  persistBike(
+    bike: { bike: GeneratedBike; bikePerformance: string },
+    seedBikeId: string
+  ): string {
     const bikeId = generateUuid();
     const generatedBike = new GeneratedBike();
     generatedBike.bikeObject = bike["bike"];
