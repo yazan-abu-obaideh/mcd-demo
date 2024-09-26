@@ -1,5 +1,4 @@
 import {
-  showForm,
   submitCustomRiderForm,
   submitRiderDimensionsForm,
   submitSeedsForm,
@@ -12,86 +11,60 @@ import person1 from "../assets/person1.png";
 import person2 from "../assets/person2.png";
 import person3 from "../assets/person3.png";
 import BikeSelectionForm from "./BikeSelectionForm";
+import { FormSelectionNavBar } from "./FormSelectionNavBar";
+
+function IntroductionSpace() {
+  return (
+    <div className="text-center m-5">
+      <img
+        className="d-block mx-auto mb-4"
+        src={decodeLogo}
+        alt=""
+        width="225"
+        height="82"
+      />
+      <h1 id="main-header" className="display-5 fw-bold text-body-emphasis">
+        Multiobjective Counterfactuals for Design
+      </h1>
+      <div className="col-lg-6 mx-auto intro-paragraph">
+        <p className="lead mb-4">
+          MCD is an automated design recommendation framework that can help you
+          generate performant and realistic designs. While this demo focuses on
+          bike designs, MCD is a generic framework that can be configured to
+          handle almost any design problem - regardless of the number or nature
+          of constraints or objectives.
+        </p>
+        <div className="d-grid gap-2 d-sm-flex justify-content-sm-center">
+          <div className="col">
+            <div className="row justify-content-center m-1">
+              <a
+                href="#generation-forms"
+                className="btn btn-outline-danger btn-lg px-4 gap-3 w-40"
+              >
+                Generate CAD Designs
+              </a>
+            </div>
+            <div className="row justify-content-center m-1">
+              <a
+                href="/mcd/read-more.html"
+                className="btn btn-outline-danger btn-lg px-4 gap-3 w-40"
+              >
+                Read more
+              </a>
+            </div>
+          </div>
+          <br />
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function McdDemoUserForm() {
   return (
     <div className="non-nav-body">
-      <div className="text-center m-5">
-        <img
-          className="d-block mx-auto mb-4"
-          src={decodeLogo}
-          alt=""
-          width="225"
-          height="82"
-        />
-        <h1 id="main-header" className="display-5 fw-bold text-body-emphasis">
-          Multiobjective Counterfactuals for Design
-        </h1>
-        <div className="col-lg-6 mx-auto intro-paragraph">
-          <p className="lead mb-4">
-            MCD is an automated design recommendation framework that can help
-            you generate performant and realistic designs. While this demo
-            focuses on bike designs, MCD is a generic framework that can be
-            configured to handle almost any design problem - regardless of the
-            number or nature of constraints or objectives.
-          </p>
-          <div className="d-grid gap-2 d-sm-flex justify-content-sm-center">
-            <div className="col">
-              <div className="row justify-content-center m-1">
-                <a
-                  href="#generation-forms"
-                  className="btn btn-outline-danger btn-lg px-4 gap-3 w-40"
-                >
-                  Generate CAD Designs
-                </a>
-              </div>
-              <div className="row justify-content-center m-1">
-                <a
-                  href="/mcd/read-more.html"
-                  className="btn btn-outline-danger btn-lg px-4 gap-3 w-40"
-                >
-                  Read more
-                </a>
-              </div>
-            </div>
-            <br />
-          </div>
-        </div>
-      </div>
-      <div className="container border problem-form-tabs-div p-3">
-        <ul className="nav">
-          <li className="nav-item" onClick={() => showForm("seeds-form-form")}>
-            <button type="button" className="nav-link">
-              Select rider
-            </button>
-          </li>
-          <li
-            className="nav-item"
-            onClick={() => showForm("specify-rider-dimensions-form")}
-          >
-            <button type="button" className="nav-link">
-              Specify rider dimensions
-            </button>
-          </li>
-          <li
-            className="nav-item"
-            onClick={() => showForm("upload-rider-image-form")}
-          >
-            <button type="button" className="nav-link">
-              Upload rider image
-            </button>
-          </li>
-          <li
-            className="nav-item"
-            onClick={() => showForm("generate-from-text-form")}
-          >
-            <button type="button" className="nav-link">
-              Generate from Text Prompt{" "}
-              <span className="text-warning">[BETA]</span>
-            </button>
-          </li>
-        </ul>
-      </div>
+      <IntroductionSpace />
+      <FormSelectionNavBar />
       <div id="generation-forms" className="container border rounded p-3 mb-3">
         <form
           id="generate-from-text-form"
@@ -336,7 +309,7 @@ export default function McdDemoUserForm() {
             </div>
           </div>
           <div id="seeds-form-form-seed-bike-placeholder">
-            < BikeSelectionForm idSuffix="seeds-form-form" />
+            <BikeSelectionForm idSuffix="seeds-form-form" />
           </div>
           <div className="p-3">
             <div className="row flex-cont text-center justify-content-center">
@@ -646,7 +619,7 @@ export default function McdDemoUserForm() {
             </div>
           </div>
           <div id="specify-rider-dimensions-form-seed-bike-placeholder">
-          <BikeSelectionForm idSuffix="specify-rider-dimensions-form" />
+            <BikeSelectionForm idSuffix="specify-rider-dimensions-form" />
           </div>
           <div className="p-3">
             <div className="row flex-cont text-center justify-content-center">
