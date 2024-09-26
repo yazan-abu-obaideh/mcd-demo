@@ -18,3 +18,18 @@ nginx/secrets/
 **/.tmp/
 **/MCD_demo.egg-info/
 **/open-api/generated/*
+
+# TS dependencies
+/.pnp
+.pnp.js
+# TS testing
+/coverage
+# TS misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
