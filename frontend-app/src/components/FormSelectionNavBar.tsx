@@ -1,5 +1,5 @@
 import { ReactElement } from "react";
-import { showForm } from "../declerative/client";
+import { showForm } from "../declarative/client";
 
 type NavItemDescription = {
   formId: string;

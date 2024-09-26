@@ -17,7 +17,7 @@ class GeneratedBike {
   bikePerformance!: string;
 }
 
-class TextPromptOptimizationReqest {
+class TextPromptOptimizationRequest {
   text_prompt!: string;
   cosine_distance_upper_bound!: number;
   optimizer_population!: number;
@@ -42,7 +42,7 @@ class RenderingController {
       headers: { "Content-Type": "application/json" },
       method: "POST",
       body: JSON.stringify({
-        bike: bike.bikeObject
+        bike: bike.bikeObject,
       }),
     });
   }
@@ -66,7 +66,9 @@ class OptimizationController {
     this.optimizationApiUrl = optimizationApiUrl;
   }
 
-  async postTextPromptOptimization(request: TextPromptOptimizationReqest): Promise<Response> {
+  async postTextPromptOptimization(
+    request: TextPromptOptimizationRequest
+  ): Promise<Response> {
     return await fetch(this.optimizationApiUrl.concat("/text-prompt"), {
       headers: { "Content-Type": "application/json" },
       method: "POST",
@@ -146,12 +148,14 @@ class OptimizationController {
       }),
     });
   }
-  async postDownloadClipsBikeCadRequest(bike: GeneratedBike): Promise<Response> {
+  async postDownloadClipsBikeCadRequest(
+    bike: GeneratedBike
+  ): Promise<Response> {
     return fetch(this.optimizationApiUrl.concat("/download-clips-cad"), {
       headers: { "Content-Type": "application/json" },
       method: "POST",
       body: JSON.stringify({
-        bike: bike.bikeObject
+        bike: bike.bikeObject,
       }),
     });
   }
@@ -162,5 +166,5 @@ export {
   FrontendDimensionsOptimizationRequest,
   GeneratedBike,
   RenderingController,
-  TextPromptOptimizationReqest
+  TextPromptOptimizationRequest,
 };

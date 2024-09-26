@@ -2,7 +2,7 @@ import {
   OptimizationController,
   RenderingController,
   GeneratedBike,
-  TextPromptOptimizationReqest,
+  TextPromptOptimizationRequest,
 } from "./controller";
 
 import { apiRoot } from "./config";
@@ -228,7 +228,7 @@ abstract class GenericBikeOptimizationSubmitter {
 
   submitValidTextPromptForm(form: HTMLFormElement) {
     const formData = new FormData(form);
-    const request = new TextPromptOptimizationReqest();
+    const request = new TextPromptOptimizationRequest();
 
     function getOrDefault<T>(label: string, parser: (string: string) => T) {
       const value = formData.get(label) as string;

@@ -3,7 +3,7 @@ import {
   submitRiderDimensionsForm,
   submitSeedsForm,
   submitTextPromptForm,
-} from "../declerative/client";
+} from "../declarative/client";
 
 import person1 from "../assets/person1.png";
 import person2 from "../assets/person2.png";
@@ -141,7 +141,7 @@ function GenerateFromTextForm(): ReactElement {
               id="diversity_weight-input"
             />
             <label className="form-label" htmlFor="diversity_weight-input">
-              Divsersity weight
+              Diversity weight
             </label>
           </div>
           <div className="col-6">
