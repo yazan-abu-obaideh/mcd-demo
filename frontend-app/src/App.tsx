@@ -1,4 +1,3 @@
-import "./App.css";
 import "./styles.css";
 import McdDemoNavBar from "./components/McdDemoNavBar";
 import McdDemoUserForm from "./components/McdDemoUserForm";
