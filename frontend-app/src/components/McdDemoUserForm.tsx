@@ -372,49 +372,10 @@ function SpecifyRiderDimensionsForm() {
       <div id="specify-rider-dimensions-form-seed-bike-placeholder">
         <BikeSelectionForm idSuffix="specify-rider-dimensions-form" />
       </div>
-      <div className="p-3">
-        <div className="row flex-cont text-center justify-content-center">
-          <div className="dropdown">
-            <button
-              className="btn btn-outline-danger btn-lg dropdown-toggle w-40"
-              type="button"
-              id="dropdownMenuButton1-specify-rider-dimensions"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              Generate!
-            </button>
-            <ul
-              className="dropdown-menu w-40"
-              aria-labelledby="dropdownMenuButton1"
-            >
-              <li>
-                <button
-                  type="button"
-                  className="dropdown-item"
-                  onClick={() => submitRiderDimensionsForm("ergonomics")}
-                >
-                  Ergonomic bikes!
-                </button>
-              </li>
-              <li>
-                <button
-                  type="button"
-                  className="dropdown-item"
-                  onClick={() => submitRiderDimensionsForm("aerodynamics")}
-                >
-                  Aerodynamic bikes!
-                </button>
-              </li>
-              <li>
-                <button type="button" className="dropdown-item disabled">
-                  Structurally-optimal bikes! [COMING SOON]
-                </button>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
+      <SubmitDropdown
+        id="1-specify-rider-dimensions"
+        typedSubmissionFunction={submitRiderDimensionsForm}
+      />
     </form>
   );
 }
@@ -458,49 +419,10 @@ function UploadImageForm() {
       <div id="upload-rider-image-form-seed-bike-placeholder">
         <BikeSelectionForm idSuffix="upload-rider-image-form" />
       </div>
-      <div className="p-3">
-        <div className="row flex-cont text-center justify-content-center">
-          <div className="dropdown">
-            <button
-              className="btn btn-outline-danger btn-lg dropdown-toggle w-40"
-              type="button"
-              id="dropdownMenuButton1-upload-rider"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              Generate!
-            </button>
-            <ul
-              className="dropdown-menu w-40"
-              aria-labelledby="dropdownMenuButton1"
-            >
-              <li>
-                <button
-                  type="button"
-                  className="dropdown-item"
-                  onClick={() => submitCustomRiderForm("ergonomics")}
-                >
-                  Ergonomic bikes!
-                </button>
-              </li>
-              <li>
-                <button
-                  type="button"
-                  className="dropdown-item"
-                  onClick={() => submitCustomRiderForm("aerodynamics")}
-                >
-                  Aerodynamic bikes!
-                </button>
-              </li>
-              <li>
-                <button type="button" className="dropdown-item disabled">
-                  Structurally-optimal bikes! [COMING SOON]
-                </button>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
+      <SubmitDropdown
+        id="1-upload-rider"
+        typedSubmissionFunction={submitCustomRiderForm}
+      />
     </form>
   );
 }
@@ -562,54 +484,61 @@ function SeedsForm() {
       <div id="seeds-form-form-seed-bike-placeholder">
         <BikeSelectionForm idSuffix="seeds-form-form" />
       </div>
-      <div className="p-3">
-        <div className="row flex-cont text-center justify-content-center">
-          <div className="dropdown">
-            <button
-              className="btn btn-outline-danger btn-lg dropdown-toggle w-40"
-              type="button"
-              id="dropdownMenuButton1"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              Generate!
-            </button>
-            <ul
-              className="dropdown-menu w-40"
-              aria-labelledby="dropdownMenuButton1"
-            >
-              <li>
-                <button
-                  type="button"
-                  className="dropdown-item"
-                  onClick={() => submitSeedsForm("ergonomics")}
-                >
-                  Ergonomic bikes!
-                </button>
-              </li>
-              <li>
-                <button
-                  type="button"
-                  className="dropdown-item"
-                  onClick={() => submitSeedsForm("aerodynamics")}
-                >
-                  Aerodynamic bikes!
-                </button>
-              </li>
-              <li>
-                <button
-                  type="button"
-                  className="dropdown-item disabled"
-                  onClick={() => submitSeedsForm("aerodynamics")}
-                >
-                  Structurally-optimal bikes! [COMING SOON]
-                </button>
-              </li>
-            </ul>
-          </div>
+      <SubmitDropdown typedSubmissionFunction={submitSeedsForm} id="1" />
+    </form>
+  );
+}
+
+function SubmitDropdown(props: {
+  id: string;
+  typedSubmissionFunction: (optimizationType: string) => void;
+}) {
+  const buttonId = "dropdownMenuButton" + props.id;
+  return (
+    <div className="p-3">
+      <div className="row flex-cont text-center justify-content-center">
+        <div className="dropdown">
+          <button
+            className="btn btn-outline-danger btn-lg dropdown-toggle w-40"
+            type="button"
+            id={buttonId}
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            Generate!
+          </button>
+          <ul className="dropdown-menu w-40" aria-labelledby={buttonId}>
+            <li>
+              <button
+                type="button"
+                className="dropdown-item"
+                onClick={() => props.typedSubmissionFunction("ergonomics")}
+              >
+                Ergonomic bikes!
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                className="dropdown-item"
+                onClick={() => props.typedSubmissionFunction("aerodynamics")}
+              >
+                Aerodynamic bikes!
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                className="dropdown-item disabled"
+                onClick={() => {}}
+              >
+                Structurally-optimal bikes! [COMING SOON]
+              </button>
+            </li>
+          </ul>
         </div>
       </div>
-    </form>
+    </div>
   );
 }
 
