@@ -7,26 +7,27 @@ import bike7 from "../assets/bike7.png";
 import bike10 from "../assets/bike10.png";
 import bike11 from "../assets/bike11.png";
 import bike12 from "../assets/bike12.png";
+import { PropsWithChildren, ReactElement } from "react";
 
-type BikeDivElements = {
+type BikeDivDescription = {
   imageSrc: string;
   inputValue: string;
   labelText: string;
 };
 
-const FIRST_ROW: Array<BikeDivElements> = [
+const FIRST_ROW: Array<BikeDivDescription> = [
   { imageSrc: bike1, inputValue: "1", labelText: "Snow Camo" },
   { imageSrc: bike2, inputValue: "2", labelText: "Childlike" },
   { imageSrc: bike3, inputValue: "3", labelText: "Fiery" },
 ];
 
-const SECOND_ROW: Array<BikeDivElements> = [
+const SECOND_ROW: Array<BikeDivDescription> = [
   { imageSrc: bike11, inputValue: "11", labelText: "Pythonic" },
   { imageSrc: bike5, inputValue: "5", labelText: "Inferno" },
   { imageSrc: bike6, inputValue: "6", labelText: "Wintery" },
 ];
 
-const THIRD_ROW: Array<BikeDivElements> = [
+const THIRD_ROW: Array<BikeDivDescription> = [
   { imageSrc: bike7, inputValue: "7", labelText: "Pastel" },
   { imageSrc: bike10, inputValue: "10", labelText: "Standard" },
   { imageSrc: bike12, inputValue: "12", labelText: "Sleek" },
@@ -37,9 +38,8 @@ function SeedBikeDiv(props: {
   imageSrc: string;
   inputValue: string;
   labelText: string;
-}) {
+}): ReactElement {
   const seedId = "seed".concat(props.inputValue);
-
   return (
     <div className="col seed-bike-div">
       <img
@@ -66,42 +66,33 @@ function SeedBikeDiv(props: {
   );
 }
 
+function BikesRow(props: PropsWithChildren): ReactElement {
+  return <div className="row p-5">{props.children}</div>;
+}
+
+function toElements(
+  idSuffix: string,
+  elementDescriptions: Array<BikeDivDescription>
+): Array<ReactElement> {
+  return elementDescriptions.map((elemDesc) => (
+    <SeedBikeDiv
+      idSuffix={idSuffix}
+      imageSrc={elemDesc.imageSrc}
+      labelText={elemDesc.labelText}
+      inputValue={elemDesc.inputValue}
+    />
+  ));
+}
+
 export default function BikeSelectionForm(props: { idSuffix: string }) {
   return (
     <div id={`seed-bike-selection-container${props.idSuffix}`} className="m-3">
       <h3>Select Seed Bike</h3>
       <div id={`bikes-container${props.idSuffix}`} className="m-3"></div>
       <div id={`all-bikes-helper-div${props.idSuffix}`}>
-        <div className="row p-5">
-          {FIRST_ROW.map((p) => (
-            <SeedBikeDiv
-              idSuffix={props.idSuffix}
-              imageSrc={p.imageSrc}
-              labelText={p.labelText}
-              inputValue={p.inputValue}
-            />
-          ))}
-        </div>
-        <div className="row p-5">
-          {SECOND_ROW.map((p) => (
-            <SeedBikeDiv
-              idSuffix={props.idSuffix}
-              imageSrc={p.imageSrc}
-              labelText={p.labelText}
-              inputValue={p.inputValue}
-            />
-          ))}
-        </div>
-        <div className="row p-5">
-          {THIRD_ROW.map((p) => (
-            <SeedBikeDiv
-              idSuffix={props.idSuffix}
-              imageSrc={p.imageSrc}
-              labelText={p.labelText}
-              inputValue={p.inputValue}
-            />
-          ))}
-        </div>
+        <BikesRow>{toElements(props.idSuffix, FIRST_ROW)}</BikesRow>
+        <BikesRow>{toElements(props.idSuffix, SECOND_ROW)}</BikesRow>
+        <BikesRow>{toElements(props.idSuffix, THIRD_ROW)}</BikesRow>
       </div>
     </div>
   );
