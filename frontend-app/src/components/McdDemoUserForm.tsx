@@ -11,15 +11,12 @@ import person3 from "../assets/person3.png";
 import BikeSelectionForm from "./BikeSelectionForm";
 import { FormSelectionNavBar } from "./FormSelectionNavBar";
 import { LandingHeader } from "./LandingHeader";
-import { ReactElement } from "react";
+import { ReactElement, useState } from "react";
+import { McdInputForm } from "../FormsEnum";
 
 function GenerateFromTextForm(): ReactElement {
   return (
-    <form
-      id="generate-from-text-form"
-      className="m-3"
-      style={{ display: "none" }}
-    >
+    <form id="generate-from-text-form" className="m-3">
       <h3>Generate from Text Prompt</h3>
       <div className="row flex-cont">
         <div className="col-6">
@@ -191,7 +188,7 @@ function GenerateFromTextForm(): ReactElement {
 }
 function SpecifyRiderDimensionsForm() {
   return (
-    <form id="specify-rider-dimensions-form" style={{ display: "none" }}>
+    <form id="specify-rider-dimensions-form">
       <div id="specify-rider-dimensions-container" className="m-3">
         <h3>
           Specify rider dimensions
@@ -382,7 +379,7 @@ function SpecifyRiderDimensionsForm() {
 
 function UploadImageForm() {
   return (
-    <form id="upload-rider-image-form" style={{ display: "none" }}>
+    <form id="upload-rider-image-form">
       <div id="upload-image-container" className="m-3">
         <h3>Upload Rider Image</h3>
         <div className="p-3">
@@ -624,15 +621,18 @@ function ServerResponseDiv() {
 }
 
 export default function McdDemoUserForm() {
+  const [selectedForm, setSelectedForm] = useState(McdInputForm.SEEDS);
   return (
     <div className="non-nav-body">
       <LandingHeader />
-      <FormSelectionNavBar />
+      <FormSelectionNavBar setForm={setSelectedForm} />
       <div id="generation-forms" className="container border rounded p-3 mb-3">
-        <GenerateFromTextForm />
-        <SeedsForm />
-        <UploadImageForm />
-        <SpecifyRiderDimensionsForm />
+        {selectedForm === McdInputForm.SEEDS && <SeedsForm />}
+        {selectedForm === McdInputForm.IMAGE && <UploadImageForm />}
+        {selectedForm === McdInputForm.TEXT && <GenerateFromTextForm />}
+        {selectedForm === McdInputForm.DIMENSIONS && (
+          <SpecifyRiderDimensionsForm />
+        )}
       </div>
       <ServerResponseDiv />
     </div>

@@ -17,7 +17,6 @@ import {
   getRenderBikeBtnId,
 } from "./bike_element_id";
 import {
-  GENERATE_FROM_TEXT_PROMPT_ID,
   SEEDS_FORM_ID,
   UPLOAD_RIDER_IMAGE_FORM_ID,
   SPECIFY_DIMENSIONS_FORM_ID,
@@ -55,13 +54,6 @@ const resultDivElements = new ExclusivelyVisibleElements([
   NO_BIKES_FOUND_DIV,
   RESPONSE_LOADING_DIV,
   ERROR_RESPONSE_DIV,
-]);
-
-const problemFormElements = new ExclusivelyVisibleElements([
-  SEEDS_FORM_ID,
-  UPLOAD_RIDER_IMAGE_FORM_ID,
-  SPECIFY_DIMENSIONS_FORM_ID,
-  GENERATE_FROM_TEXT_PROMPT_ID,
 ]);
 
 abstract class GenericBikeOptimizationSubmitter {
@@ -529,10 +521,6 @@ abstract class GenericBikeOptimizationSubmitter {
     );
   }
 
-  showForm(formId: string) {
-    problemFormElements.showElement(formId);
-  }
-
   generateDownloadCadButton(
     bikeId: string,
     downloadFunction: string
@@ -728,10 +716,6 @@ const seedsSubmitter = new SeedsSubmitter();
 const customerRidersSubmitter = new CustomerRidersSubmitter();
 const dimensionsSubmitter = new DimensionsSubmitter();
 
-function showForm(arg1: string) {
-  submitter.showForm(arg1);
-}
-
 function submitSeedsForm(arg1: string) {
   seedsSubmitter.submitForm(arg1);
 }
@@ -756,13 +740,8 @@ function downloadBikeById(arg1: string) {
   submitter.downloadBikeById(arg1);
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  showForm("seeds-form-form");
-});
-
 export {
   submitter,
-  showForm,
   submitSeedsForm,
   submitTextPromptForm,
   submitCustomRiderForm,

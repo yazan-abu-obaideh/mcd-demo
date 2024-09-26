@@ -1,20 +1,20 @@
 import { ReactElement } from "react";
-import { showForm } from "../declarative/client";
+import { McdInputForm } from "../FormsEnum";
 
 type NavItemDescription = {
-  formId: string;
+  form: McdInputForm;
   buttonInner: ReactElement;
 };
 
 const NAV_ITEMS: Array<NavItemDescription> = [
-  { formId: "seeds-form-form", buttonInner: <>Select rider</> },
+  { form: McdInputForm.SEEDS, buttonInner: <>Select rider</> },
   {
-    formId: "specify-rider-dimensions-form",
+    form: McdInputForm.DIMENSIONS,
     buttonInner: <>Specify rider dimensions</>,
   },
-  { formId: "upload-rider-image-form", buttonInner: <>Upload rider image</> },
+  { form: McdInputForm.IMAGE, buttonInner: <>Upload rider image</> },
   {
-    formId: "generate-from-text-form",
+    form: McdInputForm.TEXT,
     buttonInner: (
       <>
         Generate from Text Prompt <span className="text-warning">BETA</span>
@@ -24,11 +24,11 @@ const NAV_ITEMS: Array<NavItemDescription> = [
 ];
 
 function NavItem(props: {
-  formId: string;
   buttonInner: ReactElement;
+  setSelectedForm: () => void;
 }): ReactElement {
   return (
-    <li className="nav-item" onClick={() => showForm(props.formId)}>
+    <li className="nav-item" onClick={() => props.setSelectedForm()}>
       <button type="button" className="nav-link">
         {props.buttonInner}
       </button>
@@ -36,14 +36,16 @@ function NavItem(props: {
   );
 }
 
-export function FormSelectionNavBar() {
+export function FormSelectionNavBar(props: {
+  setForm: (form: McdInputForm) => void;
+}) {
   return (
     <div className="container border problem-form-tabs-div p-3">
       <ul className="nav">
         {NAV_ITEMS.map((navItemDesc) => (
           <NavItem
-            formId={navItemDesc.formId}
             buttonInner={navItemDesc.buttonInner}
+            setSelectedForm={() => props.setForm(navItemDesc.form)}
           />
         ))}
       </ul>
