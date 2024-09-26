@@ -1,4 +1,4 @@
-import decode_logo from "../decode_logo.png";
+import decodeLogo from "../assets/decode_logo.png";
 
 export default function McdDemoNavBar() {
   return (
@@ -6,7 +6,7 @@ export default function McdDemoNavBar() {
       <div className="container-fluid">
         <a className="navbar-brand" href="#main-header">
           <img
-            src={decode_logo}
+            src={decodeLogo}
             alt=""
             width="75"
             height="25"
