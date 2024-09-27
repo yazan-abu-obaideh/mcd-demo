@@ -1,18 +1,16 @@
 import {
-  submitCustomRiderForm,
   submitRiderDimensionsForm,
-  submitSeedsForm,
   submitTextPromptForm,
 } from "../declarative/client";
 
-import person1 from "../assets/person1.png";
-import person2 from "../assets/person2.png";
-import person3 from "../assets/person3.png";
 import BikeSelectionForm from "./BikeSelectionForm";
 import { FormSelectionNavBar } from "./FormSelectionNavBar";
 import { LandingHeader } from "./LandingHeader";
 import { ReactElement, useState } from "react";
 import { McdInputForm } from "../FormsEnum";
+import { SubmitDropdown } from "./forms/SubmitDropdown";
+import { SeedsForm } from "./forms/SeedsForm";
+import { UploadImageForm } from "./forms/UploadImageForm";
 
 function GenerateFromTextForm(): ReactElement {
   return (
@@ -374,168 +372,6 @@ function SpecifyRiderDimensionsForm() {
         typedSubmissionFunction={submitRiderDimensionsForm}
       />
     </form>
-  );
-}
-
-function UploadImageForm() {
-  return (
-    <form id="upload-rider-image-form">
-      <div id="upload-image-container" className="m-3">
-        <h3>Upload Rider Image</h3>
-        <div className="p-3">
-          <div className="row flex-cont">
-            <div className="col-6">
-              <input
-                className="form-control"
-                type="file"
-                accept=".jpg, .jpeg, .png, .svg"
-                id="user-img-upload"
-                name="user-img"
-                required
-              />
-            </div>
-          </div>
-
-          <div className="row flex-cont">
-            <div className="col-6">
-              <input
-                type="number"
-                className="form-control"
-                name="user-height"
-                id="user-height-input"
-                step="0.01"
-                required
-              />
-              <label className="form-label" htmlFor="user-height-input">
-                User Height (Inches)
-              </label>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div id="upload-rider-image-form-seed-bike-placeholder">
-        <BikeSelectionForm idSuffix="upload-rider-image-form" />
-      </div>
-      <SubmitDropdown
-        id="1-upload-rider"
-        typedSubmissionFunction={submitCustomRiderForm}
-      />
-    </form>
-  );
-}
-
-function SeedsForm() {
-  return (
-    <form id="seeds-form-form">
-      <div id="person-image-container" className="m-3">
-        <h3>Select Rider</h3>
-        <div className="row p-5">
-          <div className="col seed-bike-div">
-            <img className="seed-bike-img" src={person1} alt="rider-image-1" />
-            <br />
-            <input
-              id="rider-image-1"
-              value="1"
-              name="riderImage"
-              type="radio"
-              className="form-check-input"
-              checked
-              required
-            />
-            <label className="form-check-label" htmlFor="rider-image-1">
-              6'2"
-            </label>
-          </div>
-          <div className="col seed-bike-div">
-            <img className="seed-bike-img" src={person2} alt="rider-image-2" />
-            <br />
-            <input
-              id="rider-image-2"
-              value="2"
-              name="riderImage"
-              type="radio"
-              className="form-check-input"
-              required
-            />
-            <label className="form-check-label" htmlFor="rider-image-2">
-              5'10"
-            </label>
-          </div>
-          <div className="col seed-bike-div">
-            <img className="seed-bike-img" src={person3} alt="rider-image-3" />
-            <br />
-            <input
-              id="rider-image-3"
-              value="3"
-              name="riderImage"
-              type="radio"
-              className="form-check-input"
-              required
-            />
-            <label className="form-check-label" htmlFor="rider-image-3">
-              5'1"
-            </label>
-          </div>
-        </div>
-      </div>
-      <div id="seeds-form-form-seed-bike-placeholder">
-        <BikeSelectionForm idSuffix="seeds-form-form" />
-      </div>
-      <SubmitDropdown typedSubmissionFunction={submitSeedsForm} id="1" />
-    </form>
-  );
-}
-
-function SubmitDropdown(props: {
-  id: string;
-  typedSubmissionFunction: (optimizationType: string) => void;
-}) {
-  const buttonId = "dropdownMenuButton" + props.id;
-  return (
-    <div className="p-3">
-      <div className="row flex-cont text-center justify-content-center">
-        <div className="dropdown">
-          <button
-            className="btn btn-outline-danger btn-lg dropdown-toggle w-40"
-            type="button"
-            id={buttonId}
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            Generate!
-          </button>
-          <ul className="dropdown-menu w-40" aria-labelledby={buttonId}>
-            <li>
-              <button
-                type="button"
-                className="dropdown-item"
-                onClick={() => props.typedSubmissionFunction("ergonomics")}
-              >
-                Ergonomic bikes!
-              </button>
-            </li>
-            <li>
-              <button
-                type="button"
-                className="dropdown-item"
-                onClick={() => props.typedSubmissionFunction("aerodynamics")}
-              >
-                Aerodynamic bikes!
-              </button>
-            </li>
-            <li>
-              <button
-                type="button"
-                className="dropdown-item disabled"
-                onClick={() => {}}
-              >
-                Structurally-optimal bikes! [COMING SOON]
-              </button>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
   );
 }
 
