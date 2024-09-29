@@ -1,3 +1,4 @@
+import { PropsWithChildren, ReactElement } from "react";
 import { submitRiderDimensionsForm } from "../../declarative/client";
 import BikeSelectionForm from "../BikeSelectionForm";
 import { SubmitDropdown } from "./SubmitDropdown";
@@ -27,6 +28,10 @@ function FloatInputDiv(props: {
   );
 }
 
+function Row(props: PropsWithChildren): ReactElement {
+  return <div className="row flex-cont"> {props.children} </div>;
+}
+
 export function SpecifyRiderDimensionsForm() {
   return (
     <form id="specify-rider-dimensions-form">
@@ -36,7 +41,7 @@ export function SpecifyRiderDimensionsForm() {
           <span style={{ fontSize: "small" }}>(Inches)</span>
         </h3>
         <div className="p-3">
-          <div className="row flex-cont">
+          <Row>
             <FloatInputDiv
               name="rider-height"
               inputId="user-height-input-specify-rider-dimensions"
@@ -49,8 +54,8 @@ export function SpecifyRiderDimensionsForm() {
               initialValue={60}
               labelText="Shoulder Height"
             />
-          </div>
-          <div className="row flex-cont">
+          </Row>
+          <Row>
             <FloatInputDiv
               name="hip-ankle"
               inputId="hip-ankle-input-specify-rider-dimensions"
@@ -63,8 +68,8 @@ export function SpecifyRiderDimensionsForm() {
               initialValue={16.5}
               labelText="Hip to Knee"
             />
-          </div>
-          <div className="row flex-cont">
+          </Row>
+          <Row>
             <FloatInputDiv
               name="shoulder-wrist"
               inputId="shoulder-wrist-input-specify-rider-dimensions"
@@ -77,8 +82,8 @@ export function SpecifyRiderDimensionsForm() {
               initialValue={23.5}
               labelText="Arm Length"
             />
-          </div>
-          <div className="row flex-cont">
+          </Row>
+          <Row>
             <FloatInputDiv
               name="upper-leg"
               inputId="upper-leg-input-specify-rider-dimensions"
@@ -91,8 +96,8 @@ export function SpecifyRiderDimensionsForm() {
               initialValue={20.25}
               labelText="Lower Leg"
             />
-          </div>
-          <div className="row flex-cont">
+          </Row>
+          <Row>
             <div className="col-3" style={{ width: "50%" }}>
               <input
                 type="number"
@@ -111,7 +116,7 @@ export function SpecifyRiderDimensionsForm() {
                 Torso Length
               </label>
             </div>
-          </div>
+          </Row>
         </div>
       </div>
       <div id="specify-rider-dimensions-form-seed-bike-placeholder">
