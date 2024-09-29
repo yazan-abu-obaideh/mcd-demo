@@ -1,6 +1,6 @@
 import { ReactElement } from "react";
 import { submitTextPromptForm } from "../../declarative/client";
-import { GENERATE_FROM_TEXT_PROMPT_ID } from "../../html_element_constant_ids";
+import { TEXT_PROMPT_FORM_ID } from "../../html_element_constant_ids";
 
 const ADVANCED_OPTIONS_ID = "advancedOptions";
 
@@ -124,8 +124,7 @@ function GenerateButton() {
     <button
       className="btn btn-outline-danger btn-lg w-40"
       type="button"
-      // "generate-from-text-form-submit-button"
-      id={GENERATE_FROM_TEXT_PROMPT_ID.concat("-submit-button")}
+      id={TEXT_PROMPT_FORM_ID.concat("-submit-button")}
       onClick={() => submitTextPromptForm()}
     >
       Generate!
@@ -167,7 +166,7 @@ function BikeDescriptionInput() {
 
 export function GenerateFromTextForm(): ReactElement {
   return (
-    <form id={GENERATE_FROM_TEXT_PROMPT_ID} className="m-3">
+    <form id={TEXT_PROMPT_FORM_ID} className="m-3">
       <h3>Generate from Text Prompt</h3>
       <div className="row flex-cont">
         <BikeDescriptionInput />

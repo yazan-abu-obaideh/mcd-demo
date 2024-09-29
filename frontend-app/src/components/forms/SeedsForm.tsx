@@ -6,6 +6,7 @@ import person2 from "../../assets/person2.png";
 import person3 from "../../assets/person3.png";
 import BikeSelectionForm from "../BikeSelectionForm";
 import { SubmitDropdown } from "./SubmitDropdown";
+import { SEEDS_FORM_ID } from "../../html_element_constant_ids";
 
 function RiderDiv(props: {
   imageSrc: string;
@@ -41,7 +42,7 @@ function RiderDiv(props: {
 
 export function SeedsForm() {
   return (
-    <form id="seeds-form-form">
+    <form id={SEEDS_FORM_ID}>
       <div id="person-image-container" className="m-3">
         <h3>Select Rider</h3>
         <div className="row p-5">
@@ -50,9 +51,7 @@ export function SeedsForm() {
           <RiderDiv imageSrc={person3} inputValue="3" labelText={` 5'1"`} />
         </div>
       </div>
-      <div id="seeds-form-form-seed-bike-placeholder">
-        <BikeSelectionForm idSuffix="seeds-form-form" />
-      </div>
+      <BikeSelectionForm idSuffix={SEEDS_FORM_ID} />
       <SubmitDropdown typedSubmissionFunction={submitSeedsForm} id="1" />
     </form>
   );

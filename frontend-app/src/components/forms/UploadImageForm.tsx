@@ -1,4 +1,5 @@
 import { submitCustomRiderForm } from "../../declarative/client";
+import { UPLOAD_RIDER_IMAGE_FORM_ID, USER_IMAGE_UPLOAD } from "../../html_element_constant_ids";
 import BikeSelectionForm from "../BikeSelectionForm";
 import { SubmitDropdown } from "./SubmitDropdown";
 
@@ -30,7 +31,7 @@ function UploadImageInputDiv() {
           className="form-control"
           type="file"
           accept=".jpg, .jpeg, .png, .svg"
-          id="user-img-upload"
+          id={USER_IMAGE_UPLOAD}
           name="user-img"
           required
         />
@@ -41,7 +42,7 @@ function UploadImageInputDiv() {
 
 export function UploadImageForm() {
   return (
-    <form id="upload-rider-image-form">
+    <form id={UPLOAD_RIDER_IMAGE_FORM_ID}>
       <div id="upload-image-container" className="m-3">
         <h3>Upload Rider Image</h3>
         <div className="p-3">
@@ -49,9 +50,7 @@ export function UploadImageForm() {
           <UserHeightInputDiv />
         </div>
       </div>
-      <div id="upload-rider-image-form-seed-bike-placeholder">
-        <BikeSelectionForm idSuffix="upload-rider-image-form" />
-      </div>
+      <BikeSelectionForm idSuffix={UPLOAD_RIDER_IMAGE_FORM_ID} />
       <SubmitDropdown
         id="1-upload-rider"
         typedSubmissionFunction={submitCustomRiderForm}

@@ -6,18 +6,19 @@ import { SeedsForm } from "./forms/SeedsForm";
 import { UploadImageForm } from "./forms/UploadImageForm";
 import { SpecifyRiderDimensionsForm } from "./forms/SpecifyRiderDimensionsForm";
 import { GenerateFromTextForm } from "./forms/GenerateFromTextForm";
+import { ERROR_RESPONSE_DIV, GENERATED_DESIGNS_CONSUMER_CAROUSEL, NO_BIKES_FOUND_DIV, RESPONSE_DIV_ID, RESPONSE_LOADING_DIV, RESPONSE_RECEIVED_DIV } from "../html_element_constant_ids";
 
 function ServerResponseDiv() {
   return (
     <div
-      id="server-response-div"
+      id={RESPONSE_DIV_ID}
       className="container border rounded p-3"
       style={{ display: "none" }}
     >
       <h2>Generated Designs</h2>
       <div id="loading-or-result-div" className="container p-3">
         <div
-          id="response-loading-div"
+          id={RESPONSE_LOADING_DIV}
           className="text-center"
           style={{ display: "block" }}
         >
@@ -30,7 +31,7 @@ function ServerResponseDiv() {
           </div>
         </div>
         <div
-          id="response-received-div"
+          id={RESPONSE_RECEIVED_DIV}
           className="p-3"
           style={{ display: "none" }}
         >
@@ -39,7 +40,7 @@ function ServerResponseDiv() {
             className="carousel carousel-dark slide"
           >
             <div
-              id="generated-designs-consumer-carousel"
+              id={GENERATED_DESIGNS_CONSUMER_CAROUSEL}
               className="carousel-inner"
             ></div>
             <button
@@ -69,7 +70,7 @@ function ServerResponseDiv() {
           </div>
         </div>
         <div
-          id="no-bikes-found-div"
+          id={NO_BIKES_FOUND_DIV}
           className="p-3 text-center"
           style={{ display: "none" }}
         >
@@ -79,7 +80,7 @@ function ServerResponseDiv() {
           </h4>
         </div>
         <div
-          id="error-response-div"
+          id={ERROR_RESPONSE_DIV}
           className="p-3 text-center"
           style={{ display: "none" }}
         ></div>

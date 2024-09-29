@@ -2,6 +2,7 @@ import { PropsWithChildren, ReactElement } from "react";
 import { submitRiderDimensionsForm } from "../../declarative/client";
 import BikeSelectionForm from "../BikeSelectionForm";
 import { SubmitDropdown } from "./SubmitDropdown";
+import { SPECIFY_DIMENSIONS_FORM_ID } from "../../html_element_constant_ids";
 
 function FloatInputDiv(props: {
   name: string;
@@ -34,7 +35,7 @@ function Row(props: PropsWithChildren): ReactElement {
 
 export function SpecifyRiderDimensionsForm() {
   return (
-    <form id="specify-rider-dimensions-form">
+    <form id={SPECIFY_DIMENSIONS_FORM_ID}>
       <div id="specify-rider-dimensions-container" className="m-3">
         <h3>
           Specify rider dimensions
@@ -119,9 +120,7 @@ export function SpecifyRiderDimensionsForm() {
           </Row>
         </div>
       </div>
-      <div id="specify-rider-dimensions-form-seed-bike-placeholder">
-        <BikeSelectionForm idSuffix="specify-rider-dimensions-form" />
-      </div>
+      <BikeSelectionForm idSuffix={SPECIFY_DIMENSIONS_FORM_ID} />
       <SubmitDropdown
         id="1-specify-rider-dimensions"
         typedSubmissionFunction={submitRiderDimensionsForm}
