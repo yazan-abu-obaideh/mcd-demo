@@ -1,9 +1,9 @@
 import { ReactElement } from "react";
 import { submitSeedsForm } from "../../declarative/client";
 
-import person1 from "../assets/person1.png";
-import person2 from "../assets/person2.png";
-import person3 from "../assets/person3.png";
+import person1 from "../../assets/person1.png";
+import person2 from "../../assets/person2.png";
+import person3 from "../../assets/person3.png";
 import BikeSelectionForm from "../BikeSelectionForm";
 import { SubmitDropdown } from "./SubmitDropdown";
 
