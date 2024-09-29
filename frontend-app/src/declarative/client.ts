@@ -22,20 +22,20 @@ import {
   SPECIFY_DIMENSIONS_FORM_ID,
   TEXT_PROMPT_FORM_ID,
   RESPONSE_DIV_ID,
-} from "./html_element_constant_ids";
+} from "../html_element_constant_ids";
 import {
   RESPONSE_RECEIVED_DIV,
   NO_BIKES_FOUND_DIV,
   RESPONSE_LOADING_DIV,
   ERROR_RESPONSE_DIV,
-} from "./html_element_constant_ids";
+} from "../html_element_constant_ids";
 import { createSpaceDiv } from "./html_utils";
 import { getOriginalImageInResultId } from "./bike_element_id";
 import { renderingFailedElementId } from "./bike_element_id";
 import { bikeLoadingId } from "./bike_element_id";
-import { GENERATED_DESIGNS_CONSUMER_CAROUSEL } from "./html_element_constant_ids";
+import { GENERATED_DESIGNS_CONSUMER_CAROUSEL } from "../html_element_constant_ids";
 import { generateUuid } from "./generic_utils";
-import { USER_IMAGE_UPLOAD } from "./html_element_constant_ids";
+import { USER_IMAGE_UPLOAD } from "../html_element_constant_ids";
 import { dimensionsFormToRiderDimensions as dimensionsFormToDimensionsRequest } from "./forms";
 
 const optimizationApiUrl = apiRoot.concat("/api/v1/optimization");
