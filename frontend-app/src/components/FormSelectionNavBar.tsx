@@ -1,30 +1,8 @@
 import { ReactElement } from "react";
 import { McdInputForm } from "../FormsEnum";
 
-type NavItemDescription = {
-  form: McdInputForm;
-  buttonInner: ReactElement;
-};
-
-const NAV_ITEMS: Array<NavItemDescription> = [
-  { form: McdInputForm.SEEDS, buttonInner: <>Select rider</> },
-  {
-    form: McdInputForm.DIMENSIONS,
-    buttonInner: <>Specify rider dimensions</>,
-  },
-  { form: McdInputForm.IMAGE, buttonInner: <>Upload rider image</> },
-  {
-    form: McdInputForm.TEXT,
-    buttonInner: (
-      <>
-        Generate from Text Prompt <span className="text-warning">BETA</span>
-      </>
-    ),
-  },
-];
-
 function NavItem(props: {
-  buttonInner: ReactElement;
+  buttonInner: ReactElement | string;
   setSelectedForm: () => void;
 }): ReactElement {
   return (
@@ -42,12 +20,27 @@ export function FormSelectionNavBar(props: {
   return (
     <div className="container border problem-form-tabs-div p-3">
       <ul className="nav">
-        {NAV_ITEMS.map((navItemDesc) => (
-          <NavItem
-            buttonInner={navItemDesc.buttonInner}
-            setSelectedForm={() => props.setForm(navItemDesc.form)}
-          />
-        ))}
+        <NavItem
+          buttonInner={"Select rider"}
+          setSelectedForm={() => props.setForm(McdInputForm.SEEDS)}
+        />
+        <NavItem
+          buttonInner={"Specify rider dimensions"}
+          setSelectedForm={() => props.setForm(McdInputForm.DIMENSIONS)}
+        />
+        <NavItem
+          buttonInner={"Upload rider image"}
+          setSelectedForm={() => props.setForm(McdInputForm.IMAGE)}
+        />
+        <NavItem
+          buttonInner={
+            <>
+              Generate from Text Prompt{" "}
+              <span className="text-warning">BETA</span>
+            </>
+          }
+          setSelectedForm={() => props.setForm(McdInputForm.TEXT)}
+        />
       </ul>
     </div>
   );
