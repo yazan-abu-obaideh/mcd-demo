@@ -741,6 +741,8 @@ function downloadBikeById(arg1: string) {
 }
 
 export {
+  optimizationController,
+  renderingController,
   submitter,
   submitSeedsForm,
   submitTextPromptForm,

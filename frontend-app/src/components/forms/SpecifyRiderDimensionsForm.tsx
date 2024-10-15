@@ -121,10 +121,10 @@ export function SpecifyRiderDimensionsForm() {
         </div>
       </div>
       <BikeSelectionForm idSuffix={SPECIFY_DIMENSIONS_FORM_ID} />
-      <SubmitDropdown
+      {/* <SubmitDropdown
         id="1-specify-rider-dimensions"
         typedSubmissionFunction={submitRiderDimensionsForm}
-      />
+      /> */}
     </form>
   );
 }

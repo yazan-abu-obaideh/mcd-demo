@@ -6,6 +6,7 @@ import {
   NO_BIKES_FOUND_DIV,
   ERROR_RESPONSE_DIV,
 } from "../html_element_constant_ids";
+import { McdServerResponse } from "./McdServerResponse";
 
 function LoadingDiv() {
   return (
@@ -69,15 +70,22 @@ function ValidBikesDiv() {
   );
 }
 
-export function ServerResponseDiv() {
+export function ServerResponseDiv(props: {
+  mcdServerResponse: McdServerResponse;
+}) {
+  const optRes = props.mcdServerResponse.optimizationResponse;
   return (
     <div id={RESPONSE_DIV_ID} className="container border rounded p-3">
       <h2>Generated Designs</h2>
       <div id="loading-or-result-div" className="container p-3">
-        <LoadingDiv />
-        <ValidBikesDiv />
-        <NoBikesDiv />
-        <div id={ERROR_RESPONSE_DIV} className="p-3 text-center"></div>
+        {props.mcdServerResponse.isLoading && <LoadingDiv />}
+        {optRes !== undefined && optRes.bikes.length > 0 && <ValidBikesDiv />}
+        {optRes !== undefined && optRes.bikes.length === 0 && <ValidBikesDiv />}
+        {props.mcdServerResponse.error !== undefined && (
+          <div id={ERROR_RESPONSE_DIV} className="p-3 text-center">
+            {props.mcdServerResponse.error.errorMessage}
+          </div>
+        )}
       </div>
     </div>
   );

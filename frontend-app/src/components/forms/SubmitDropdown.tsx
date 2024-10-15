@@ -1,6 +1,8 @@
+
 export function SubmitDropdown(props: {
   id: string;
-  typedSubmissionFunction: (optimizationType: string) => void;
+  ergonomicOptimizationFunction: () => void;
+  aerodynamicOptimizationFunction: () => void;
 }) {
   const buttonId = "dropdownMenuButton" + props.id;
   return (
@@ -19,11 +21,11 @@ export function SubmitDropdown(props: {
           <ul className="dropdown-menu w-40" aria-labelledby={buttonId}>
             <DropdownItem
               itemText="Ergonomic bikes!"
-              onClickFun={() => props.typedSubmissionFunction("ergonomics")}
+              onClickFun={() => props.ergonomicOptimizationFunction()}
             />
             <DropdownItem
               itemText="Aerodynamic bikes!"
-              onClickFun={() => props.typedSubmissionFunction("aerodynamics")}
+              onClickFun={() => props.aerodynamicOptimizationFunction()}
             />
             <DropdownItem
               itemText="Structurally-optimal bikes! [COMING SOON]"

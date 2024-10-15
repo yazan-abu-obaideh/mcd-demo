@@ -1,5 +1,8 @@
 import { ReactElement } from "react";
-import { submitSeedsForm } from "../../declarative/client";
+import {
+  optimizationController,
+  submitSeedsForm,
+} from "../../declarative/client";
 
 import person1 from "../../assets/person1.png";
 import person2 from "../../assets/person2.png";
@@ -7,6 +10,23 @@ import person3 from "../../assets/person3.png";
 import BikeSelectionForm from "../BikeSelectionForm";
 import { SubmitDropdown } from "./SubmitDropdown";
 import { SEEDS_FORM_ID } from "../../html_element_constant_ids";
+import {
+  GENERIC_ERROR,
+  McdError,
+  McdServerResponse,
+  BikesServerResponse,
+} from "../McdServerResponse";
+import { OptimizationController } from "../../declarative/controller";
+import { apiRoot } from "../../declarative/config";
+import { SEED_BIKE_DATA_NAME } from "../constants";
+
+const RIDER_DATA_NAME = "riderImage";
+const LOADING = new McdServerResponse(true, undefined, undefined);
+const GENERIC_ERROR_RESPONSE = new McdServerResponse(
+  false,
+  GENERIC_ERROR,
+  undefined
+);
 
 function RiderDiv(props: {
   imageSrc: string;
@@ -24,7 +44,7 @@ function RiderDiv(props: {
       <input
         id={"rider-image-" + props.inputValue}
         value={props.inputValue}
-        name="riderImage"
+        name={RIDER_DATA_NAME}
         type="radio"
         className="form-check-input"
         checked
@@ -40,7 +60,24 @@ function RiderDiv(props: {
   );
 }
 
-export function SeedsForm() {
+function stringFromFormData(dataName: string) {
+  const formData = new FormData(
+    document.getElementById(SEEDS_FORM_ID) as HTMLFormElement
+  );
+  return formData.get(dataName) as string;
+}
+
+function grabSelectedSeed(): string {
+  return stringFromFormData(SEED_BIKE_DATA_NAME);
+}
+
+function grabSelectedRider(): string {
+  return stringFromFormData(RIDER_DATA_NAME);
+}
+
+export function SeedsForm(props: {
+  setServerResponse: (mcdServerResponse: McdServerResponse) => void;
+}) {
   return (
     <form id={SEEDS_FORM_ID}>
       <div id="person-image-container" className="m-3">
@@ -52,7 +89,45 @@ export function SeedsForm() {
         </div>
       </div>
       <BikeSelectionForm idSuffix={SEEDS_FORM_ID} />
-      <SubmitDropdown typedSubmissionFunction={submitSeedsForm} id="1" />
+      <SubmitDropdown
+        id="1"
+        ergonomicOptimizationFunction={() => {
+          props.setServerResponse(LOADING);
+          optimizationController
+            .postSeedsOptimization(
+              "ergonomics",
+              grabSelectedSeed(),
+              grabSelectedRider()
+            )
+            .then((response) => {
+              if (response.status !== 200) {
+                response.json().then((resJson) => {
+                  props.setServerResponse(
+                    new McdServerResponse(
+                      false,
+                      new McdError(resJson["message"]),
+                      undefined
+                    )
+                  );
+                });
+              } else {
+                response.json().then((resJson) => {
+                  
+                  const optResponse = JSON.parse(
+                    resJson
+                  ) as BikesServerResponse;
+                  props.setServerResponse(
+                    new McdServerResponse(false, undefined, optResponse)
+                  );
+                });
+              }
+            })
+            .catch(() => {
+              props.setServerResponse(GENERIC_ERROR_RESPONSE);
+            });
+        }}
+        aerodynamicOptimizationFunction={() => {}}
+      />
     </form>
   );
 }

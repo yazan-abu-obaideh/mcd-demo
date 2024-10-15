@@ -8,6 +8,7 @@ import bike10 from "../assets/bike10.png";
 import bike11 from "../assets/bike11.png";
 import bike12 from "../assets/bike12.png";
 import { PropsWithChildren, ReactElement } from "react";
+import { SEED_BIKE_DATA_NAME } from "./constants";
 
 type BikeDivDescription = {
   imageSrc: string;
@@ -51,7 +52,7 @@ function SeedBikeDiv(props: {
       <input
         id={`${seedId}${props.idSuffix}`}
         value={props.inputValue}
-        name="seedBike"
+        name={SEED_BIKE_DATA_NAME}
         type="radio"
         className="form-check-input"
         required

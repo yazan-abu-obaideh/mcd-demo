@@ -51,10 +51,10 @@ export function UploadImageForm() {
         </div>
       </div>
       <BikeSelectionForm idSuffix={UPLOAD_RIDER_IMAGE_FORM_ID} />
-      <SubmitDropdown
+      {/* <SubmitDropdown
         id="1-upload-rider"
         typedSubmissionFunction={submitCustomRiderForm}
-      />
+      /> */}
     </form>
   );
 }
