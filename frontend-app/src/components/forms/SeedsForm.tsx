@@ -1,8 +1,5 @@
 import { ReactElement } from "react";
-import {
-  optimizationController,
-  submitSeedsForm,
-} from "../../declarative/client";
+import { optimizationController } from "../../declarative/client";
 
 import person1 from "../../assets/person1.png";
 import person2 from "../../assets/person2.png";
@@ -11,13 +8,11 @@ import BikeSelectionForm from "../BikeSelectionForm";
 import { SubmitDropdown } from "./SubmitDropdown";
 import { SEEDS_FORM_ID } from "../../html_element_constant_ids";
 import {
+  BikesServerResponse,
   GENERIC_ERROR,
   McdError,
   McdServerResponse,
-  BikesServerResponse,
 } from "../McdServerResponse";
-import { OptimizationController } from "../../declarative/controller";
-import { apiRoot } from "../../declarative/config";
 import { SEED_BIKE_DATA_NAME } from "../constants";
 
 const RIDER_DATA_NAME = "riderImage";
@@ -111,11 +106,12 @@ export function SeedsForm(props: {
                   );
                 });
               } else {
-                response.json().then((resJson) => {
-                  
+                response.text().then((resJson) => {
+                  console.log(`Result JSON: ${resJson}`);
                   const optResponse = JSON.parse(
                     resJson
                   ) as BikesServerResponse;
+                  console.log("Parsed!!");
                   props.setServerResponse(
                     new McdServerResponse(false, undefined, optResponse)
                   );

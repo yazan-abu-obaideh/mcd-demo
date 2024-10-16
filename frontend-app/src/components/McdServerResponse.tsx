@@ -11,6 +11,7 @@ export type BikesServerResponse = {
     bike: GeneratedBike;
     bikePerformance: string;
   }>;
+  logs?: Array<string>;
 };
 
 export class McdServerResponse {
