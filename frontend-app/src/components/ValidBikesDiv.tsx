@@ -1,10 +1,34 @@
 import { useState } from "react";
-import { optimizationController } from "../declarative/client";
+import {
+  optimizationController,
+  renderingController,
+} from "../declarative/client";
 import { GeneratedBike } from "../declarative/controller";
-import { McdServerResponse } from "./McdServerResponse";
-
+import { OptimizationRequestState } from "./McdServerResponse";
+import { generateUuid } from "../declarative/generic_utils";
+import bike1 from "../assets/bike1.png";
+import bike2 from "../assets/bike2.png";
+import bike3 from "../assets/bike3.png";
+import bike5 from "../assets/bike5.png";
+import bike6 from "../assets/bike6.png";
+import bike7 from "../assets/bike7.png";
+import bike10 from "../assets/bike10.png";
+import bike11 from "../assets/bike11.png";
+import bike12 from "../assets/bike12.png";
+import "../styles.css";
 
 const urlCreator = window.URL || window.webkitURL;
+
+const SEED_ID_TO_IMAGE = new Map<string, string>();
+SEED_ID_TO_IMAGE.set("1", bike1);
+SEED_ID_TO_IMAGE.set("2", bike2);
+SEED_ID_TO_IMAGE.set("3", bike3);
+SEED_ID_TO_IMAGE.set("5", bike5);
+SEED_ID_TO_IMAGE.set("6", bike6);
+SEED_ID_TO_IMAGE.set("7", bike7);
+SEED_ID_TO_IMAGE.set("10", bike10);
+SEED_ID_TO_IMAGE.set("11", bike11);
+SEED_ID_TO_IMAGE.set("12", bike12);
 
 const ACTION_BUTTON_CSS = "btn btn-outline-danger btn-lg";
 const DOWNLOAD_FAILED = { active: false, innerText: "Download failed" };
@@ -18,7 +42,9 @@ const DOWNLOADING = {
 };
 
 type RenderingState = {
-  renderingRequest: boolean;
+  renderingRequested: boolean;
+  renderingResult: Blob | undefined;
+  renderingFailed: boolean;
 };
 
 function CarouselControl(props: { controlType: "prev" | "next" }) {
@@ -40,10 +66,12 @@ function CarouselControl(props: { controlType: "prev" | "next" }) {
 function BikeElement(props: {
   index: number;
   bike: { bike: GeneratedBike; bikePerformance: string };
+  seedBikeId: string;
 }) {
-  const [renderingState, setRenderingState] = useState({
+  const [renderingState, setRenderingState] = useState<RenderingState>({
     renderingRequested: false,
     renderingResult: undefined,
+    renderingFailed: false,
   });
 
   const active = props.index === 0 ? "active" : undefined;
@@ -51,19 +79,104 @@ function BikeElement(props: {
     "container text-center border rounded carousel-item mb-1 p-5 optimized-bike-div " +
     active;
 
+  const originalId = generateUuid();
+  const renderedId = generateUuid();
   return (
     <div className={className}>
       <h4>Generated Bike {props.index + 1}</h4>
       <h5>{props.bike.bikePerformance}</h5>
       <br></br>
-      <button onClick={() => {}} className={ACTION_BUTTON_CSS}>
-        Render Bike
-      </button>
+      {!renderingState.renderingRequested && (
+        <button
+          onClick={() => {
+            setRenderingState({
+              renderingRequested: true,
+              renderingFailed: false,
+              renderingResult: undefined,
+            });
+
+            const request = new GeneratedBike();
+            request.bikeObject = props.bike.bike;
+            request.bikePerformance = props.bike.bikePerformance;
+            request.seedImageId = props.seedBikeId;
+
+            renderingController
+              .postRenderBikeRequest(request)
+              .then((response) => {
+                if (response.status !== 200) {
+                  setRenderingState({
+                    renderingRequested: true,
+                    renderingFailed: true,
+                    renderingResult: undefined,
+                  });
+                } else {
+                  response.blob().then((resBlob) => {
+                    setRenderingState({
+                      renderingRequested: true,
+                      renderingResult: resBlob,
+                      renderingFailed: false,
+                    });
+                  });
+                }
+              })
+              .catch(() => {
+                setRenderingState({
+                  renderingFailed: true,
+                  renderingRequested: true,
+                  renderingResult: undefined,
+                });
+              });
+          }}
+          className={ACTION_BUTTON_CSS}
+        >
+          Render Bike
+        </button>
+      )}
       <div style={{ height: "5px" }}></div>
       <DownloadCadButton
         bike={props.bike.bike}
         bikePerformance={props.bike.bikePerformance}
+        seedBikeId={props.seedBikeId}
       />
+
+      {renderingState.renderingRequested &&
+        renderingState.renderingResult === undefined && (
+          <div className="text-center bike-render-inner-element-div flex-column">
+            <div className="spinner-border loading-element"></div>
+            <div>Rendering bike...</div>
+          </div>
+        )}
+
+      {renderingState.renderingResult !== undefined && (
+        <div className="text-center p-5 row" style={{display: "flex"}}>
+          <div className="col bike-img-div-in-result">
+            <img
+              id={originalId}
+              className="original-bike-img-in-result"
+              alt="original bike"
+              style={{ display: "flex" }}
+              src={SEED_ID_TO_IMAGE.get(props.seedBikeId)}
+            />
+            <label htmlFor={originalId}>Original</label>
+          </div>
+          <div className="col bike-img-div-in-result">
+            <img
+              id={renderedId}
+              alt="rendered bike"
+              className="rendered-bike-img"
+              style={{ display: "flex" }}
+              src={urlCreator.createObjectURL(renderingState.renderingResult)}
+            />
+            <label htmlFor={renderedId}>Generated</label>
+          </div>
+        </div>
+      )}
+
+      {renderingState.renderingFailed && (
+        <div className="bike-render-inner-element-div">
+          <h4> Rendering failed... </h4>
+        </div>
+      )}
     </div>
   );
 }
@@ -71,6 +184,7 @@ function BikeElement(props: {
 function DownloadCadButton(props: {
   bike: GeneratedBike;
   bikePerformance: string;
+  seedBikeId: string;
 }) {
   const [buttonState, setButtonState] = useState({
     active: true,
@@ -83,7 +197,7 @@ function DownloadCadButton(props: {
         setButtonState(DOWNLOADING);
         const req = new GeneratedBike();
         req.bikeObject = props.bike;
-        // TODO: req.seedImageId = "1";
+        req.seedImageId = props.seedBikeId;
         optimizationController
           .postDownloadBikeCadRequest(req)
           .then((res) => {
@@ -117,7 +231,9 @@ function downloadTextFile(resText: string) {
   anchor.remove();
 }
 
-export function ValidBikesDiv(props: { mcdServerResponse: McdServerResponse }) {
+export function ValidBikesDiv(props: {
+  mcdServerResponse: OptimizationRequestState;
+}) {
   return (
     <div id="response-received-div" className="p-3">
       <div id="bikesCarousel" className="carousel carousel-dark slide">
@@ -128,7 +244,15 @@ export function ValidBikesDiv(props: { mcdServerResponse: McdServerResponse }) {
           <div>
             {props.mcdServerResponse.optimizationResponse?.bikes.map(
               (bike, index) => {
-                return <BikeElement bike={bike} index={index} />;
+                return (
+                  <BikeElement
+                    seedBikeId={
+                      props.mcdServerResponse.requestPayload!.seedBike
+                    }
+                    bike={bike}
+                    index={index}
+                  />
+                );
               }
             )}
           </div>
@@ -137,13 +261,5 @@ export function ValidBikesDiv(props: { mcdServerResponse: McdServerResponse }) {
         <CarouselControl controlType="next" />
       </div>
     </div>
-  );
-}
-
-function BikeActionButton(props: { innerText: string; onClick: () => void }) {
-  return (
-    <button onClick={props.onClick} className={ACTION_BUTTON_CSS}>
-      {props.innerText}
-    </button>
   );
 }

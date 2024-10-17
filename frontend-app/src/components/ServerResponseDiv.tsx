@@ -4,7 +4,7 @@ import {
   NO_BIKES_FOUND_DIV,
   ERROR_RESPONSE_DIV,
 } from "../html_element_constant_ids";
-import { McdServerResponse } from "./McdServerResponse";
+import { OptimizationRequestState } from "./McdServerResponse";
 import { ValidBikesDiv } from "./ValidBikesDiv";
 
 function LoadingDiv() {
@@ -32,7 +32,7 @@ function NoBikesDiv() {
   );
 }
 
-function BikesDiv(props: { mcdServerResponse: McdServerResponse }) {
+function BikesDiv(props: { mcdServerResponse: OptimizationRequestState }) {
   const empty =
     props.mcdServerResponse.optimizationResponse?.bikes.length === 0;
   const returnValue = empty ? (
@@ -44,7 +44,7 @@ function BikesDiv(props: { mcdServerResponse: McdServerResponse }) {
 }
 
 export function ServerResponseDiv(props: {
-  mcdServerResponse: McdServerResponse;
+  mcdServerResponse: OptimizationRequestState;
 }) {
   const optRes = props.mcdServerResponse.optimizationResponse;
   const validResponse = optRes !== undefined;

@@ -11,13 +11,14 @@ import {
   BikesServerResponse,
   GENERIC_ERROR,
   McdError,
-  McdServerResponse,
+  McdServerRequest,
+  OptimizationRequestState,
 } from "../McdServerResponse";
 import { SEED_BIKE_DATA_NAME } from "../constants";
 
 const RIDER_DATA_NAME = "riderImage";
-const LOADING = new McdServerResponse(true, undefined, undefined);
-const GENERIC_ERROR_RESPONSE = new McdServerResponse(
+const GENERIC_ERROR_RESPONSE = new OptimizationRequestState(
+  undefined,
   false,
   GENERIC_ERROR,
   undefined
@@ -71,7 +72,7 @@ function grabSelectedRider(): string {
 }
 
 export function SeedsForm(props: {
-  setServerResponse: (mcdServerResponse: McdServerResponse) => void;
+  setServerResponse: (mcdServerResponse: OptimizationRequestState) => void;
 }) {
   return (
     <form id={SEEDS_FORM_ID}>
@@ -87,18 +88,24 @@ export function SeedsForm(props: {
       <SubmitDropdown
         id="1"
         ergonomicOptimizationFunction={() => {
-          props.setServerResponse(LOADING);
+          const selectedSeed = grabSelectedSeed();
+          const mcdRequest = new McdServerRequest(selectedSeed);
+
+          props.setServerResponse(
+            new OptimizationRequestState(mcdRequest, true, undefined, undefined)
+          );
           optimizationController
             .postSeedsOptimization(
               "ergonomics",
-              grabSelectedSeed(),
+              selectedSeed,
               grabSelectedRider()
             )
             .then((response) => {
               if (response.status !== 200) {
                 response.json().then((resJson) => {
                   props.setServerResponse(
-                    new McdServerResponse(
+                    new OptimizationRequestState(
+                      mcdRequest,
                       false,
                       new McdError(resJson["message"]),
                       undefined
@@ -111,9 +118,13 @@ export function SeedsForm(props: {
                   const optResponse = JSON.parse(
                     resJson
                   ) as BikesServerResponse;
-                  console.log("Parsed!!");
                   props.setServerResponse(
-                    new McdServerResponse(false, undefined, optResponse)
+                    new OptimizationRequestState(
+                      mcdRequest,
+                      false,
+                      undefined,
+                      optResponse
+                    )
                   );
                 });
               }

@@ -7,12 +7,12 @@ import { UploadImageForm } from "./forms/UploadImageForm";
 import { SpecifyRiderDimensionsForm } from "./forms/SpecifyRiderDimensionsForm";
 import { GenerateFromTextForm } from "./forms/GenerateFromTextForm";
 import { ServerResponseDiv } from "./ServerResponseDiv";
-import { McdServerResponse } from "./McdServerResponse";
+import { OptimizationRequestState } from "./McdServerResponse";
 
 export default function McdDemoUserForm() {
   const [selectedForm, setSelectedForm] = useState(McdInputForm.SEEDS);
   const [serverResponse, setServerResponse] = useState(
-    new McdServerResponse(false, undefined, undefined)
+    new OptimizationRequestState(undefined, false, undefined, undefined)
   );
   return (
     <div className="non-nav-body">

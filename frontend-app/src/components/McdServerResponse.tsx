@@ -14,8 +14,13 @@ export type BikesServerResponse = {
   logs?: Array<string>;
 };
 
-export class McdServerResponse {
+export class McdServerRequest {
+  constructor(readonly seedBike: string) {}
+}
+
+export class OptimizationRequestState {
   constructor(
+    readonly requestPayload: undefined | McdServerRequest,
     readonly isLoading: boolean,
     readonly error: McdError | undefined,
     readonly optimizationResponse: BikesServerResponse | undefined
