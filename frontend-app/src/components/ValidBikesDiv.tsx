@@ -1,4 +1,9 @@
+import { useState } from "react";
+import { optimizationController } from "../declarative/client";
+import { GeneratedBike } from "../declarative/controller";
 import { McdServerResponse } from "./McdServerResponse";
+
+const ACTION_BUTTON_CSS = "btn btn-outline-danger btn-lg";
 
 export function ValidBikesDiv(props: { mcdServerResponse: McdServerResponse }) {
   return (
@@ -21,9 +26,12 @@ export function ValidBikesDiv(props: { mcdServerResponse: McdServerResponse }) {
                     <h4>Generated Bike {index + 1}</h4>
                     <h5>{b.bikePerformance}</h5>
                     <br></br>
-                    <BikeActionButton innerText="Render Bike" />
+                    <BikeActionButton
+                      onClick={() => {}}
+                      innerText="Render Bike"
+                    />
                     <div style={{ height: "5px" }}></div>
-                    <BikeActionButton innerText="Download CAD" />
+                    {DownloadCadButton(b)}
                   </div>
                 );
               }
@@ -58,8 +66,59 @@ export function ValidBikesDiv(props: { mcdServerResponse: McdServerResponse }) {
     </div>
   );
 }
-function BikeActionButton(props: { innerText: string }) {
+function DownloadCadButton(b: {
+  bike: GeneratedBike;
+  bikePerformance: string;
+}) {
+  const [buttonState, setButtonState] = useState({
+    active: true,
+    innerText: "Download CAD",
+  });
+
+  const extraClass = buttonState.active ? " " : " disabled";
   return (
-    <button className="btn btn-outline-danger btn-lg">{props.innerText}</button>
+    <button
+      className={ACTION_BUTTON_CSS + extraClass}
+      onClick={() => {
+        b.bike.seedImageId = "1";
+        const req = new GeneratedBike();
+        req.bikeObject = b.bike;
+        // TODO: req.seedImageId = "1";
+        optimizationController
+          .postDownloadBikeCadRequest(req)
+          .then((res) => {
+            if (res.status === 200) {
+              res.text().then((resText) => {
+                const anchor = document.createElement("a");
+                anchor.setAttribute("download", "bike.xml");
+                anchor.setAttribute(
+                  "href",
+                  "data:application/xml;charset=utf-8," +
+                    encodeURIComponent(resText)
+                );
+                anchor.click();
+                anchor.remove();
+                setButtonState({
+                  active: false,
+                  innerText: "Download successful",
+                });
+              });
+            }
+          })
+          .catch((err) => {
+            setButtonState({ active: false, innerText: "Download failed" });
+          });
+      }}
+    >
+      {buttonState.innerText}
+    </button>
+  );
+}
+
+function BikeActionButton(props: { innerText: string; onClick: () => void }) {
+  return (
+    <button onClick={props.onClick} className={ACTION_BUTTON_CSS}>
+      {props.innerText}
+    </button>
   );
 }
