@@ -132,13 +132,6 @@ function BikeElement(props: {
           Render Bike
         </button>
       )}
-      <div style={{ height: "5px" }}></div>
-      <DownloadCadButton
-        bike={props.bike.bike}
-        bikePerformance={props.bike.bikePerformance}
-        seedBikeId={props.seedBikeId}
-      />
-
       {renderingState.renderingRequested &&
         renderingState.renderingResult === undefined && (
           <div className="text-center bike-render-inner-element-div flex-column">
@@ -148,26 +141,24 @@ function BikeElement(props: {
         )}
 
       {renderingState.renderingResult !== undefined && (
-        <div className="text-center p-5 row" style={{display: "flex"}}>
+        <div className="text-center p-5 row" style={{ display: "flex" }}>
           <div className="col bike-img-div-in-result">
             <img
               id={originalId}
               className="original-bike-img-in-result"
               alt="original bike"
-              style={{ display: "flex" }}
               src={SEED_ID_TO_IMAGE.get(props.seedBikeId)}
             />
-            <label htmlFor={originalId}>Original</label>
+            <label style={{display: "block"}} htmlFor={originalId}>Original</label>
           </div>
           <div className="col bike-img-div-in-result">
             <img
               id={renderedId}
               alt="rendered bike"
               className="rendered-bike-img"
-              style={{ display: "flex" }}
               src={urlCreator.createObjectURL(renderingState.renderingResult)}
             />
-            <label htmlFor={renderedId}>Generated</label>
+            <label style={{display: "block"}} htmlFor={renderedId}>Generated</label>
           </div>
         </div>
       )}
@@ -177,6 +168,13 @@ function BikeElement(props: {
           <h4> Rendering failed... </h4>
         </div>
       )}
+
+      <div style={{ height: "5px" }}></div>
+      <DownloadCadButton
+        bike={props.bike.bike}
+        bikePerformance={props.bike.bikePerformance}
+        seedBikeId={props.seedBikeId}
+      />
     </div>
   );
 }
