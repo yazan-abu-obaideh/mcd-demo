@@ -1,8 +1,15 @@
 import { PropsWithChildren, ReactElement } from "react";
-import { submitRiderDimensionsForm } from "../../declarative/client";
+import { optimizationController } from "../../declarative/client";
 import BikeSelectionForm from "../BikeSelectionForm";
 import { SubmitDropdown } from "./SubmitDropdown";
 import { SPECIFY_DIMENSIONS_FORM_ID } from "../../html_element_constant_ids";
+import {
+  McdServerRequest,
+  OptimizationRequestState,
+} from "../McdServerResponse";
+import { handleResponse } from "./FormUtils";
+import { FrontendDimensionsOptimizationRequest } from "../../declarative/controller";
+import { SEED_BIKE_DATA_NAME } from "../constants";
 
 function FloatInputDiv(props: {
   name: string;
@@ -18,7 +25,6 @@ function FloatInputDiv(props: {
         name={props.name}
         id={props.inputId}
         step={0.01}
-        value={props.initialValue}
         placeholder={props.initialValue.toString()}
         required
       />
@@ -33,7 +39,57 @@ function Row(props: PropsWithChildren): ReactElement {
   return <div className="row flex-cont"> {props.children} </div>;
 }
 
-export function SpecifyRiderDimensionsForm() {
+function optimizeDimensions(
+  setServerResponse: (mcdServerResponse: OptimizationRequestState) => void,
+  postRequest: (
+    dimensionsRequest: FrontendDimensionsOptimizationRequest
+  ) => Promise<Response>
+) {
+  const formData = new FormData(
+    document.getElementById(SPECIFY_DIMENSIONS_FORM_ID) as HTMLFormElement
+  );
+  const bikeId = formData.get(SEED_BIKE_DATA_NAME) as string;
+
+  const dimensionsRequest = new FrontendDimensionsOptimizationRequest();
+  dimensionsRequest.arm_length = Number.parseFloat(
+    formData.get("arm-length") as string
+  );
+  dimensionsRequest.height = Number.parseFloat(
+    formData.get("rider-height") as string
+  );
+  dimensionsRequest.sh_height = Number.parseFloat(
+    formData.get("shoulder-height") as string
+  );
+  dimensionsRequest.hip_to_ankle = Number.parseFloat(
+    formData.get("hip-ankle") as string
+  );
+  dimensionsRequest.hip_to_knee = Number.parseFloat(
+    formData.get("hip-knee") as string
+  );
+  dimensionsRequest.shoulder_to_wrist = Number.parseFloat(
+    formData.get("shoulder-wrist") as string
+  );
+  dimensionsRequest.upper_leg = Number.parseFloat(
+    formData.get("upper-leg") as string
+  );
+  dimensionsRequest.lower_leg = Number.parseFloat(
+    formData.get("lower-leg") as string
+  );
+  dimensionsRequest.torso_length = Number.parseFloat(
+    formData.get("torso-length") as string
+  );
+  dimensionsRequest.seedBikeId = bikeId;
+
+  const mcdRequest = new McdServerRequest(bikeId);
+  setServerResponse(OptimizationRequestState.started(mcdRequest));
+
+  const response = postRequest(dimensionsRequest);
+  handleResponse(response, setServerResponse, mcdRequest);
+}
+
+export function SpecifyRiderDimensionsForm(props: {
+  setServerResponse: (mcdServerResponse: OptimizationRequestState) => void;
+}) {
   return (
     <form id={SPECIFY_DIMENSIONS_FORM_ID}>
       <div id="specify-rider-dimensions-container" className="m-3">
@@ -107,7 +163,6 @@ export function SpecifyRiderDimensionsForm() {
                 id="torso-length-input-specify-rider-dimensions"
                 step="0.01"
                 placeholder="23"
-                value="23"
                 required
               />
               <label
@@ -121,10 +176,25 @@ export function SpecifyRiderDimensionsForm() {
         </div>
       </div>
       <BikeSelectionForm idSuffix={SPECIFY_DIMENSIONS_FORM_ID} />
-      {/* <SubmitDropdown
-        id="1-specify-rider-dimensions"
-        typedSubmissionFunction={submitRiderDimensionsForm}
-      /> */}
+      <SubmitDropdown
+        id="1"
+        ergonomicOptimizationFunction={() => {
+          optimizeDimensions(props.setServerResponse, (dimensionsRequest) =>
+            optimizationController.postDimensionsOptimization(
+              "ergonomics",
+              dimensionsRequest
+            )
+          );
+        }}
+        aerodynamicOptimizationFunction={() => {
+          optimizeDimensions(props.setServerResponse, (dimensionsRequest) =>
+            optimizationController.postDimensionsOptimization(
+              "aerodynamics",
+              dimensionsRequest
+            )
+          );
+        }}
+      />
     </form>
   );
 }

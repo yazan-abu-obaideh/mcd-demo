@@ -652,7 +652,10 @@ class BikeOptimizationSubmitter extends GenericBikeOptimizationSubmitter {
 }
 
 class SeedsSubmitter extends GenericBikeOptimizationSubmitter {
-  submitValidSeedsForm(optimizationType: string, form: HTMLFormElement) {
+  submitValidSeedsForm(
+    optimizationType: "ergonomics" | "aerodynamics",
+    form: HTMLFormElement
+  ) {
     const formData = new FormData(form);
     this.postOptimizationForm(
       this.getSeedBikeId(formData),
@@ -663,7 +666,10 @@ class SeedsSubmitter extends GenericBikeOptimizationSubmitter {
       )
     );
   }
-  submitValidForm(form: HTMLFormElement, optimizationType: string) {
+  submitValidForm(
+    form: HTMLFormElement,
+    optimizationType: "aerodynamics" | "ergonomics"
+  ) {
     this.submitValidSeedsForm(optimizationType, form);
   }
   formId(): string {

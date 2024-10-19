@@ -8,16 +8,17 @@ import BikeSelectionForm from "../BikeSelectionForm";
 import { SubmitDropdown } from "./SubmitDropdown";
 import { SEEDS_FORM_ID } from "../../html_element_constant_ids";
 import {
-  BikesServerResponse,
   GENERIC_ERROR,
-  McdError,
   McdServerRequest,
   OptimizationRequestState,
 } from "../McdServerResponse";
 import { SEED_BIKE_DATA_NAME } from "../constants";
+import { handleResponse } from "./FormUtils";
 
 const RIDER_DATA_NAME = "riderImage";
-const GENERIC_ERROR_RESPONSE = new OptimizationRequestState(
+
+export const GENERIC_ERROR_RESPONSE = new OptimizationRequestState(
+  true,
   undefined,
   false,
   GENERIC_ERROR,
@@ -88,53 +89,43 @@ export function SeedsForm(props: {
       <SubmitDropdown
         id="1"
         ergonomicOptimizationFunction={() => {
-          const selectedSeed = grabSelectedSeed();
-          const mcdRequest = new McdServerRequest(selectedSeed);
-
-          props.setServerResponse(
-            new OptimizationRequestState(mcdRequest, true, undefined, undefined)
+          optimizeSeeds(
+            props.setServerResponse,
+            (selectedSeed, selectedRider) =>
+              optimizationController.postSeedsOptimization(
+                "ergonomics",
+                selectedSeed,
+                selectedRider
+              )
           );
-          optimizationController
-            .postSeedsOptimization(
-              "ergonomics",
-              selectedSeed,
-              grabSelectedRider()
-            )
-            .then((response) => {
-              if (response.status !== 200) {
-                response.json().then((resJson) => {
-                  props.setServerResponse(
-                    new OptimizationRequestState(
-                      mcdRequest,
-                      false,
-                      new McdError(resJson["message"]),
-                      undefined
-                    )
-                  );
-                });
-              } else {
-                response.text().then((resJson) => {
-                  console.log(`Result JSON: ${resJson}`);
-                  const optResponse = JSON.parse(
-                    resJson
-                  ) as BikesServerResponse;
-                  props.setServerResponse(
-                    new OptimizationRequestState(
-                      mcdRequest,
-                      false,
-                      undefined,
-                      optResponse
-                    )
-                  );
-                });
-              }
-            })
-            .catch(() => {
-              props.setServerResponse(GENERIC_ERROR_RESPONSE);
-            });
         }}
-        aerodynamicOptimizationFunction={() => {}}
+        aerodynamicOptimizationFunction={() => {
+          optimizeSeeds(
+            props.setServerResponse,
+            (selectedSeed, selectedRider) =>
+              optimizationController.postSeedsOptimization(
+                "aerodynamics",
+                selectedSeed,
+                selectedRider
+              )
+          );
+        }}
       />
     </form>
   );
+}
+function optimizeSeeds(
+  setServerResponse: (mcdServerResponse: OptimizationRequestState) => void,
+  postRequest: (
+    selectedSeed: string,
+    selectedRider: string
+  ) => Promise<Response>
+) {
+  const selectedSeed = grabSelectedSeed();
+  const selectedRider = grabSelectedRider();
+  const mcdRequest = new McdServerRequest(selectedSeed);
+
+  setServerResponse(OptimizationRequestState.started(mcdRequest));
+  const response = postRequest(selectedSeed, selectedRider);
+  handleResponse(response, setServerResponse, mcdRequest);
 }

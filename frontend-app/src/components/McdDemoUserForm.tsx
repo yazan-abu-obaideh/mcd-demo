@@ -9,11 +9,17 @@ import { GenerateFromTextForm } from "./forms/GenerateFromTextForm";
 import { ServerResponseDiv } from "./ServerResponseDiv";
 import { OptimizationRequestState } from "./McdServerResponse";
 
+const INITIAL_RESPONSE_STATE = new OptimizationRequestState(
+  false,
+  undefined,
+  false,
+  undefined,
+  undefined
+);
+
 export default function McdDemoUserForm() {
   const [selectedForm, setSelectedForm] = useState(McdInputForm.SEEDS);
-  const [serverResponse, setServerResponse] = useState(
-    new OptimizationRequestState(undefined, false, undefined, undefined)
-  );
+  const [serverResponse, setServerResponse] = useState(INITIAL_RESPONSE_STATE);
   return (
     <div className="non-nav-body">
       <LandingHeader />
@@ -25,10 +31,13 @@ export default function McdDemoUserForm() {
         {selectedForm === McdInputForm.IMAGE && <UploadImageForm />}
         {selectedForm === McdInputForm.TEXT && <GenerateFromTextForm />}
         {selectedForm === McdInputForm.DIMENSIONS && (
-          <SpecifyRiderDimensionsForm />
+          <SpecifyRiderDimensionsForm setServerResponse={setServerResponse} />
         )}
       </div>
-      <ServerResponseDiv mcdServerResponse={serverResponse} />
+
+      {serverResponse.started && (
+        <ServerResponseDiv mcdServerResponse={serverResponse} />
+      )}
     </div>
   );
 }

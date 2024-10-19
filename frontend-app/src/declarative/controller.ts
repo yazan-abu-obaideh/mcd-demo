@@ -121,7 +121,7 @@ class OptimizationController {
   }
 
   async postSeedsOptimization(
-    optimizationType: string,
+    optimizationType: "ergonomics" | "aerodynamics",
     seedBikeId: string,
     riderImageId: string
   ): Promise<Response> {
