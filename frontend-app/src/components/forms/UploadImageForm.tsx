@@ -1,6 +1,16 @@
-import { submitCustomRiderForm } from "../../declarative/client";
-import { UPLOAD_RIDER_IMAGE_FORM_ID, USER_IMAGE_UPLOAD } from "../../html_element_constant_ids";
+import { optimizationController } from "../../declarative/client";
+import { readFile } from "../../declarative/html_utils";
+import {
+  UPLOAD_RIDER_IMAGE_FORM_ID,
+  USER_IMAGE_UPLOAD,
+} from "../../html_element_constant_ids";
 import BikeSelectionForm from "../BikeSelectionForm";
+import { SEED_BIKE_DATA_NAME } from "../constants";
+import {
+  McdServerRequest,
+  OptimizationRequestState,
+} from "../McdServerResponse";
+import { handleResponse } from "./FormUtils";
 import { SubmitDropdown } from "./SubmitDropdown";
 
 function UserHeightInputDiv() {
@@ -23,6 +33,42 @@ function UserHeightInputDiv() {
   );
 }
 
+function arrayBufferToBase64(arrayBuffer: ArrayBuffer) {
+  let binary = "";
+  const bytes = new Uint8Array(arrayBuffer);
+  for (let i = 0; i < bytes.byteLength; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return btoa(binary);
+}
+
+function optimizeImage(
+  setServerResponse: (mcdServerResponse: OptimizationRequestState) => void,
+  postRequest: (
+    seedBikeId: string,
+    base64File: string,
+    personHeight: number
+  ) => Promise<Response>
+) {
+  const formData = new FormData(
+    document.getElementById(UPLOAD_RIDER_IMAGE_FORM_ID) as HTMLFormElement
+  );
+  const bikeId = formData.get(SEED_BIKE_DATA_NAME) as string;
+  const userHeight = Number.parseFloat(formData.get("user-height") as string);
+
+  readFile(USER_IMAGE_UPLOAD, (reader) => {
+    const base64File: string = arrayBufferToBase64(
+      reader.result as ArrayBuffer
+    );
+
+    const mcdRequest = new McdServerRequest(bikeId);
+    setServerResponse(OptimizationRequestState.started(mcdRequest));
+
+    const response = postRequest(bikeId, base64File, userHeight);
+    handleResponse(response, setServerResponse, mcdRequest);
+  });
+}
+
 function UploadImageInputDiv() {
   return (
     <div className="row flex-cont">
@@ -40,7 +86,9 @@ function UploadImageInputDiv() {
   );
 }
 
-export function UploadImageForm() {
+export function UploadImageForm(props: {
+  setServerResponse: (mcdServerResponse: OptimizationRequestState) => void;
+}) {
   return (
     <form id={UPLOAD_RIDER_IMAGE_FORM_ID}>
       <div id="upload-image-container" className="m-3">
@@ -51,10 +99,33 @@ export function UploadImageForm() {
         </div>
       </div>
       <BikeSelectionForm idSuffix={UPLOAD_RIDER_IMAGE_FORM_ID} />
-      {/* <SubmitDropdown
+      <SubmitDropdown
         id="1-upload-rider"
-        typedSubmissionFunction={submitCustomRiderForm}
-      /> */}
+        ergonomicOptimizationFunction={() => {
+          optimizeImage(
+            props.setServerResponse,
+            (seedBikeId, base64File, personHeight) =>
+              optimizationController.postImageOptimization(
+                "ergonomics",
+                seedBikeId,
+                base64File,
+                personHeight
+              )
+          );
+        }}
+        aerodynamicOptimizationFunction={() => {
+          optimizeImage(
+            props.setServerResponse,
+            (seedBikeId, base64File, personHeight) =>
+              optimizationController.postImageOptimization(
+                "aerodynamics",
+                seedBikeId,
+                base64File,
+                personHeight
+              )
+          );
+        }}
+      />
     </form>
   );
 }

@@ -39,17 +39,9 @@ function Row(props: PropsWithChildren): ReactElement {
   return <div className="row flex-cont"> {props.children} </div>;
 }
 
-function optimizeDimensions(
-  setServerResponse: (mcdServerResponse: OptimizationRequestState) => void,
-  postRequest: (
-    dimensionsRequest: FrontendDimensionsOptimizationRequest
-  ) => Promise<Response>
-) {
-  const formData = new FormData(
-    document.getElementById(SPECIFY_DIMENSIONS_FORM_ID) as HTMLFormElement
-  );
-  const bikeId = formData.get(SEED_BIKE_DATA_NAME) as string;
-
+function buildFromFormData(
+  formData: FormData
+): FrontendDimensionsOptimizationRequest {
   const dimensionsRequest = new FrontendDimensionsOptimizationRequest();
   dimensionsRequest.arm_length = Number.parseFloat(
     formData.get("arm-length") as string
@@ -78,6 +70,21 @@ function optimizeDimensions(
   dimensionsRequest.torso_length = Number.parseFloat(
     formData.get("torso-length") as string
   );
+  return dimensionsRequest;
+}
+
+function optimizeDimensions(
+  setServerResponse: (mcdServerResponse: OptimizationRequestState) => void,
+  postRequest: (
+    dimensionsRequest: FrontendDimensionsOptimizationRequest
+  ) => Promise<Response>
+) {
+  const formData = new FormData(
+    document.getElementById(SPECIFY_DIMENSIONS_FORM_ID) as HTMLFormElement
+  );
+  const bikeId = formData.get(SEED_BIKE_DATA_NAME) as string;
+
+  const dimensionsRequest = buildFromFormData(formData);
   dimensionsRequest.seedBikeId = bikeId;
 
   const mcdRequest = new McdServerRequest(bikeId);
