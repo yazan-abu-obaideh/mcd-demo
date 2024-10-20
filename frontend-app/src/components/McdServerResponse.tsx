@@ -20,13 +20,7 @@ export class McdServerRequest {
 
 export class OptimizationRequestState {
   static started(mcdRequest: McdServerRequest) {
-    return new OptimizationRequestState(
-      true,
-      mcdRequest,
-      true,
-      undefined,
-      undefined
-    );
+    return new OptimizationRequestState(true, mcdRequest, true, undefined, undefined);
   }
   constructor(
     readonly started: boolean,

@@ -4,35 +4,18 @@ import { TEXT_PROMPT_FORM_ID } from "../../html_element_constant_ids";
 
 const ADVANCED_OPTIONS_ID = "advancedOptions";
 
-function IntegerInputDiv(props: {
-  name: string;
-  labelText: string;
-  min: number;
-  max: number;
-}) {
+function IntegerInputDiv(props: { name: string; labelText: string; min: number; max: number }) {
   const inputId = props.name + "-input";
   return (
     <div className="col-6">
-      <input
-        type="number"
-        className="form-control"
-        name={props.name}
-        id={inputId}
-        min={props.min}
-        max={props.max}
-      />
+      <input type="number" className="form-control" name={props.name} id={inputId} min={props.min} max={props.max} />
       <label className="form-label" htmlFor={inputId}>
         {props.labelText}
       </label>
     </div>
   );
 }
-function BoundedFloatInputDiv(props: {
-  name: string;
-  labelText: string;
-  min: number;
-  max: number;
-}) {
+function BoundedFloatInputDiv(props: { name: string; labelText: string; min: number; max: number }) {
   const inputId = props.name + "-input";
   return (
     <div className="col-6">
@@ -67,18 +50,8 @@ function AdvancedOptions() {
   return (
     <div className="collapse p-3" id={ADVANCED_OPTIONS_ID}>
       <div className="row flex-cont">
-        <IntegerInputDiv
-          name="optimizer_population"
-          min={1}
-          max={100}
-          labelText="Bikes per generation"
-        />
-        <IntegerInputDiv
-          name="optimizer_generations"
-          min={1}
-          max={60}
-          labelText="Number of generations"
-        />
+        <IntegerInputDiv name="optimizer_population" min={1} max={100} labelText="Bikes per generation" />
+        <IntegerInputDiv name="optimizer_generations" min={1} max={60} labelText="Number of generations" />
       </div>
       <div className="row flex-cont">
         <BoundedFloatInputDiv
@@ -87,10 +60,7 @@ function AdvancedOptions() {
           min={0.1}
           max={1}
         />
-        <FloatInputDiv
-          name="avg_gower_weight"
-          labelText="Average gower weight"
-        />
+        <FloatInputDiv name="avg_gower_weight" labelText="Average gower weight" />
       </div>
       <div className="row flex-cont">
         <FloatInputDiv name="cfc_weight" labelText="Counterfactual weight" />
@@ -98,18 +68,11 @@ function AdvancedOptions() {
       </div>
       <div className="row flex-cont">
         <FloatInputDiv name="diversity_weight" labelText="Diversity weight" />
-        <FloatInputDiv
-          name="bonus_objective_weight"
-          labelText="Bonus objective weight"
-        />
+        <FloatInputDiv name="bonus_objective_weight" labelText="Bonus objective weight" />
       </div>
       <div className="row flex-cont">
         <div className="col-6">
-          <input
-            type="checkbox"
-            name="include_dataset"
-            id="include_dataset-input"
-          />
+          <input type="checkbox" name="include_dataset" id="include_dataset-input" />
           <label className="form-label" htmlFor="include_dataset-input">
             Include dataset
           </label>
@@ -150,13 +113,7 @@ function ShowAdvancedOptionsButton() {
 function BikeDescriptionInput() {
   return (
     <div className="col-6">
-      <input
-        type="text"
-        className="form-control"
-        name="bike-description"
-        id="bike-description-input"
-        required
-      />
+      <input type="text" className="form-control" name="bike-description" id="bike-description-input" required />
       <label className="form-label" htmlFor="bike-description-input">
         Bike Description
       </label>

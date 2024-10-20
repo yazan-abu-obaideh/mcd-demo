@@ -7,36 +7,18 @@ import person3 from "../../assets/person3.png";
 import BikeSelectionForm from "../BikeSelectionForm";
 import { SubmitDropdown } from "./SubmitDropdown";
 import { SEEDS_FORM_ID } from "../../html_element_constant_ids";
-import {
-  GENERIC_ERROR,
-  McdServerRequest,
-  OptimizationRequestState,
-} from "../McdServerResponse";
+import { GENERIC_ERROR, McdServerRequest, OptimizationRequestState } from "../McdServerResponse";
 import { SEED_BIKE_DATA_NAME } from "../constants";
 import { handleResponse } from "./FormUtils";
 
 const RIDER_DATA_NAME = "riderImage";
 
-export const GENERIC_ERROR_RESPONSE = new OptimizationRequestState(
-  true,
-  undefined,
-  false,
-  GENERIC_ERROR,
-  undefined
-);
+export const GENERIC_ERROR_RESPONSE = new OptimizationRequestState(true, undefined, false, GENERIC_ERROR, undefined);
 
-function RiderDiv(props: {
-  imageSrc: string;
-  inputValue: string;
-  labelText: string;
-}): ReactElement {
+function RiderDiv(props: { imageSrc: string; inputValue: string; labelText: string }): ReactElement {
   return (
     <div className="col seed-bike-div">
-      <img
-        className="seed-bike-img"
-        src={props.imageSrc}
-        alt={"rider-image-" + props.inputValue}
-      />
+      <img className="seed-bike-img" src={props.imageSrc} alt={"rider-image-" + props.inputValue} />
       <br />
       <input
         id={"rider-image-" + props.inputValue}
@@ -47,10 +29,7 @@ function RiderDiv(props: {
         checked
         required
       />
-      <label
-        className="form-check-label"
-        htmlFor={"rider-image-" + props.inputValue}
-      >
+      <label className="form-check-label" htmlFor={"rider-image-" + props.inputValue}>
         {props.labelText}
       </label>
     </div>
@@ -58,9 +37,7 @@ function RiderDiv(props: {
 }
 
 function stringFromFormData(dataName: string) {
-  const formData = new FormData(
-    document.getElementById(SEEDS_FORM_ID) as HTMLFormElement
-  );
+  const formData = new FormData(document.getElementById(SEEDS_FORM_ID) as HTMLFormElement);
   return formData.get(dataName) as string;
 }
 
@@ -72,9 +49,7 @@ function grabSelectedRider(): string {
   return stringFromFormData(RIDER_DATA_NAME);
 }
 
-export function SeedsForm(props: {
-  setServerResponse: (mcdServerResponse: OptimizationRequestState) => void;
-}) {
+export function SeedsForm(props: { setServerResponse: (mcdServerResponse: OptimizationRequestState) => void }) {
   return (
     <form id={SEEDS_FORM_ID}>
       <div id="person-image-container" className="m-3">
@@ -89,25 +64,13 @@ export function SeedsForm(props: {
       <SubmitDropdown
         id="1"
         ergonomicOptimizationFunction={() => {
-          optimizeSeeds(
-            props.setServerResponse,
-            (selectedSeed, selectedRider) =>
-              optimizationController.postSeedsOptimization(
-                "ergonomics",
-                selectedSeed,
-                selectedRider
-              )
+          optimizeSeeds(props.setServerResponse, (selectedSeed, selectedRider) =>
+            optimizationController.postSeedsOptimization("ergonomics", selectedSeed, selectedRider)
           );
         }}
         aerodynamicOptimizationFunction={() => {
-          optimizeSeeds(
-            props.setServerResponse,
-            (selectedSeed, selectedRider) =>
-              optimizationController.postSeedsOptimization(
-                "aerodynamics",
-                selectedSeed,
-                selectedRider
-              )
+          optimizeSeeds(props.setServerResponse, (selectedSeed, selectedRider) =>
+            optimizationController.postSeedsOptimization("aerodynamics", selectedSeed, selectedRider)
           );
         }}
       />
@@ -116,10 +79,7 @@ export function SeedsForm(props: {
 }
 function optimizeSeeds(
   setServerResponse: (mcdServerResponse: OptimizationRequestState) => void,
-  postRequest: (
-    selectedSeed: string,
-    selectedRider: string
-  ) => Promise<Response>
+  postRequest: (selectedSeed: string, selectedRider: string) => Promise<Response>
 ) {
   const selectedSeed = grabSelectedSeed();
   const selectedRider = grabSelectedRider();

@@ -1,9 +1,4 @@
-import {
-  BikesServerResponse,
-  McdError,
-  McdServerRequest,
-  OptimizationRequestState,
-} from "../McdServerResponse";
+import { BikesServerResponse, McdError, McdServerRequest, OptimizationRequestState } from "../McdServerResponse";
 import { GENERIC_ERROR_RESPONSE } from "./SeedsForm";
 
 export function handleResponse(
@@ -16,27 +11,13 @@ export function handleResponse(
       if (response.status !== 200) {
         response.json().then((resJson) => {
           setServerResponse(
-            new OptimizationRequestState(
-              true,
-              mcdRequest,
-              false,
-              new McdError(resJson["message"]),
-              undefined
-            )
+            new OptimizationRequestState(true, mcdRequest, false, new McdError(resJson["message"]), undefined)
           );
         });
       } else {
         response.text().then((resJson) => {
           const optResponse = JSON.parse(resJson) as BikesServerResponse;
-          setServerResponse(
-            new OptimizationRequestState(
-              true,
-              mcdRequest,
-              false,
-              undefined,
-              optResponse
-            )
-          );
+          setServerResponse(new OptimizationRequestState(true, mcdRequest, false, undefined, optResponse));
         });
       }
     })

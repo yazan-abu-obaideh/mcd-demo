@@ -43,11 +43,7 @@ function SeedBikeDiv(props: {
   const seedId = "seed".concat(props.inputValue);
   return (
     <div className="col seed-bike-div">
-      <img
-        className="seed-bike-img"
-        src={props.imageSrc}
-        alt="seed-bike-image"
-      />
+      <img className="seed-bike-img" src={props.imageSrc} alt="seed-bike-image" />
       <br />
       <input
         id={`${seedId}${props.idSuffix}`}
@@ -57,10 +53,7 @@ function SeedBikeDiv(props: {
         className="form-check-input"
         required
       />
-      <label
-        className="form-check-label"
-        htmlFor={`${seedId}${props.idSuffix}`}
-      >
+      <label className="form-check-label" htmlFor={`${seedId}${props.idSuffix}`}>
         {props.labelText}
       </label>
     </div>
@@ -71,10 +64,7 @@ function BikesRow(props: PropsWithChildren): ReactElement {
   return <div className="row p-5">{props.children}</div>;
 }
 
-function toElements(
-  idSuffix: string,
-  elementDescriptions: Array<BikeDivDescription>
-): Array<ReactElement> {
+function toElements(idSuffix: string, elementDescriptions: Array<BikeDivDescription>): Array<ReactElement> {
   return elementDescriptions.map((elemDesc) => (
     <SeedBikeDiv
       idSuffix={idSuffix}

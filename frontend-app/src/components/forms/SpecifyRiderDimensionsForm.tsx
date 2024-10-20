@@ -3,20 +3,12 @@ import { optimizationController } from "../../declarative/client";
 import BikeSelectionForm from "../BikeSelectionForm";
 import { SubmitDropdown } from "./SubmitDropdown";
 import { SPECIFY_DIMENSIONS_FORM_ID } from "../../html_element_constant_ids";
-import {
-  McdServerRequest,
-  OptimizationRequestState,
-} from "../McdServerResponse";
+import { McdServerRequest, OptimizationRequestState } from "../McdServerResponse";
 import { handleResponse } from "./FormUtils";
 import { FrontendDimensionsOptimizationRequest } from "../../declarative/controller";
 import { SEED_BIKE_DATA_NAME } from "../constants";
 
-function FloatInputDiv(props: {
-  name: string;
-  labelText: string;
-  inputId: string;
-  initialValue: number;
-}) {
+function FloatInputDiv(props: { name: string; labelText: string; inputId: string; initialValue: number }) {
   return (
     <div className="col-3">
       <input
@@ -39,49 +31,25 @@ function Row(props: PropsWithChildren): ReactElement {
   return <div className="row flex-cont"> {props.children} </div>;
 }
 
-function buildFromFormData(
-  formData: FormData
-): FrontendDimensionsOptimizationRequest {
+function buildFromFormData(formData: FormData): FrontendDimensionsOptimizationRequest {
   const dimensionsRequest = new FrontendDimensionsOptimizationRequest();
-  dimensionsRequest.arm_length = Number.parseFloat(
-    formData.get("arm-length") as string
-  );
-  dimensionsRequest.height = Number.parseFloat(
-    formData.get("rider-height") as string
-  );
-  dimensionsRequest.sh_height = Number.parseFloat(
-    formData.get("shoulder-height") as string
-  );
-  dimensionsRequest.hip_to_ankle = Number.parseFloat(
-    formData.get("hip-ankle") as string
-  );
-  dimensionsRequest.hip_to_knee = Number.parseFloat(
-    formData.get("hip-knee") as string
-  );
-  dimensionsRequest.shoulder_to_wrist = Number.parseFloat(
-    formData.get("shoulder-wrist") as string
-  );
-  dimensionsRequest.upper_leg = Number.parseFloat(
-    formData.get("upper-leg") as string
-  );
-  dimensionsRequest.lower_leg = Number.parseFloat(
-    formData.get("lower-leg") as string
-  );
-  dimensionsRequest.torso_length = Number.parseFloat(
-    formData.get("torso-length") as string
-  );
+  dimensionsRequest.arm_length = Number.parseFloat(formData.get("arm-length") as string);
+  dimensionsRequest.height = Number.parseFloat(formData.get("rider-height") as string);
+  dimensionsRequest.sh_height = Number.parseFloat(formData.get("shoulder-height") as string);
+  dimensionsRequest.hip_to_ankle = Number.parseFloat(formData.get("hip-ankle") as string);
+  dimensionsRequest.hip_to_knee = Number.parseFloat(formData.get("hip-knee") as string);
+  dimensionsRequest.shoulder_to_wrist = Number.parseFloat(formData.get("shoulder-wrist") as string);
+  dimensionsRequest.upper_leg = Number.parseFloat(formData.get("upper-leg") as string);
+  dimensionsRequest.lower_leg = Number.parseFloat(formData.get("lower-leg") as string);
+  dimensionsRequest.torso_length = Number.parseFloat(formData.get("torso-length") as string);
   return dimensionsRequest;
 }
 
 function optimizeDimensions(
   setServerResponse: (mcdServerResponse: OptimizationRequestState) => void,
-  postRequest: (
-    dimensionsRequest: FrontendDimensionsOptimizationRequest
-  ) => Promise<Response>
+  postRequest: (dimensionsRequest: FrontendDimensionsOptimizationRequest) => Promise<Response>
 ) {
-  const formData = new FormData(
-    document.getElementById(SPECIFY_DIMENSIONS_FORM_ID) as HTMLFormElement
-  );
+  const formData = new FormData(document.getElementById(SPECIFY_DIMENSIONS_FORM_ID) as HTMLFormElement);
   const bikeId = formData.get(SEED_BIKE_DATA_NAME) as string;
 
   const dimensionsRequest = buildFromFormData(formData);
@@ -172,10 +140,7 @@ export function SpecifyRiderDimensionsForm(props: {
                 placeholder="23"
                 required
               />
-              <label
-                className="form-label"
-                htmlFor="torso-length-input-specify-rider-dimensions"
-              >
+              <label className="form-label" htmlFor="torso-length-input-specify-rider-dimensions">
                 Torso Length
               </label>
             </div>
@@ -187,18 +152,12 @@ export function SpecifyRiderDimensionsForm(props: {
         id="1"
         ergonomicOptimizationFunction={() => {
           optimizeDimensions(props.setServerResponse, (dimensionsRequest) =>
-            optimizationController.postDimensionsOptimization(
-              "ergonomics",
-              dimensionsRequest
-            )
+            optimizationController.postDimensionsOptimization("ergonomics", dimensionsRequest)
           );
         }}
         aerodynamicOptimizationFunction={() => {
           optimizeDimensions(props.setServerResponse, (dimensionsRequest) =>
-            optimizationController.postDimensionsOptimization(
-              "aerodynamics",
-              dimensionsRequest
-            )
+            optimizationController.postDimensionsOptimization("aerodynamics", dimensionsRequest)
           );
         }}
       />

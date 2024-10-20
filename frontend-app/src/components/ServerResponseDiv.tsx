@@ -24,28 +24,18 @@ function LoadingDiv() {
 function NoBikesDiv() {
   return (
     <div id={NO_BIKES_FOUND_DIV} className="p-3 text-center">
-      <h4>
-        MCD could not generate any valid designs within the allotted time.
-        Please try a different request.
-      </h4>
+      <h4>MCD could not generate any valid designs within the allotted time. Please try a different request.</h4>
     </div>
   );
 }
 
 function BikesDiv(props: { mcdServerResponse: OptimizationRequestState }) {
-  const empty =
-    props.mcdServerResponse.optimizationResponse?.bikes.length === 0;
-  const returnValue = empty ? (
-    <NoBikesDiv />
-  ) : (
-    <ValidBikesDiv mcdServerResponse={props.mcdServerResponse} />
-  );
+  const empty = props.mcdServerResponse.optimizationResponse?.bikes.length === 0;
+  const returnValue = empty ? <NoBikesDiv /> : <ValidBikesDiv mcdServerResponse={props.mcdServerResponse} />;
   return returnValue;
 }
 
-export function ServerResponseDiv(props: {
-  mcdServerResponse: OptimizationRequestState;
-}) {
+export function ServerResponseDiv(props: { mcdServerResponse: OptimizationRequestState }) {
   const optRes = props.mcdServerResponse.optimizationResponse;
   const validResponse = optRes !== undefined;
   return (
@@ -53,9 +43,7 @@ export function ServerResponseDiv(props: {
       <h2>Generated Designs</h2>
       <div id="loading-or-result-div" className="container p-3">
         {props.mcdServerResponse.isLoading && <LoadingDiv />}
-        {validResponse && (
-          <BikesDiv mcdServerResponse={props.mcdServerResponse} />
-        )}
+        {validResponse && <BikesDiv mcdServerResponse={props.mcdServerResponse} />}
         {props.mcdServerResponse.error !== undefined && (
           <div id={ERROR_RESPONSE_DIV} className="p-3 text-center">
             {props.mcdServerResponse.error.errorMessage}

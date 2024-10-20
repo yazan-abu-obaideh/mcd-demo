@@ -5,13 +5,7 @@ export default function McdDemoNavBar() {
     <nav className="navbar navbar-expand-lg bg-light navbar-nav-scroll sticky-top bg-opacity-75">
       <div className="container-fluid">
         <a className="navbar-brand" href="#main-header">
-          <img
-            src={decodeLogo}
-            alt=""
-            width="75"
-            height="25"
-            className="d-inline-block align-text-bottom"
-          />
+          <img src={decodeLogo} alt="" width="75" height="25" className="d-inline-block align-text-bottom" />
           Counterfactuals for Design
         </a>
         <button
@@ -28,11 +22,7 @@ export default function McdDemoNavBar() {
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item">
-              <a
-                className="nav-link active"
-                aria-current="page"
-                href="#generation-forms"
-              >
+              <a className="nav-link active" aria-current="page" href="#generation-forms">
                 Interactive demo
               </a>
             </li>

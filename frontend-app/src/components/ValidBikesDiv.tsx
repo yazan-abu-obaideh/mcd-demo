@@ -1,8 +1,5 @@
 import { useState } from "react";
-import {
-  optimizationController,
-  renderingController,
-} from "../declarative/client";
+import { optimizationController, renderingController } from "../declarative/client";
 import { GeneratedBike } from "../declarative/controller";
 import { OptimizationRequestState } from "./McdServerResponse";
 import { generateUuid } from "../declarative/generic_utils";
@@ -55,10 +52,7 @@ function CarouselControl(props: { controlType: "prev" | "next" }) {
       data-bs-target="#bikesCarousel"
       data-bs-slide={props.controlType}
     >
-      <span
-        className={`carousel-control-${props.controlType}-icon`}
-        aria-hidden="true"
-      ></span>
+      <span className={`carousel-control-${props.controlType}-icon`} aria-hidden="true"></span>
     </button>
   );
 }
@@ -75,9 +69,7 @@ function BikeElement(props: {
   });
 
   const active = props.index === 0 ? "active" : undefined;
-  const className =
-    "container text-center border rounded carousel-item mb-1 p-5 optimized-bike-div " +
-    active;
+  const className = "container text-center border rounded carousel-item mb-1 p-5 optimized-bike-div " + active;
 
   const originalId = generateUuid();
   const renderedId = generateUuid();
@@ -132,13 +124,12 @@ function BikeElement(props: {
           Render Bike
         </button>
       )}
-      {renderingState.renderingRequested &&
-        renderingState.renderingResult === undefined && (
-          <div className="text-center bike-render-inner-element-div flex-column">
-            <div className="spinner-border loading-element"></div>
-            <div>Rendering bike...</div>
-          </div>
-        )}
+      {renderingState.renderingRequested && renderingState.renderingResult === undefined && (
+        <div className="text-center bike-render-inner-element-div flex-column">
+          <div className="spinner-border loading-element"></div>
+          <div>Rendering bike...</div>
+        </div>
+      )}
 
       {renderingState.renderingResult !== undefined && (
         <div className="text-center p-5 row" style={{ display: "flex" }}>
@@ -149,7 +140,9 @@ function BikeElement(props: {
               alt="original bike"
               src={SEED_ID_TO_IMAGE.get(props.seedBikeId)}
             />
-            <label style={{display: "block"}} htmlFor={originalId}>Original</label>
+            <label style={{ display: "block" }} htmlFor={originalId}>
+              Original
+            </label>
           </div>
           <div className="col bike-img-div-in-result">
             <img
@@ -158,7 +151,9 @@ function BikeElement(props: {
               className="rendered-bike-img"
               src={urlCreator.createObjectURL(renderingState.renderingResult)}
             />
-            <label style={{display: "block"}} htmlFor={renderedId}>Generated</label>
+            <label style={{ display: "block" }} htmlFor={renderedId}>
+              Generated
+            </label>
           </div>
         </div>
       )}
@@ -179,11 +174,7 @@ function BikeElement(props: {
   );
 }
 
-function DownloadCadButton(props: {
-  bike: GeneratedBike;
-  bikePerformance: string;
-  seedBikeId: string;
-}) {
+function DownloadCadButton(props: { bike: GeneratedBike; bikePerformance: string; seedBikeId: string }) {
   const [buttonState, setButtonState] = useState({
     active: true,
     innerText: "Download CAD",
@@ -221,38 +212,22 @@ function DownloadCadButton(props: {
 function downloadTextFile(resText: string) {
   const anchor = document.createElement("a");
   anchor.setAttribute("download", "bike.bcad");
-  anchor.setAttribute(
-    "href",
-    "data:application/xml;charset=utf-8," + encodeURIComponent(resText)
-  );
+  anchor.setAttribute("href", "data:application/xml;charset=utf-8," + encodeURIComponent(resText));
   anchor.click();
   anchor.remove();
 }
 
-export function ValidBikesDiv(props: {
-  mcdServerResponse: OptimizationRequestState;
-}) {
+export function ValidBikesDiv(props: { mcdServerResponse: OptimizationRequestState }) {
   return (
     <div id="response-received-div" className="p-3">
       <div id="bikesCarousel" className="carousel carousel-dark slide">
-        <div
-          id="generated-designs-consumer-carousel"
-          className="carousel-inner"
-        >
+        <div id="generated-designs-consumer-carousel" className="carousel-inner">
           <div>
-            {props.mcdServerResponse.optimizationResponse?.bikes.map(
-              (bike, index) => {
-                return (
-                  <BikeElement
-                    seedBikeId={
-                      props.mcdServerResponse.requestPayload!.seedBike
-                    }
-                    bike={bike}
-                    index={index}
-                  />
-                );
-              }
-            )}
+            {props.mcdServerResponse.optimizationResponse?.bikes.map((bike, index) => {
+              return (
+                <BikeElement seedBikeId={props.mcdServerResponse.requestPayload!.seedBike} bike={bike} index={index} />
+              );
+            })}
           </div>
         </div>
         <CarouselControl controlType="prev" />
