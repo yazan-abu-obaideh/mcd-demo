@@ -1,3 +1,21 @@
+function DropdownItem({
+  itemText,
+  onClickFun,
+  extraClasses,
+}: {
+  itemText: string;
+  onClickFun: () => void;
+  extraClasses?: string;
+}) {
+  return (
+    <li>
+      <button type="button" className={"dropdown-item " + (extraClasses || "")} onClick={onClickFun}>
+        {itemText}
+      </button>
+    </li>
+  );
+}
+
 export function SubmitDropdown(props: {
   id: string;
   ergonomicOptimizationFunction: () => void;
@@ -29,23 +47,5 @@ export function SubmitDropdown(props: {
         </div>
       </div>
     </div>
-  );
-}
-
-function DropdownItem({
-  itemText,
-  onClickFun,
-  extraClasses,
-}: {
-  itemText: string;
-  onClickFun: () => void;
-  extraClasses?: string;
-}) {
-  return (
-    <li>
-      <button type="button" className={"dropdown-item " + (extraClasses || "")} onClick={onClickFun}>
-        {itemText}
-      </button>
-    </li>
   );
 }
