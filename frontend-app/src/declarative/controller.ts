@@ -99,7 +99,7 @@ class OptimizationController {
   }
 
   async postImageOptimization(
-    optimizationType: string,
+    optimizationType: "aerodynamics" | "ergonomics",
     seedBikeId: string,
     imageBase64: string,
     personHeight: number

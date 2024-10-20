@@ -8,21 +8,9 @@ import {
 import { apiRoot } from "./config";
 import { getElementById } from "./html_utils";
 import { ExclusivelyVisibleElements } from "./exclusively_visible_elements";
-import { readFile } from "./html_utils";
 import { downloadAsTextFile } from "./html_utils";
-import {
-  getDownloadBikeCadBtnId,
-  getBikeImgId,
-  getBikeImagesDivId,
-  getRenderBikeBtnId,
-} from "./bike_element_id";
-import {
-  SEEDS_FORM_ID,
-  UPLOAD_RIDER_IMAGE_FORM_ID,
-  SPECIFY_DIMENSIONS_FORM_ID,
-  TEXT_PROMPT_FORM_ID,
-  RESPONSE_DIV_ID,
-} from "../html_element_constant_ids";
+import { getDownloadBikeCadBtnId, getBikeImgId, getBikeImagesDivId, getRenderBikeBtnId } from "./bike_element_id";
+import { TEXT_PROMPT_FORM_ID, RESPONSE_DIV_ID } from "../html_element_constant_ids";
 import {
   RESPONSE_RECEIVED_DIV,
   NO_BIKES_FOUND_DIV,
@@ -35,8 +23,6 @@ import { renderingFailedElementId } from "./bike_element_id";
 import { bikeLoadingId } from "./bike_element_id";
 import { GENERATED_DESIGNS_CONSUMER_CAROUSEL } from "../html_element_constant_ids";
 import { generateUuid } from "./generic_utils";
-import { USER_IMAGE_UPLOAD } from "../html_element_constant_ids";
-import { dimensionsFormToRiderDimensions as dimensionsFormToDimensionsRequest } from "./forms";
 
 const optimizationApiUrl = apiRoot.concat("/api/v1/optimization");
 const renderingApiUrl = apiRoot.concat("/api/v1/rendering");
@@ -60,9 +46,7 @@ abstract class GenericBikeOptimizationSubmitter {
   submitForm(optimizationType: string): void {
     this.resetBikeStore();
     this.throwIfInvalidType(optimizationType);
-    const form: HTMLFormElement = getElementById(
-      this.formId()
-    ) as HTMLFormElement;
+    const form: HTMLFormElement = getElementById(this.formId()) as HTMLFormElement;
     if (form.checkValidity()) {
       this.showResponseDiv();
       this.submitValidForm(form, optimizationType);
@@ -71,19 +55,11 @@ abstract class GenericBikeOptimizationSubmitter {
     }
   }
 
-  abstract submitValidForm(
-    form: HTMLFormElement,
-    optimizationType: string
-  ): void;
+  abstract submitValidForm(form: HTMLFormElement, optimizationType: string): void;
   abstract formId(): string;
 
-  downloadBike(
-    bikeId: string,
-    downloadFunction: (bike: GeneratedBike) => Promise<Response>
-  ) {
-    const downloadButton = getElementById(
-      getDownloadBikeCadBtnId(bikeId)
-    ) as HTMLButtonElement;
+  downloadBike(bikeId: string, downloadFunction: (bike: GeneratedBike) => Promise<Response>) {
+    const downloadButton = getElementById(getDownloadBikeCadBtnId(bikeId)) as HTMLButtonElement;
 
     downloadButton.innerHTML = "Downloading bike...";
 
@@ -92,10 +68,7 @@ abstract class GenericBikeOptimizationSubmitter {
         if (response.status === 200) {
           response.text().then((responseText) => {
             downloadAsTextFile(responseText, "bike.bcad");
-            this.toPressedDownloadButton(
-              downloadButton,
-              "Downloaded successfully"
-            );
+            this.toPressedDownloadButton(downloadButton, "Downloaded successfully");
           });
         } else {
           this.toPressedDownloadButton(downloadButton, "Download failed");
@@ -106,45 +79,28 @@ abstract class GenericBikeOptimizationSubmitter {
       });
   }
 
-  toPressedDownloadButton(
-    downloadButton: HTMLButtonElement,
-    textContent: string
-  ) {
+  toPressedDownloadButton(downloadButton: HTMLButtonElement, textContent: string) {
     downloadButton.innerHTML = textContent;
-    downloadButton.setAttribute(
-      "class",
-      downloadButton.getAttribute("class")!.replace("btn-danger", "btn-dark")
-    );
+    downloadButton.setAttribute("class", downloadButton.getAttribute("class")!.replace("btn-danger", "btn-dark"));
     downloadButton.disabled = true;
   }
 
   renderBikeById(bikeId: string) {
-    this.renderBike(bikeId, (bike: GeneratedBike) =>
-      renderingController.postRenderBikeRequest(bike)
-    );
+    this.renderBike(bikeId, (bike: GeneratedBike) => renderingController.postRenderBikeRequest(bike));
   }
 
   downloadBikeById(bikeId: string) {
-    this.downloadBike(bikeId, (bike: GeneratedBike) =>
-      optimizationController.postDownloadBikeCadRequest(bike)
-    );
+    this.downloadBike(bikeId, (bike: GeneratedBike) => optimizationController.postDownloadBikeCadRequest(bike));
   }
 
   renderClipsBike(bikeId: string) {
-    this.renderBike(bikeId, (bike: GeneratedBike) =>
-      renderingController.postRenderClipsBikeRequest(bike)
-    );
+    this.renderBike(bikeId, (bike: GeneratedBike) => renderingController.postRenderClipsBikeRequest(bike));
   }
   downloadClipsBike(bikeId: string) {
-    this.downloadBike(bikeId, (bike: GeneratedBike) =>
-      optimizationController.postDownloadClipsBikeCadRequest(bike)
-    );
+    this.downloadBike(bikeId, (bike: GeneratedBike) => optimizationController.postDownloadClipsBikeCadRequest(bike));
   }
 
-  renderBike(
-    bikeId: string,
-    renderingCall: (bike: GeneratedBike) => Promise<Response>
-  ) {
+  renderBike(bikeId: string, renderingCall: (bike: GeneratedBike) => Promise<Response>) {
     this.hideRenderButton(bikeId);
     this.setBikeLoading(bikeId, "flex");
     renderingCall(bikeStore.get(bikeId)!)
@@ -163,10 +119,7 @@ abstract class GenericBikeOptimizationSubmitter {
   }
 
   showRenderError(bikeId: string) {
-    getElementById(renderingFailedElementId(bikeId)).setAttribute(
-      "style",
-      "display: flex"
-    );
+    getElementById(renderingFailedElementId(bikeId)).setAttribute("style", "display: flex");
   }
 
   handleSuccessfulRenderResponse(response: Response, bikeId: string) {
@@ -176,25 +129,18 @@ abstract class GenericBikeOptimizationSubmitter {
   }
 
   setBikeLoading(bikeId: string, display: string): void {
-    document
-      .getElementById(bikeLoadingId(bikeId))!
-      .setAttribute("style", `display: ${display}`);
+    document.getElementById(bikeLoadingId(bikeId))!.setAttribute("style", `display: ${display}`);
   }
 
   handleRenderedBikeImage(bikeId: string, responseBlob: Blob) {
     const outputImg = getElementById(getBikeImgId(bikeId)) as HTMLImageElement;
     outputImg.src = urlCreator.createObjectURL(responseBlob);
-    getElementById(getBikeImagesDivId(bikeId)).setAttribute(
-      "style",
-      "display: flex"
-    );
+    getElementById(getBikeImagesDivId(bikeId)).setAttribute("style", "display: flex");
   }
 
   submitTextPromptForm(): void {
     this.resetBikeStore();
-    const form: HTMLFormElement = getElementById(
-      TEXT_PROMPT_FORM_ID
-    ) as HTMLFormElement;
+    const form: HTMLFormElement = getElementById(TEXT_PROMPT_FORM_ID) as HTMLFormElement;
     if (form.checkValidity()) {
       this.showResponseDiv();
       this.submitValidTextPromptForm(form);
@@ -228,36 +174,15 @@ abstract class GenericBikeOptimizationSubmitter {
     }
 
     request.text_prompt = formData.get("bike-description") as string;
-    request.optimizer_population = getOrDefault(
-      "optimizer_population",
-      Number.parseInt
-    )!;
-    request.optimizer_generations = getOrDefault(
-      "optimizer_generations",
-      Number.parseInt
-    )!;
-    request.avg_gower_weight = getOrDefault(
-      "avg_gower_weight",
-      Number.parseFloat
-    )!;
-    request.bonus_objective_weight = getOrDefault(
-      "bonus_objective_weight",
-      Number.parseFloat
-    )!;
+    request.optimizer_population = getOrDefault("optimizer_population", Number.parseInt)!;
+    request.optimizer_generations = getOrDefault("optimizer_generations", Number.parseInt)!;
+    request.avg_gower_weight = getOrDefault("avg_gower_weight", Number.parseFloat)!;
+    request.bonus_objective_weight = getOrDefault("bonus_objective_weight", Number.parseFloat)!;
     request.cfc_weight = getOrDefault("cfc_weight", Number.parseFloat)!;
-    request.cosine_distance_upper_bound = getOrDefault(
-      "cosine_distance_upper_bound",
-      Number.parseFloat
-    )!;
-    request.diversity_weight = getOrDefault(
-      "diversity_weight",
-      Number.parseFloat
-    )!;
+    request.cosine_distance_upper_bound = getOrDefault("cosine_distance_upper_bound", Number.parseFloat)!;
+    request.diversity_weight = getOrDefault("diversity_weight", Number.parseFloat)!;
     request.gower_weight = getOrDefault("gower_weight", Number.parseFloat)!;
-    request.include_dataset = getOrDefault(
-      "include_dataset",
-      (val) => "true" === val.toLowerCase()
-    )!;
+    request.include_dataset = getOrDefault("include_dataset", (val) => "true" === val.toLowerCase())!;
 
     this.postOptimizationForm(
       STANDARD_BIKE_INDEX,
@@ -268,7 +193,7 @@ abstract class GenericBikeOptimizationSubmitter {
   }
 
   postCustomRiderOptimizationForm(
-    optimizationType: string,
+    optimizationType: "ergonomics" | "aerodynamics",
     formData: FormData,
     base64File: string
   ) {
@@ -291,12 +216,7 @@ abstract class GenericBikeOptimizationSubmitter {
   ) {
     responsePromise
       .then((response) => {
-        this.handleOptimizationResponse(
-          response,
-          seedBikeId,
-          renderingFunction,
-          downloadFunction
-        );
+        this.handleOptimizationResponse(response, seedBikeId, renderingFunction, downloadFunction);
       })
       .catch((exception) => {
         this.showGenericError();
@@ -314,12 +234,7 @@ abstract class GenericBikeOptimizationSubmitter {
     downloadFunction: string
   ) {
     if (response.status === 200) {
-      this.handleSuccessfulOptimizationResponse(
-        response,
-        seedBikeId,
-        renderingFunction,
-        downloadFunction
-      );
+      this.handleSuccessfulOptimizationResponse(response, seedBikeId, renderingFunction, downloadFunction);
     } else {
       this.handleFailedResponse(response);
     }
@@ -338,12 +253,7 @@ abstract class GenericBikeOptimizationSubmitter {
       if (responseJson["bikes"].length === 0) {
         resultDivElements.showElement(NO_BIKES_FOUND_DIV);
       } else {
-        this.showGeneratedBikes(
-          responseJson,
-          seedBikeId,
-          renderingFunction,
-          downloadFunction
-        );
+        this.showGeneratedBikes(responseJson, seedBikeId, renderingFunction, downloadFunction);
         this.renderFirstBike();
       }
     });
@@ -351,9 +261,7 @@ abstract class GenericBikeOptimizationSubmitter {
 
   renderFirstBike() {
     const firstBikeId = bikeStore.keys().next().value;
-    (
-      getElementById(getRenderBikeBtnId(firstBikeId)) as HTMLButtonElement
-    ).click();
+    (getElementById(getRenderBikeBtnId(firstBikeId)) as HTMLButtonElement).click();
   }
 
   showGeneratedBikes(
@@ -365,13 +273,12 @@ abstract class GenericBikeOptimizationSubmitter {
     downloadFunction: string
   ) {
     resultDivElements.showElement(RESPONSE_RECEIVED_DIV);
-    getElementById(GENERATED_DESIGNS_CONSUMER_CAROUSEL).innerHTML =
-      this.persistAndBuildCarouselItems(
-        responseJson["bikes"],
-        seedBikeId,
-        renderingFunction,
-        downloadFunction
-      ).innerHTML;
+    getElementById(GENERATED_DESIGNS_CONSUMER_CAROUSEL).innerHTML = this.persistAndBuildCarouselItems(
+      responseJson["bikes"],
+      seedBikeId,
+      renderingFunction,
+      downloadFunction
+    ).innerHTML;
   }
 
   setLoading() {
@@ -412,10 +319,7 @@ abstract class GenericBikeOptimizationSubmitter {
 
   activateFirst(index: number, bikeItem: HTMLDivElement) {
     if (index === 0) {
-      bikeItem.setAttribute(
-        "class",
-        bikeItem.getAttribute("class") + " active"
-      );
+      bikeItem.setAttribute("class", bikeItem.getAttribute("class") + " active");
     }
   }
 
@@ -432,31 +336,19 @@ abstract class GenericBikeOptimizationSubmitter {
       "class",
       "container text-center border rounded carousel-item mb-1 p-5 optimized-bike-div"
     );
-    optimizedBikeDiv.appendChild(
-      this.generateBikeDescription(index, bike, totalBikes)
-    );
-    optimizedBikeDiv.appendChild(
-      this.generatePerformanceElement(bike["bikePerformance"])
-    );
+    optimizedBikeDiv.appendChild(this.generateBikeDescription(index, bike, totalBikes));
+    optimizedBikeDiv.appendChild(this.generatePerformanceElement(bike["bikePerformance"]));
     optimizedBikeDiv.appendChild(document.createElement("br"));
     optimizedBikeDiv.appendChild(this.createBikeLoadingElement(bikeId));
     optimizedBikeDiv.appendChild(this.createRenderingFailedElement(bikeId));
-    optimizedBikeDiv.appendChild(
-      this.generateRenderButton(bikeId, renderingFunction)
-    );
+    optimizedBikeDiv.appendChild(this.generateRenderButton(bikeId, renderingFunction));
     optimizedBikeDiv.appendChild(this.generateRenderedImgElement(bikeId));
     optimizedBikeDiv.appendChild(createSpaceDiv());
-    optimizedBikeDiv.appendChild(
-      this.generateDownloadCadButton(bikeId, downloadFunction)
-    );
+    optimizedBikeDiv.appendChild(this.generateDownloadCadButton(bikeId, downloadFunction));
     return optimizedBikeDiv;
   }
 
-  generateBikeDescription(
-    index: number,
-    bike: object,
-    totalBikes: number
-  ): HTMLElement {
+  generateBikeDescription(index: number, bike: object, totalBikes: number): HTMLElement {
     const element = document.createElement("h4");
     element.textContent = `Generated Bike ${index + 1}/${totalBikes}`;
     return element;
@@ -473,9 +365,7 @@ abstract class GenericBikeOptimizationSubmitter {
     const renderedImg = document.createElement("img");
 
     const originalImg = document.createElement("img");
-    originalImg.src = `../mcd/assets/bike${
-      bikeStore.get(bikeId)!.seedImageId
-    }.png`;
+    originalImg.src = `../mcd/assets/bike${bikeStore.get(bikeId)!.seedImageId}.png`;
     originalImg.setAttribute("class", "original-bike-img-in-result");
     originalImg.setAttribute("id", getOriginalImageInResultId(bikeId));
 
@@ -484,14 +374,10 @@ abstract class GenericBikeOptimizationSubmitter {
     renderedImg.setAttribute("alt", "rendered bike image");
 
     renderedImgDiv.appendChild(renderedImg);
-    renderedImgDiv.appendChild(
-      this.getImageLabel("Generated", getBikeImgId(bikeId))
-    );
+    renderedImgDiv.appendChild(this.getImageLabel("Generated", getBikeImgId(bikeId)));
 
     originalImgDiv.appendChild(originalImg);
-    originalImgDiv.appendChild(
-      this.getImageLabel("Original", getOriginalImageInResultId(bikeId))
-    );
+    originalImgDiv.appendChild(this.getImageLabel("Original", getOriginalImageInResultId(bikeId)));
 
     imagesDiv.appendChild(originalImgDiv);
     imagesDiv.appendChild(renderedImgDiv);
@@ -513,24 +399,11 @@ abstract class GenericBikeOptimizationSubmitter {
   }
 
   generateRenderButton(bikeId: string, renderingFunction: string): HTMLElement {
-    return this.generateBikeActionButton(
-      bikeId,
-      getRenderBikeBtnId,
-      "Render bike",
-      renderingFunction
-    );
+    return this.generateBikeActionButton(bikeId, getRenderBikeBtnId, "Render bike", renderingFunction);
   }
 
-  generateDownloadCadButton(
-    bikeId: string,
-    downloadFunction: string
-  ): HTMLElement {
-    return this.generateBikeActionButton(
-      bikeId,
-      getDownloadBikeCadBtnId,
-      "Download CAD",
-      downloadFunction
-    );
+  generateDownloadCadButton(bikeId: string, downloadFunction: string): HTMLElement {
+    return this.generateBikeActionButton(bikeId, getDownloadBikeCadBtnId, "Download CAD", downloadFunction);
   }
 
   generateBikeActionButton(
@@ -548,10 +421,7 @@ abstract class GenericBikeOptimizationSubmitter {
     return button;
   }
 
-  persistBike(
-    bike: { bike: GeneratedBike; bikePerformance: string },
-    seedBikeId: string
-  ): string {
+  persistBike(bike: { bike: GeneratedBike; bikePerformance: string }, seedBikeId: string): string {
     const bikeId = generateUuid();
     const generatedBike = new GeneratedBike();
     generatedBike.bikeObject = bike["bike"];
@@ -599,10 +469,7 @@ abstract class GenericBikeOptimizationSubmitter {
   createBikeLoadingElement(bikeId: string): HTMLDivElement {
     const bikeLoadingDiv = document.createElement("div");
     bikeLoadingDiv.setAttribute("id", bikeLoadingId(bikeId));
-    bikeLoadingDiv.setAttribute(
-      "class",
-      "text-center bike-render-inner-element-div flex-column"
-    );
+    bikeLoadingDiv.setAttribute("class", "text-center bike-render-inner-element-div flex-column");
     bikeLoadingDiv.setAttribute("style", "display: none;");
 
     const innerDiv = document.createElement("div");
@@ -626,9 +493,7 @@ abstract class GenericBikeOptimizationSubmitter {
 
   generatePerformanceElement(bikePerformance: string): HTMLElement {
     const div = document.createElement("h5");
-    div.textContent = JSON.stringify(bikePerformance)
-      .replace('"', "")
-      .replace('"', "");
+    div.textContent = JSON.stringify(bikePerformance).replace('"', "").replace('"', "");
     return div;
   }
 
@@ -651,91 +516,10 @@ class BikeOptimizationSubmitter extends GenericBikeOptimizationSubmitter {
   }
 }
 
-class SeedsSubmitter extends GenericBikeOptimizationSubmitter {
-  submitValidSeedsForm(
-    optimizationType: "ergonomics" | "aerodynamics",
-    form: HTMLFormElement
-  ) {
-    const formData = new FormData(form);
-    this.postOptimizationForm(
-      this.getSeedBikeId(formData),
-      optimizationController.postSeedsOptimization(
-        optimizationType,
-        formData.get("seedBike") as string,
-        formData.get("riderImage") as string
-      )
-    );
-  }
-  submitValidForm(
-    form: HTMLFormElement,
-    optimizationType: "aerodynamics" | "ergonomics"
-  ) {
-    this.submitValidSeedsForm(optimizationType, form);
-  }
-  formId(): string {
-    return SEEDS_FORM_ID;
-  }
-}
-
-class CustomerRidersSubmitter extends GenericBikeOptimizationSubmitter {
-  submitValidCustomRiderForm(optimizationType: string, form: HTMLFormElement) {
-    readFile(USER_IMAGE_UPLOAD, (reader) => {
-      const base64File: string = this.arrayBufferToBase64(
-        reader.result as ArrayBuffer
-      );
-      const formData: FormData = new FormData(form);
-      this.postCustomRiderOptimizationForm(
-        optimizationType,
-        formData,
-        base64File
-      );
-    });
-  }
-  submitValidForm(form: HTMLFormElement, optimizationType: string) {
-    this.submitValidCustomRiderForm(optimizationType, form);
-  }
-  formId(): string {
-    return UPLOAD_RIDER_IMAGE_FORM_ID;
-  }
-}
-class DimensionsSubmitter extends GenericBikeOptimizationSubmitter {
-  submitValidDimensionsForm(optimizationType: string, form: HTMLFormElement) {
-    const formData = new FormData(form);
-    this.postOptimizationForm(
-      this.getSeedBikeId(formData),
-      optimizationController.postDimensionsOptimization(
-        optimizationType,
-        dimensionsFormToDimensionsRequest(formData)
-      )
-    );
-  }
-  submitValidForm(form: HTMLFormElement, optimizationType: string) {
-    this.submitValidDimensionsForm(optimizationType, form);
-  }
-  formId(): string {
-    return SPECIFY_DIMENSIONS_FORM_ID;
-  }
-}
-
 const submitter = new BikeOptimizationSubmitter();
-const seedsSubmitter = new SeedsSubmitter();
-const customerRidersSubmitter = new CustomerRidersSubmitter();
-const dimensionsSubmitter = new DimensionsSubmitter();
-
-function submitSeedsForm(arg1: string) {
-  seedsSubmitter.submitForm(arg1);
-}
 
 function submitTextPromptForm() {
   submitter.submitTextPromptForm();
-}
-
-function submitCustomRiderForm(arg1: string) {
-  customerRidersSubmitter.submitForm(arg1);
-}
-
-function submitRiderDimensionsForm(arg1: string) {
-  dimensionsSubmitter.submitForm(arg1);
 }
 
 function renderBikeById(arg1: string) {
@@ -750,10 +534,7 @@ export {
   optimizationController,
   renderingController,
   submitter,
-  submitSeedsForm,
   submitTextPromptForm,
-  submitCustomRiderForm,
-  submitRiderDimensionsForm,
   renderBikeById,
   downloadBikeById,
 };
