@@ -28,7 +28,9 @@ export default function McdDemoUserForm() {
         {selectedForm === McdInputForm.SEEDS && (
           <SeedsForm setServerResponse={setServerResponse} />
         )}
-        {selectedForm === McdInputForm.IMAGE && <UploadImageForm />}
+        {selectedForm === McdInputForm.IMAGE && (
+          <UploadImageForm setServerResponse={setServerResponse} />
+        )}
         {selectedForm === McdInputForm.TEXT && <GenerateFromTextForm />}
         {selectedForm === McdInputForm.DIMENSIONS && (
           <SpecifyRiderDimensionsForm setServerResponse={setServerResponse} />
