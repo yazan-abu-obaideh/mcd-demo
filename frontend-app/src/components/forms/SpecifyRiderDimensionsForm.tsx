@@ -31,17 +31,23 @@ function Row(props: PropsWithChildren): ReactElement {
   return <div className="row flex-cont"> {props.children} </div>;
 }
 
+function parseFloat(formData: FormData, fieldName: string): number {
+  return Number.parseFloat(formData.get(fieldName) as string);
+}
+
 function buildFromFormData(formData: FormData): FrontendDimensionsOptimizationRequest {
   const dimensionsRequest = new FrontendDimensionsOptimizationRequest();
-  dimensionsRequest.arm_length = Number.parseFloat(formData.get("arm-length") as string);
-  dimensionsRequest.height = Number.parseFloat(formData.get("rider-height") as string);
-  dimensionsRequest.sh_height = Number.parseFloat(formData.get("shoulder-height") as string);
-  dimensionsRequest.hip_to_ankle = Number.parseFloat(formData.get("hip-ankle") as string);
-  dimensionsRequest.hip_to_knee = Number.parseFloat(formData.get("hip-knee") as string);
-  dimensionsRequest.shoulder_to_wrist = Number.parseFloat(formData.get("shoulder-wrist") as string);
-  dimensionsRequest.upper_leg = Number.parseFloat(formData.get("upper-leg") as string);
-  dimensionsRequest.lower_leg = Number.parseFloat(formData.get("lower-leg") as string);
-  dimensionsRequest.torso_length = Number.parseFloat(formData.get("torso-length") as string);
+
+  dimensionsRequest.arm_length = parseFloat(formData, "arm-length");
+  dimensionsRequest.height = parseFloat(formData, "rider-height");
+  dimensionsRequest.sh_height = parseFloat(formData, "shoulder-height");
+  dimensionsRequest.hip_to_ankle = parseFloat(formData, "hip-ankle");
+  dimensionsRequest.hip_to_knee = parseFloat(formData, "hip-knee");
+  dimensionsRequest.shoulder_to_wrist = parseFloat(formData, "shoulder-wrist");
+  dimensionsRequest.upper_leg = parseFloat(formData, "upper-leg");
+  dimensionsRequest.lower_leg = parseFloat(formData, "lower-leg");
+  dimensionsRequest.torso_length = parseFloat(formData, "torso-length");
+  
   return dimensionsRequest;
 }
 
