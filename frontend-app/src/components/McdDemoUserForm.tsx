@@ -21,7 +21,7 @@ export default function McdDemoUserForm() {
       <div id="generation-forms" className="container border rounded p-3 mb-3">
         {selectedForm === McdInputForm.SEEDS && <SeedsForm setServerResponse={setServerResponse} />}
         {selectedForm === McdInputForm.IMAGE && <UploadImageForm setServerResponse={setServerResponse} />}
-        {selectedForm === McdInputForm.TEXT && <GenerateFromTextForm />}
+        {selectedForm === McdInputForm.TEXT && <GenerateFromTextForm setServerResponse={setServerResponse} />}
         {selectedForm === McdInputForm.DIMENSIONS && (
           <SpecifyRiderDimensionsForm setServerResponse={setServerResponse} />
         )}
