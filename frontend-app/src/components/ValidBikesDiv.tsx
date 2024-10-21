@@ -61,6 +61,7 @@ function BikeElement(props: {
   index: number;
   bike: { bike: GeneratedBike; bikePerformance: string };
   seedBikeId: string;
+  isClips: boolean;
 }) {
   const [renderingState, setRenderingState] = useState<RenderingState>({
     renderingRequested: false,
@@ -92,8 +93,11 @@ function BikeElement(props: {
             request.bikePerformance = props.bike.bikePerformance;
             request.seedImageId = props.seedBikeId;
 
-            renderingController
-              .postRenderBikeRequest(request)
+            const renderingFunction = props.isClips
+              ? renderingController.postRenderClipsBikeRequest.bind(renderingController)
+              : renderingController.postRenderBikeRequest.bind(renderingController);
+
+            renderingFunction(request)
               .then((response) => {
                 if (response.status !== 200) {
                   setRenderingState({
@@ -169,12 +173,18 @@ function BikeElement(props: {
         bike={props.bike.bike}
         bikePerformance={props.bike.bikePerformance}
         seedBikeId={props.seedBikeId}
+        isClips={props.isClips}
       />
     </div>
   );
 }
 
-function DownloadCadButton(props: { bike: GeneratedBike; bikePerformance: string; seedBikeId: string }) {
+function DownloadCadButton(props: {
+  bike: GeneratedBike;
+  bikePerformance: string;
+  seedBikeId: string;
+  isClips: boolean;
+}) {
   const [buttonState, setButtonState] = useState({
     active: true,
     innerText: "Download CAD",
@@ -187,8 +197,12 @@ function DownloadCadButton(props: { bike: GeneratedBike; bikePerformance: string
         const req = new GeneratedBike();
         req.bikeObject = props.bike;
         req.seedImageId = props.seedBikeId;
-        optimizationController
-          .postDownloadBikeCadRequest(req)
+
+        const downloadBikeFunction = props.isClips
+          ? optimizationController.postDownloadClipsBikeCadRequest.bind(optimizationController)
+          : optimizationController.postDownloadBikeCadRequest.bind(optimizationController);
+
+        downloadBikeFunction(req)
           .then((res) => {
             if (res.status === 200) {
               res.text().then((resText) => {
@@ -199,8 +213,9 @@ function DownloadCadButton(props: { bike: GeneratedBike; bikePerformance: string
               setButtonState(DOWNLOAD_FAILED);
             }
           })
-          .catch(() => {
+          .catch((err) => {
             setButtonState(DOWNLOAD_FAILED);
+            throw err;
           });
       }}
     >
@@ -225,7 +240,12 @@ export function ValidBikesDiv(props: { mcdServerResponse: OptimizationRequestSta
           <div>
             {props.mcdServerResponse.optimizationResponse?.bikes.map((bike, index) => {
               return (
-                <BikeElement seedBikeId={props.mcdServerResponse.requestPayload!.seedBike} bike={bike} index={index} />
+                <BikeElement
+                  isClips={props.mcdServerResponse.isClips}
+                  seedBikeId={props.mcdServerResponse.requestPayload!.seedBike}
+                  bike={bike}
+                  index={index}
+                />
               );
             })}
           </div>

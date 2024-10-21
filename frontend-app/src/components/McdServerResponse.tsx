@@ -27,6 +27,7 @@ export class OptimizationRequestState {
     readonly requestPayload: undefined | McdServerRequest,
     readonly isLoading: boolean,
     readonly error: McdError | undefined,
-    readonly optimizationResponse: BikesServerResponse | undefined
+    readonly optimizationResponse: BikesServerResponse | undefined,
+    readonly isClips: boolean = false
   ) {}
 }

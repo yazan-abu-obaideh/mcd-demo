@@ -102,18 +102,18 @@ function GenerateButton(props: { setServerResponse: (mcdServerResponse: Optimiza
         }
 
         request.text_prompt = formData.get("bike-description") as string;
-        request.optimizer_population = getOrDefault("optimizer_population", Number.parseInt)!;
-        request.optimizer_generations = getOrDefault("optimizer_generations", Number.parseInt)!;
-        request.avg_gower_weight = getOrDefault("avg_gower_weight", Number.parseFloat)!;
-        request.bonus_objective_weight = getOrDefault("bonus_objective_weight", Number.parseFloat)!;
-        request.cfc_weight = getOrDefault("cfc_weight", Number.parseFloat)!;
-        request.cosine_distance_upper_bound = getOrDefault("cosine_distance_upper_bound", Number.parseFloat)!;
-        request.diversity_weight = getOrDefault("diversity_weight", Number.parseFloat)!;
-        request.gower_weight = getOrDefault("gower_weight", Number.parseFloat)!;
+        request.optimizer_population = getOrDefault("optimizer_population", Number.parseInt);
+        request.optimizer_generations = getOrDefault("optimizer_generations", Number.parseInt);
+        request.avg_gower_weight = getOrDefault("avg_gower_weight", Number.parseFloat);
+        request.bonus_objective_weight = getOrDefault("bonus_objective_weight", Number.parseFloat);
+        request.cfc_weight = getOrDefault("cfc_weight", Number.parseFloat);
+        request.cosine_distance_upper_bound = getOrDefault("cosine_distance_upper_bound", Number.parseFloat);
+        request.diversity_weight = getOrDefault("diversity_weight", Number.parseFloat);
+        request.gower_weight = getOrDefault("gower_weight", Number.parseFloat);
         request.include_dataset = getOrDefault("include_dataset", (val) => "true" === val.toLowerCase())!;
 
         const response = optimizationController.postTextPromptOptimization(request);
-        handleResponse(response, props.setServerResponse, new McdServerRequest(STANDARD_BIKE_INDEX));
+        handleResponse(response, props.setServerResponse, new McdServerRequest(STANDARD_BIKE_INDEX), true);
       }}
     >
       Generate!

@@ -19,15 +19,15 @@ class GeneratedBike {
 
 class TextPromptOptimizationRequest {
   text_prompt!: string;
-  cosine_distance_upper_bound!: number;
-  optimizer_population!: number;
-  optimizer_generations!: number;
-  avg_gower_weight!: number;
-  cfc_weight!: number;
-  gower_weight!: number;
-  diversity_weight!: number;
-  bonus_objective_weight!: number;
-  include_dataset!: boolean;
+  cosine_distance_upper_bound: number | null = null;
+  optimizer_population: number | null = null;
+  optimizer_generations: number | null = null;
+  avg_gower_weight: number | null = null;
+  cfc_weight: number | null = null;
+  gower_weight: number | null = null;
+  diversity_weight: number | null = null;
+  bonus_objective_weight: number | null = null;
+  include_dataset: boolean = false;
 }
 
 class RenderingController {
