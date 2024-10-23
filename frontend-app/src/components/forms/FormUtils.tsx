@@ -1,6 +1,15 @@
 import { BikesServerResponse, McdError, McdServerRequest, OptimizationRequestState } from "../McdServerResponse";
 import { GENERIC_ERROR_RESPONSE } from "./SeedsForm";
 
+export function callIfValidForm(formId: string, actionFunction: () => void) {
+  const form = document.getElementById(formId) as HTMLFormElement;
+  if (!form.checkValidity()) {
+    form.reportValidity();
+    return;
+  }
+  actionFunction();
+}
+
 export function handleResponse(
   response: Promise<Response>,
   setServerResponse: (mcdServerResponse: OptimizationRequestState) => void,

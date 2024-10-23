@@ -4,7 +4,7 @@ import BikeSelectionForm from "../BikeSelectionForm";
 import { SubmitDropdown } from "./SubmitDropdown";
 import { SPECIFY_DIMENSIONS_FORM_ID } from "../../html_element_constant_ids";
 import { McdServerRequest, OptimizationRequestState } from "../McdServerResponse";
-import { handleResponse } from "./FormUtils";
+import { callIfValidForm, handleResponse } from "./FormUtils";
 import { FrontendDimensionsOptimizationRequest } from "../../declarative/controller";
 import { SEED_BIKE_DATA_NAME } from "../constants";
 
@@ -157,14 +157,18 @@ export function SpecifyRiderDimensionsForm(props: {
       <SubmitDropdown
         id="1"
         ergonomicOptimizationFunction={() => {
-          optimizeDimensions(props.setServerResponse, (dimensionsRequest) =>
-            optimizationController.postDimensionsOptimization("ergonomics", dimensionsRequest)
-          );
+          callIfValidForm(SPECIFY_DIMENSIONS_FORM_ID, () => {
+            optimizeDimensions(props.setServerResponse, (dimensionsRequest) =>
+              optimizationController.postDimensionsOptimization("ergonomics", dimensionsRequest)
+            );
+          });
         }}
         aerodynamicOptimizationFunction={() => {
-          optimizeDimensions(props.setServerResponse, (dimensionsRequest) =>
-            optimizationController.postDimensionsOptimization("aerodynamics", dimensionsRequest)
-          );
+          callIfValidForm(SPECIFY_DIMENSIONS_FORM_ID, () => {
+            optimizeDimensions(props.setServerResponse, (dimensionsRequest) =>
+              optimizationController.postDimensionsOptimization("aerodynamics", dimensionsRequest)
+            );
+          });
         }}
       />
     </form>

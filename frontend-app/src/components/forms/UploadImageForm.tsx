@@ -4,7 +4,7 @@ import { UPLOAD_RIDER_IMAGE_FORM_ID, USER_IMAGE_UPLOAD } from "../../html_elemen
 import BikeSelectionForm from "../BikeSelectionForm";
 import { SEED_BIKE_DATA_NAME } from "../constants";
 import { McdServerRequest, OptimizationRequestState } from "../McdServerResponse";
-import { handleResponse } from "./FormUtils";
+import { callIfValidForm, handleResponse } from "./FormUtils";
 import { SubmitDropdown } from "./SubmitDropdown";
 
 function UserHeightInputDiv() {
@@ -79,14 +79,18 @@ export function UploadImageForm(props: { setServerResponse: (mcdServerResponse: 
       <SubmitDropdown
         id="1-upload-rider"
         ergonomicOptimizationFunction={() => {
-          optimizeImage(props.setServerResponse, (seedBikeId, base64File, personHeight) =>
-            optimizationController.postImageOptimization("ergonomics", seedBikeId, base64File, personHeight)
-          );
+          callIfValidForm(UPLOAD_RIDER_IMAGE_FORM_ID, () => {
+            optimizeImage(props.setServerResponse, (seedBikeId, base64File, personHeight) =>
+              optimizationController.postImageOptimization("ergonomics", seedBikeId, base64File, personHeight)
+            );
+          });
         }}
         aerodynamicOptimizationFunction={() => {
-          optimizeImage(props.setServerResponse, (seedBikeId, base64File, personHeight) =>
-            optimizationController.postImageOptimization("aerodynamics", seedBikeId, base64File, personHeight)
-          );
+          callIfValidForm(UPLOAD_RIDER_IMAGE_FORM_ID, () => {
+            optimizeImage(props.setServerResponse, (seedBikeId, base64File, personHeight) =>
+              optimizationController.postImageOptimization("aerodynamics", seedBikeId, base64File, personHeight)
+            );
+          });
         }}
       />
     </form>

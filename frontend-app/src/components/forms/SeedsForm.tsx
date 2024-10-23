@@ -9,7 +9,7 @@ import { SubmitDropdown } from "./SubmitDropdown";
 import { SEEDS_FORM_ID } from "../../html_element_constant_ids";
 import { GENERIC_ERROR, McdServerRequest, OptimizationRequestState } from "../McdServerResponse";
 import { SEED_BIKE_DATA_NAME } from "../constants";
-import { handleResponse } from "./FormUtils";
+import { callIfValidForm, handleResponse } from "./FormUtils";
 
 const RIDER_DATA_NAME = "riderImage";
 
@@ -64,14 +64,18 @@ export function SeedsForm(props: { setServerResponse: (mcdServerResponse: Optimi
       <SubmitDropdown
         id="1"
         ergonomicOptimizationFunction={() => {
-          optimizeSeeds(props.setServerResponse, (selectedSeed, selectedRider) =>
-            optimizationController.postSeedsOptimization("ergonomics", selectedSeed, selectedRider)
-          );
+          callIfValidForm(SEEDS_FORM_ID, () => {
+            optimizeSeeds(props.setServerResponse, (selectedSeed, selectedRider) =>
+              optimizationController.postSeedsOptimization("ergonomics", selectedSeed, selectedRider)
+            );
+          });
         }}
         aerodynamicOptimizationFunction={() => {
-          optimizeSeeds(props.setServerResponse, (selectedSeed, selectedRider) =>
-            optimizationController.postSeedsOptimization("aerodynamics", selectedSeed, selectedRider)
-          );
+          callIfValidForm(SEEDS_FORM_ID, () => {
+            optimizeSeeds(props.setServerResponse, (selectedSeed, selectedRider) =>
+              optimizationController.postSeedsOptimization("aerodynamics", selectedSeed, selectedRider)
+            );
+          });
         }}
       />
     </form>
