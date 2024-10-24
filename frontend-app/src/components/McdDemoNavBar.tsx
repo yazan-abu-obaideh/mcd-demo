@@ -1,4 +1,5 @@
 import decodeLogo from "../assets/decode_logo.png";
+import { READ_MORE, ROOT } from "../paths";
 
 export default function McdDemoNavBar() {
   return (
@@ -22,12 +23,12 @@ export default function McdDemoNavBar() {
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item">
-              <a className="nav-link active" aria-current="page" href="#generation-forms">
+              <a className="nav-link active" aria-current="page" href={ROOT.concat("#generation-forms")}>
                 Interactive demo
               </a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="/mcd/read-more.html">
+              <a className="nav-link" href={READ_MORE}>
                 Read more
               </a>
             </li>

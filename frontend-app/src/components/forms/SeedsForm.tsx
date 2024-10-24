@@ -49,6 +49,19 @@ function grabSelectedRider(): string {
   return stringFromFormData(RIDER_DATA_NAME);
 }
 
+function buildOnClickFunction(
+  setServerResponse: (mcdServerResponse: OptimizationRequestState) => void,
+  optimizationType: "aerodynamics" | "ergonomics"
+): () => void {
+  return () => {
+    callIfValidForm(SEEDS_FORM_ID, () => {
+      optimizeSeeds(setServerResponse, (selectedSeed, selectedRider) =>
+        optimizationController.postSeedsOptimization(optimizationType, selectedSeed, selectedRider)
+      );
+    });
+  };
+}
+
 export function SeedsForm(props: { setServerResponse: (mcdServerResponse: OptimizationRequestState) => void }) {
   return (
     <form id={SEEDS_FORM_ID}>
@@ -63,20 +76,8 @@ export function SeedsForm(props: { setServerResponse: (mcdServerResponse: Optimi
       <BikeSelectionForm idSuffix={SEEDS_FORM_ID} />
       <SubmitDropdown
         id="1"
-        ergonomicOptimizationFunction={() => {
-          callIfValidForm(SEEDS_FORM_ID, () => {
-            optimizeSeeds(props.setServerResponse, (selectedSeed, selectedRider) =>
-              optimizationController.postSeedsOptimization("ergonomics", selectedSeed, selectedRider)
-            );
-          });
-        }}
-        aerodynamicOptimizationFunction={() => {
-          callIfValidForm(SEEDS_FORM_ID, () => {
-            optimizeSeeds(props.setServerResponse, (selectedSeed, selectedRider) =>
-              optimizationController.postSeedsOptimization("aerodynamics", selectedSeed, selectedRider)
-            );
-          });
-        }}
+        ergonomicOptimizationFunction={buildOnClickFunction(props.setServerResponse, "ergonomics")}
+        aerodynamicOptimizationFunction={buildOnClickFunction(props.setServerResponse, "aerodynamics")}
       />
     </form>
   );

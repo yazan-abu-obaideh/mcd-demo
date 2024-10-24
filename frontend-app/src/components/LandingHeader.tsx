@@ -1,5 +1,6 @@
 import { ReactElement } from "react";
 import decodeLogo from "../assets/decode_logo.png";
+import { READ_MORE } from "../paths";
 
 function DecodeLogo() {
   return <img className="d-block mx-auto mb-4" src={decodeLogo} alt="" width="225" height="82" />;
@@ -43,7 +44,7 @@ export function LandingHeader(): ReactElement {
         <div className="d-grid gap-2 d-sm-flex justify-content-sm-center">
           <div className="col">
             <ActionLink href="#generation-forms" visibleText="Generate CAD Designs" />
-            <ActionLink href="/mcd/read-more.html" visibleText="Read more" />
+            <ActionLink href={READ_MORE} visibleText="Read more" />
           </div>
           <br />
         </div>

@@ -18,6 +18,7 @@ function FloatInputDiv(props: { name: string; labelText: string; inputId: string
         id={props.inputId}
         step={0.01}
         placeholder={props.initialValue.toString()}
+        defaultValue={props.initialValue}
         required
       />
       <label className="form-label" htmlFor={props.inputId}>
@@ -66,6 +67,19 @@ function optimizeDimensions(
 
   const response = postRequest(dimensionsRequest);
   handleResponse(response, setServerResponse, mcdRequest);
+}
+
+function buildOnClickFunction(
+  setServerResponse: (mcdServerResponse: OptimizationRequestState) => void,
+  optimizationType: "aerodynamics" | "ergonomics"
+): () => void {
+  return () => {
+    callIfValidForm(SPECIFY_DIMENSIONS_FORM_ID, () => {
+      optimizeDimensions(setServerResponse, (dimensionsRequest) =>
+        optimizationController.postDimensionsOptimization(optimizationType, dimensionsRequest)
+      );
+    });
+  };
 }
 
 export function SpecifyRiderDimensionsForm(props: {
@@ -144,6 +158,7 @@ export function SpecifyRiderDimensionsForm(props: {
                 id="torso-length-input-specify-rider-dimensions"
                 step="0.01"
                 placeholder="23"
+                defaultValue={23}
                 required
               />
               <label className="form-label" htmlFor="torso-length-input-specify-rider-dimensions">
@@ -156,20 +171,8 @@ export function SpecifyRiderDimensionsForm(props: {
       <BikeSelectionForm idSuffix={SPECIFY_DIMENSIONS_FORM_ID} />
       <SubmitDropdown
         id="1"
-        ergonomicOptimizationFunction={() => {
-          callIfValidForm(SPECIFY_DIMENSIONS_FORM_ID, () => {
-            optimizeDimensions(props.setServerResponse, (dimensionsRequest) =>
-              optimizationController.postDimensionsOptimization("ergonomics", dimensionsRequest)
-            );
-          });
-        }}
-        aerodynamicOptimizationFunction={() => {
-          callIfValidForm(SPECIFY_DIMENSIONS_FORM_ID, () => {
-            optimizeDimensions(props.setServerResponse, (dimensionsRequest) =>
-              optimizationController.postDimensionsOptimization("aerodynamics", dimensionsRequest)
-            );
-          });
-        }}
+        ergonomicOptimizationFunction={buildOnClickFunction(props.setServerResponse, "ergonomics")}
+        aerodynamicOptimizationFunction={buildOnClickFunction(props.setServerResponse, "aerodynamics")}
       />
     </form>
   );

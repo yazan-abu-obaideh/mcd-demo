@@ -65,6 +65,19 @@ function UploadImageInputDiv() {
   );
 }
 
+function buildOnClickFunction(
+  setServerResponse: (mcdServerResponse: OptimizationRequestState) => void,
+  optimizationType: "aerodynamics" | "ergonomics"
+): () => void {
+  return () => {
+    callIfValidForm(UPLOAD_RIDER_IMAGE_FORM_ID, () => {
+      optimizeImage(setServerResponse, (seedBikeId, base64File, personHeight) =>
+        optimizationController.postImageOptimization(optimizationType, seedBikeId, base64File, personHeight)
+      );
+    });
+  };
+}
+
 export function UploadImageForm(props: { setServerResponse: (mcdServerResponse: OptimizationRequestState) => void }) {
   return (
     <form id={UPLOAD_RIDER_IMAGE_FORM_ID}>
@@ -78,20 +91,8 @@ export function UploadImageForm(props: { setServerResponse: (mcdServerResponse: 
       <BikeSelectionForm idSuffix={UPLOAD_RIDER_IMAGE_FORM_ID} />
       <SubmitDropdown
         id="1-upload-rider"
-        ergonomicOptimizationFunction={() => {
-          callIfValidForm(UPLOAD_RIDER_IMAGE_FORM_ID, () => {
-            optimizeImage(props.setServerResponse, (seedBikeId, base64File, personHeight) =>
-              optimizationController.postImageOptimization("ergonomics", seedBikeId, base64File, personHeight)
-            );
-          });
-        }}
-        aerodynamicOptimizationFunction={() => {
-          callIfValidForm(UPLOAD_RIDER_IMAGE_FORM_ID, () => {
-            optimizeImage(props.setServerResponse, (seedBikeId, base64File, personHeight) =>
-              optimizationController.postImageOptimization("aerodynamics", seedBikeId, base64File, personHeight)
-            );
-          });
-        }}
+        ergonomicOptimizationFunction={buildOnClickFunction(props.setServerResponse, "ergonomics")}
+        aerodynamicOptimizationFunction={buildOnClickFunction(props.setServerResponse, "aerodynamics")}
       />
     </form>
   );
