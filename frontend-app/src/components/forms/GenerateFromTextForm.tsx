@@ -19,6 +19,7 @@ function IntegerInputDiv(props: { name: string; labelText: string; min: number; 
     </div>
   );
 }
+
 function BoundedFloatInputDiv(props: { name: string; labelText: string; min: number; max: number }) {
   const inputId = props.name + "-input";
   return (

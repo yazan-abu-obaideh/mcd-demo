@@ -15,6 +15,7 @@ const INITIAL_RESPONSE_STATE = new OptimizationRequestState(false, undefined, fa
 export default function McdDemoUserForm() {
   const [selectedForm, setSelectedForm] = useState(McdInputForm.SEEDS);
   const [serverResponse, setServerResponse] = useState(INITIAL_RESPONSE_STATE);
+
   return (
     <>
       <McdDemoNavBar />

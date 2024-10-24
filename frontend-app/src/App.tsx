@@ -1,7 +1,7 @@
 import "./styles.css";
 import McdDemoUserForm from "./components/McdDemoUserForm";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { READ_MORE } from "./paths";
+import { READ_MORE, ROOT } from "./paths";
 import { ReadMore } from "./pages/ReadMore";
 
 function App() {
@@ -9,7 +9,7 @@ function App() {
     <BrowserRouter>
       <div className="App">
         <Routes>
-          <Route index path="/" element={<McdDemoUserForm />} />
+          <Route index path={ROOT} element={<McdDemoUserForm />} />
           <Route path={READ_MORE} element={<ReadMore />} />
         </Routes>
       </div>
