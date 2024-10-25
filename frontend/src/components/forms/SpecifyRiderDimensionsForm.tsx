@@ -1,5 +1,5 @@
 import { PropsWithChildren, ReactElement } from "react";
-import { optimizationController } from "../../declarative/client";
+import { optimizationController } from "../../declarative/controller";
 import BikeSelectionForm from "../BikeSelectionForm";
 import { SubmitDropdown } from "./SubmitDropdown";
 import { SPECIFY_DIMENSIONS_FORM_ID } from "../../html_element_constant_ids";

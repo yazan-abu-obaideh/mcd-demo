@@ -1,3 +1,5 @@
+import { optimizationApiUrl, renderingApiUrl } from "./config";
+
 class FrontendDimensionsOptimizationRequest {
   seedBikeId: string | undefined;
   height!: number;
@@ -167,4 +169,6 @@ export {
   GeneratedBike,
   RenderingController,
   TextPromptOptimizationRequest,
-};
+};export const optimizationController = new OptimizationController(optimizationApiUrl);
+  export const renderingController = new RenderingController(renderingApiUrl);
+

@@ -1,5 +1,5 @@
 import { ReactElement } from "react";
-import { optimizationController } from "../../declarative/client";
+import { optimizationController } from "../../declarative/controller";
 import { TEXT_PROMPT_FORM_ID } from "../../html_element_constant_ids";
 import { TextPromptOptimizationRequest } from "../../declarative/controller";
 import { handleResponse } from "./FormUtils";

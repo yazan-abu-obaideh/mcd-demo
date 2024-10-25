@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { optimizationController, renderingController } from "../declarative/client";
+import { optimizationController, renderingController } from "../declarative/controller";
 import { GeneratedBike } from "../declarative/controller";
 import { OptimizationRequestState } from "./McdServerResponse";
 import { generateUuid } from "../declarative/generic_utils";
