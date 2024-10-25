@@ -1,4 +1,4 @@
-import { GeneratedBike } from "../declarative/controller";
+import { GeneratedBike } from "../controller";
 
 export class McdError {
   constructor(readonly errorMessage: string) {}

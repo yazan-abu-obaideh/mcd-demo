@@ -1,5 +1,5 @@
-import { optimizationController } from "../../declarative/controller";
-import { readFile } from "../../declarative/html_utils";
+import { optimizationController } from "../../controller";
+import { readFile } from "../../utils/html_utils";
 import { UPLOAD_RIDER_IMAGE_FORM_ID, USER_IMAGE_UPLOAD } from "../../html_element_constant_ids";
 import BikeSelectionForm from "../BikeSelectionForm";
 import { SEED_BIKE_DATA_NAME } from "../constants";

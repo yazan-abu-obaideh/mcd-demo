@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { optimizationController, renderingController } from "../declarative/controller";
-import { GeneratedBike } from "../declarative/controller";
+import { optimizationController, renderingController } from "../controller";
+import { GeneratedBike } from "../controller";
 import { OptimizationRequestState } from "./McdServerResponse";
-import { generateUuid } from "../declarative/generic_utils";
+import { generateUuid } from "../utils/generic_utils";
 import bike1 from "../assets/bike1.png";
 import bike2 from "../assets/bike2.png";
 import bike3 from "../assets/bike3.png";

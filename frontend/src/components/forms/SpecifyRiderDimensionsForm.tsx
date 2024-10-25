@@ -1,11 +1,11 @@
 import { PropsWithChildren, ReactElement } from "react";
-import { optimizationController } from "../../declarative/controller";
+import { optimizationController } from "../../controller";
 import BikeSelectionForm from "../BikeSelectionForm";
 import { SubmitDropdown } from "./SubmitDropdown";
 import { SPECIFY_DIMENSIONS_FORM_ID } from "../../html_element_constant_ids";
 import { McdServerRequest, OptimizationRequestState } from "../McdServerResponse";
 import { callIfValidForm, handleResponse } from "./FormUtils";
-import { FrontendDimensionsOptimizationRequest } from "../../declarative/controller";
+import { FrontendDimensionsOptimizationRequest } from "../../controller";
 import { SEED_BIKE_DATA_NAME } from "../constants";
 
 function FloatInputDiv(props: { name: string; labelText: string; inputId: string; initialValue: number }) {

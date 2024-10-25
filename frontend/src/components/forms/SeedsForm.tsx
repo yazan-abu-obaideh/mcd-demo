@@ -1,5 +1,5 @@
 import { ReactElement } from "react";
-import { optimizationController } from "../../declarative/controller";
+import { optimizationController } from "../../controller";
 
 import person1 from "../../assets/person1.png";
 import person2 from "../../assets/person2.png";
