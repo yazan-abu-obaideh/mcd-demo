@@ -5,7 +5,7 @@ export default function McdDemoNavBar() {
   return (
     <nav className="navbar navbar-expand-lg bg-light navbar-nav-scroll sticky-top bg-opacity-75">
       <div className="container-fluid">
-        <a className="navbar-brand" href="#main-header">
+        <a className="navbar-brand" href={ROOT.concat("#main-header")}>
           <img src={decodeLogo} alt="" width="75" height="25" className="d-inline-block align-text-bottom" />
           Counterfactuals for Design
         </a>
