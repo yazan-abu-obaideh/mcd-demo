@@ -68,9 +68,7 @@ class OptimizationController {
     this.optimizationApiUrl = optimizationApiUrl;
   }
 
-  async postTextPromptOptimization(
-    request: TextPromptOptimizationRequest
-  ): Promise<Response> {
+  async postTextPromptOptimization(request: TextPromptOptimizationRequest): Promise<Response> {
     return await fetch(this.optimizationApiUrl.concat("/text-prompt"), {
       headers: { "Content-Type": "application/json" },
       method: "POST",
@@ -85,19 +83,14 @@ class OptimizationController {
     const seedId = dimensionsRequestInches.seedBikeId;
     delete dimensionsRequestInches.seedBikeId;
 
-    return await fetch(
-      this.optimizationApiUrl.concat(
-        `/${optimizationType}/optimize-dimensions`
-      ),
-      {
-        headers: { "Content-Type": "application/json" },
-        method: "POST",
-        body: JSON.stringify({
-          seedBikeId: seedId,
-          riderDimensionsInches: dimensionsRequestInches,
-        }),
-      }
-    );
+    return await fetch(this.optimizationApiUrl.concat(`/${optimizationType}/optimize-dimensions`), {
+      headers: { "Content-Type": "application/json" },
+      method: "POST",
+      body: JSON.stringify({
+        seedBikeId: seedId,
+        riderDimensionsInches: dimensionsRequestInches,
+      }),
+    });
   }
 
   async postImageOptimization(
@@ -106,20 +99,15 @@ class OptimizationController {
     imageBase64: string,
     personHeight: number
   ) {
-    return await fetch(
-      this.optimizationApiUrl.concat(
-        `/${optimizationType}/optimize-custom-rider`
-      ),
-      {
-        headers: { "Content-Type": "application/json" },
-        method: "POST",
-        body: JSON.stringify({
-          seedBikeId: seedBikeId,
-          imageBase64: imageBase64,
-          riderHeight: personHeight,
-        }),
-      }
-    );
+    return await fetch(this.optimizationApiUrl.concat(`/${optimizationType}/optimize-custom-rider`), {
+      headers: { "Content-Type": "application/json" },
+      method: "POST",
+      body: JSON.stringify({
+        seedBikeId: seedBikeId,
+        imageBase64: imageBase64,
+        riderHeight: personHeight,
+      }),
+    });
   }
 
   async postSeedsOptimization(
@@ -127,17 +115,14 @@ class OptimizationController {
     seedBikeId: string,
     riderImageId: string
   ): Promise<Response> {
-    return await fetch(
-      this.optimizationApiUrl.concat(`/${optimizationType}/optimize-seeds`),
-      {
-        headers: { "Content-Type": "application/json" },
-        method: "POST",
-        body: JSON.stringify({
-          seedBikeId: seedBikeId,
-          riderId: riderImageId,
-        }),
-      }
-    );
+    return await fetch(this.optimizationApiUrl.concat(`/${optimizationType}/optimize-seeds`), {
+      headers: { "Content-Type": "application/json" },
+      method: "POST",
+      body: JSON.stringify({
+        seedBikeId: seedBikeId,
+        riderId: riderImageId,
+      }),
+    });
   }
 
   async postDownloadBikeCadRequest(bike: GeneratedBike): Promise<Response> {
@@ -150,9 +135,7 @@ class OptimizationController {
       }),
     });
   }
-  async postDownloadClipsBikeCadRequest(
-    bike: GeneratedBike
-  ): Promise<Response> {
+  async postDownloadClipsBikeCadRequest(bike: GeneratedBike): Promise<Response> {
     return fetch(this.optimizationApiUrl.concat("/download-clips-cad"), {
       headers: { "Content-Type": "application/json" },
       method: "POST",
@@ -169,6 +152,6 @@ export {
   GeneratedBike,
   RenderingController,
   TextPromptOptimizationRequest,
-};export const optimizationController = new OptimizationController(optimizationApiUrl);
-  export const renderingController = new RenderingController(renderingApiUrl);
-
+};
+export const optimizationController = new OptimizationController(optimizationApiUrl);
+export const renderingController = new RenderingController(renderingApiUrl);
