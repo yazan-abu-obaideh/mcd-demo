@@ -1,3 +1,4 @@
+import { RESPONSE_DIV_ID } from "../../html_element_constant_ids";
 import { BikesServerResponse, McdError, McdServerRequest, OptimizationRequestState } from "../McdServerResponse";
 import { GENERIC_ERROR_RESPONSE } from "./SeedsForm";
 
@@ -16,6 +17,11 @@ export function handleResponse(
   mcdRequest: McdServerRequest,
   isClips: boolean = false
 ) {
+
+  setTimeout(() => {
+    document.getElementById(RESPONSE_DIV_ID)?.scrollIntoView();
+  }, 250);
+
   response
     .then((response) => {
       if (response.status !== 200) {

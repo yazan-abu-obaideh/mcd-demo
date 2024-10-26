@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { optimizationController, renderingController } from "../controller";
 import { GeneratedBike } from "../controller";
 import { OptimizationRequestState } from "./McdServerResponse";
@@ -63,6 +63,10 @@ function BikeElement(props: {
   seedBikeId: string;
   isClips: boolean;
 }) {
+  const renderButtonId = generateUuid();
+  const originalId = generateUuid();
+  const renderedId = generateUuid();
+
   const [renderingState, setRenderingState] = useState<RenderingState>({
     renderingRequested: false,
     renderingResult: undefined,
@@ -72,8 +76,13 @@ function BikeElement(props: {
   const active = props.index === 0 ? "active" : undefined;
   const className = "container text-center border rounded carousel-item mb-1 p-5 optimized-bike-div " + active;
 
-  const originalId = generateUuid();
-  const renderedId = generateUuid();
+  useEffect(() => {
+    // render first bike automatically
+    if (props.index === 0) {
+      document.getElementById(renderButtonId)?.click();
+    }
+  }, [renderButtonId, props.index]);
+
   return (
     <div className={className}>
       <h4>Generated Bike {props.index + 1}</h4>
@@ -81,6 +90,7 @@ function BikeElement(props: {
       <br></br>
       {!renderingState.renderingRequested && (
         <button
+          id={renderButtonId}
           onClick={() => {
             setRenderingState({
               renderingRequested: true,
