@@ -1,33 +1,35 @@
+import { optimizationApiUrl, renderingApiUrl } from "./config";
+
 class FrontendDimensionsOptimizationRequest {
-  seedBikeId: string;
-  height: number;
-  sh_height: number;
-  hip_to_ankle: number;
-  hip_to_knee: number;
-  shoulder_to_wrist: number;
-  arm_length: number;
-  torso_length: number;
-  lower_leg: number;
-  upper_leg: number;
+  seedBikeId: string | undefined;
+  height!: number;
+  sh_height!: number;
+  hip_to_ankle!: number;
+  hip_to_knee!: number;
+  shoulder_to_wrist!: number;
+  arm_length!: number;
+  torso_length!: number;
+  lower_leg!: number;
+  upper_leg!: number;
 }
 
 class GeneratedBike {
-  seedImageId: string;
-  bikeObject: object;
-  bikePerformance: string;
+  seedImageId!: string;
+  bikeObject!: object;
+  bikePerformance!: string;
 }
 
-class TextPromptOptimizationReqest {
-  text_prompt: string;
-  cosine_distance_upper_bound: number;
-  optimizer_population: number;
-  optimizer_generations: number;
-  avg_gower_weight: number;
-  cfc_weight: number;
-  gower_weight: number;
-  diversity_weight: number;
-  bonus_objective_weight: number;
-  include_dataset: boolean
+class TextPromptOptimizationRequest {
+  text_prompt!: string;
+  cosine_distance_upper_bound: number | null = null;
+  optimizer_population: number | null = null;
+  optimizer_generations: number | null = null;
+  avg_gower_weight: number | null = null;
+  cfc_weight: number | null = null;
+  gower_weight: number | null = null;
+  diversity_weight: number | null = null;
+  bonus_objective_weight: number | null = null;
+  include_dataset: boolean = false;
 }
 
 class RenderingController {
@@ -42,7 +44,7 @@ class RenderingController {
       headers: { "Content-Type": "application/json" },
       method: "POST",
       body: JSON.stringify({
-        bike: bike.bikeObject
+        bike: bike.bikeObject,
       }),
     });
   }
@@ -66,7 +68,7 @@ class OptimizationController {
     this.optimizationApiUrl = optimizationApiUrl;
   }
 
-  async postTextPromptOptimization(request: TextPromptOptimizationReqest): Promise<Response> {
+  async postTextPromptOptimization(request: TextPromptOptimizationRequest): Promise<Response> {
     return await fetch(this.optimizationApiUrl.concat("/text-prompt"), {
       headers: { "Content-Type": "application/json" },
       method: "POST",
@@ -81,59 +83,46 @@ class OptimizationController {
     const seedId = dimensionsRequestInches.seedBikeId;
     delete dimensionsRequestInches.seedBikeId;
 
-    return await fetch(
-      this.optimizationApiUrl.concat(
-        `/${optimizationType}/optimize-dimensions`
-      ),
-      {
-        headers: { "Content-Type": "application/json" },
-        method: "POST",
-        body: JSON.stringify({
-          seedBikeId: seedId,
-          riderDimensionsInches: dimensionsRequestInches,
-        }),
-      }
-    );
+    return await fetch(this.optimizationApiUrl.concat(`/${optimizationType}/optimize-dimensions`), {
+      headers: { "Content-Type": "application/json" },
+      method: "POST",
+      body: JSON.stringify({
+        seedBikeId: seedId,
+        riderDimensionsInches: dimensionsRequestInches,
+      }),
+    });
   }
 
   async postImageOptimization(
-    optimizationType: string,
+    optimizationType: "aerodynamics" | "ergonomics",
     seedBikeId: string,
     imageBase64: string,
     personHeight: number
   ) {
-    return await fetch(
-      this.optimizationApiUrl.concat(
-        `/${optimizationType}/optimize-custom-rider`
-      ),
-      {
-        headers: { "Content-Type": "application/json" },
-        method: "POST",
-        body: JSON.stringify({
-          seedBikeId: seedBikeId,
-          imageBase64: imageBase64,
-          riderHeight: personHeight,
-        }),
-      }
-    );
+    return await fetch(this.optimizationApiUrl.concat(`/${optimizationType}/optimize-custom-rider`), {
+      headers: { "Content-Type": "application/json" },
+      method: "POST",
+      body: JSON.stringify({
+        seedBikeId: seedBikeId,
+        imageBase64: imageBase64,
+        riderHeight: personHeight,
+      }),
+    });
   }
 
   async postSeedsOptimization(
-    optimizationType: string,
+    optimizationType: "ergonomics" | "aerodynamics",
     seedBikeId: string,
     riderImageId: string
   ): Promise<Response> {
-    return await fetch(
-      this.optimizationApiUrl.concat(`/${optimizationType}/optimize-seeds`),
-      {
-        headers: { "Content-Type": "application/json" },
-        method: "POST",
-        body: JSON.stringify({
-          seedBikeId: seedBikeId,
-          riderId: riderImageId,
-        }),
-      }
-    );
+    return await fetch(this.optimizationApiUrl.concat(`/${optimizationType}/optimize-seeds`), {
+      headers: { "Content-Type": "application/json" },
+      method: "POST",
+      body: JSON.stringify({
+        seedBikeId: seedBikeId,
+        riderId: riderImageId,
+      }),
+    });
   }
 
   async postDownloadBikeCadRequest(bike: GeneratedBike): Promise<Response> {
@@ -151,7 +140,7 @@ class OptimizationController {
       headers: { "Content-Type": "application/json" },
       method: "POST",
       body: JSON.stringify({
-        bike: bike.bikeObject
+        bike: bike.bikeObject,
       }),
     });
   }
@@ -162,5 +151,7 @@ export {
   FrontendDimensionsOptimizationRequest,
   GeneratedBike,
   RenderingController,
-  TextPromptOptimizationReqest
+  TextPromptOptimizationRequest,
 };
+export const optimizationController = new OptimizationController(optimizationApiUrl);
+export const renderingController = new RenderingController(renderingApiUrl);

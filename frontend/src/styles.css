@@ -65,7 +65,6 @@ input[type="number"] {
   height: auto;
 }
 
-
 .original-bike-img-in-result {
   width: 70%;
   height: auto;
@@ -73,7 +72,6 @@ input[type="number"] {
 
 .problem-form-tabs-div {
   border-bottom: 0px !important;
-
 }
 
 .optimized-bike-div {
@@ -95,7 +93,6 @@ input[type="number"] {
 .bike-img-div-in-result {
   width: 40%;
 }
-
 
 .w-40 {
   width: 40%;
